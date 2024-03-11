@@ -1,0 +1,58 @@
+.customInput {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 610px;
+  height: 36px;
+  padding: 0 6px;
+
+  .iconfont {
+    margin-left: 10px;
+  }
+}
+.iconBlock {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  left: 90px;
+  z-index: 999;
+  display: flex;
+  flex-wrap: wrap;
+  width: 610px;
+  height: 150px;
+  padding: 10px;
+  overflow-y: auto;
+  background: #092b83;
+  border: 1px solid #092b83;
+  border-radius: 4px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #737372;
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 20%);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #191f28;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .iconItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10%;
+    height: 60px;
+    cursor: pointer;
+  }
+}
+.bigScreen {
+  width: 20px;
+  height: 20px;
+}

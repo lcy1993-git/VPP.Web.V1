@@ -1,0 +1,74 @@
+.alarmPage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .alarmPageNav {
+    height: 30px;
+  }
+
+  .alarmPageMain {
+    flex: 1;
+    width: 100%;
+    padding-right: 10px;
+    overflow: hidden;
+  }
+}
+
+.search {
+  width: 100%;
+  height: 56px;
+}
+
+.modalBody {
+  height: 640px;
+  padding: 20px;
+  padding-right: 40px;
+
+  .formItem {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 40px;
+    padding-left: 40px;
+    font-size: 16px;
+
+    .label {
+      width: 120px;
+    }
+
+    .value {
+      flex: 1;
+      overflow: hidden;
+    }
+  }
+
+  .siteList {
+    display: flex;
+    width: 100%;
+    height: 500px;
+    padding-top: 10px;
+    padding-left: 40px;
+
+    .label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 120px;
+      height: 40px;
+      font-size: 16px;
+    }
+
+    .value {
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+
+  .modalFooter:extend(.flex_center) {
+    height: 60px;
+  }
+}

@@ -1,0 +1,120 @@
+
+/**------------------ ant button default start  ----------------------*/
+.ant-btn-default {
+  box-shadow: 0 0 10px 4px rgba(1, 70, 160, 1) inset;
+  border-color: #006ade;
+}
+
+.ant-btn-primary {
+  box-shadow: 0 0 20px 4px rgba(13, 123, 207, 1) inset;
+  border-color: #1798e6;
+  background: transparent;
+}
+
+.ant-btn-sm {
+  line-height: 1;
+}
+
+/**------------------ ant button default end  -----------------------*/
+
+
+
+
+/**------------------ 侧边栏菜单 start  ------------------------------*/
+// 菜单收缩 自定义搜索
+.ant-pro-layout .ant-pro-sider-logo-collapsed {
+  padding-top: 16px;
+  padding-right: 16px;
+  padding-bottom: 16px;
+  padding-left: 12px;
+}
+
+.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
+  left: unset;
+  border-top: 1px solid  #18338a;
+}
+
+.ant-layout-sider-children::after {
+  content: '';
+  width: 8px;
+  height: 2px;
+  background: #41abf1;
+  position: absolute;
+  right: -1px;
+  top: -1px;
+}
+
+.ant-pro-layout .ant-pro-sider .ant-layout-sider-children {
+  border-color: #18338a;
+  padding: 0;
+}
+
+.ant-menu-inline.ant-menu-root .ant-menu-item, .ant-menu-inline.ant-menu-root .ant-menu-submenu-title {
+  border: 1px solid transparent;
+}
+.ant-menu-dark .ant-menu-item-selected, .ant-menu-dark>.ant-menu .ant-menu-item-selected {
+  background: transparent;
+  border: 1px solid #0069d1 !important;
+  margin-right: 0;
+  border-radius: 2px;
+  color: #006fdb;
+  font-weight: 400;
+  box-shadow: 0 0 10px 4px rgba(1, 70, 160, 1) inset;
+}
+
+.ant-pro-base-menu-inline-item-title .ant-pro-base-menu-inline-item-text {
+  color: #fff;
+}
+
+/**------------------ 侧边栏菜单 end  --------------------------------*/
+
+
+
+/**------------------ 改写header背景色 start  ------------------------*/
+.ant-pro-layout .ant-layout-header.ant-pro-layout-header {
+  border-bottom: none;
+  background-image: url('@/assets/image/base/header.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.ant-pro-layout .ant-pro-layout-bg-list {
+  background-image: url('@/assets/image/base/background.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+/**------------------ 改写header背景色 end  --------------------------*/
+
+/*--------- 定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺 start------- */
+::-webkit-scrollbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  background-color: #0552b1;
+}
+
+/* 定义滚动条轨道 内阴影+圆角 */
+::-webkit-scrollbar-track {
+  background-color: #022a86;
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
+}
+
+/* 定义滑块 内阴影+圆角 */
+::-webkit-scrollbar-thumb {
+  background-color: #024eab;
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
+}
+/*--------- 定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺 end -------- */
+
+/**------------------ ant table header start  ----------------------*/
+.ant-table-thead {
+  background-image: url('@/assets/image/base/table-header.png');
+  background-size: 100% 100%;
+}
+
+/**------------------ ant table header end  ----------------------*/
+

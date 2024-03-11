@@ -1,0 +1,111 @@
+.module_container {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0 0 10px 0;
+  border: 1px solid #003199;
+  background-image: radial-gradient(transparent, rgba(4, 30, 96, 0.9));
+  position: relative;
+  display: flex;
+  border-radius: 0px;
+  flex-direction: column;
+
+  &_title p {
+    height: 60px;
+    line-height: 60px;
+    font-size: 18px;
+    padding: 0 10px;
+    width: 100%;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+    border-bottom: 1px solid #003199;
+    display: inline-block;
+    position: relative;
+  }
+
+  &_body {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px 0 10px;
+    overflow: hidden;
+  }
+}
+
+.module_container_border_left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+}
+
+.module_container_border_right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+}
+
+
+.module_container::after {
+  position: absolute;
+  left: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+  content: '';
+}
+
+.module_container::before {
+  position: absolute;
+  right: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+  content: '';
+}
+
+// -----------------------------------
+
+.contentPage::after {
+  position: absolute;
+  right: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+  content: '';
+}
+
+.contentPage::before {
+  position: absolute;
+  left: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+  content: '';
+}
+
+.rightContent::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+  content: '';
+}
+
+.rightContent::before {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 2px;
+  background: #22b9ff;
+  content: '';
+}

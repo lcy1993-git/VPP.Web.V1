@@ -91,15 +91,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 colorText: '#fff',
                 colorBorder: '#023999',
                 colorPrimaryHover: '#10a2fa',
-              colorTextPlaceholder: '#0143cc',
-              controlOutline: 'transparent', // 输入组件 激活边框颜色
-              colorBgBase: '#032566', // 所有组件的基础背景色
-              colorBgContainer: 'transparent',
-              colorError: '#ff0000',
-              colorBgElevated: ' #001d51', // 模态框、悬浮框背景色
-              controlItemBgActiveHover: 'rgba(0, 84, 255, 0.2)', // 控制组件项在鼠标悬浮且激活状态下的背景颜色
-              controlItemBgHover: 'rgba(0, 84, 255, 0.2)', // 下拉框，手鼠hover背景色
-              controlItemBgActive: 'rgba(0, 84, 255, 0.3)', // 控制组件项在激活状态下的背景颜色
+                colorTextPlaceholder: '#0143cc',
+                controlOutline: 'transparent', // 输入组件 激活边框颜色
+                colorBgBase: '#032566', // 所有组件的基础背景色
+                colorBgContainer: 'transparent',
+                colorError: '#ff0000',
+                colorBgElevated: ' #001d51', // 模态框、悬浮框背景色
+                controlItemBgActiveHover: 'rgba(0, 84, 255, 0.2)', // 控制组件项在鼠标悬浮且激活状态下的背景颜色
+                controlItemBgHover: 'rgba(0, 84, 255, 0.2)', // 下拉框，手鼠hover背景色
+                controlItemBgActive: 'rgba(0, 84, 255, 0.3)', // 控制组件项在激活状态下的背景颜色
               },
             }}
           >

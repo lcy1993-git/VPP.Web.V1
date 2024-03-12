@@ -1,34 +1,68 @@
 .module_container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 0 0 10px 0;
-  border: 1px solid #003199;
   background-image: radial-gradient(transparent, rgba(4, 30, 96, 0.9));
-  position: relative;
-  display: flex;
+  border: 1px solid #003199;
   border-radius: 0px;
-  flex-direction: column;
 
   &_title p {
-    height: 60px;
-    line-height: 60px;
-    font-size: 18px;
-    padding: 0 10px;
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
     width: 100%;
+    height: 60px;
+    padding: 0 10px;
+    font-size: 18px;
+    line-height: 60px;
     white-space: nowrap;
     text-align: center;
-    box-sizing: border-box;
     border-bottom: 1px solid #003199;
-    display: inline-block;
-    position: relative;
+  }
+
+  &_title2 {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    p {
+      position: relative;
+      flex: 1;
+      padding-left: 23px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: left;
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 12px;
+        width: 2px;
+        height: 16px;
+        background: #fff;
+        content: '';
+      }
+    }
+
+    .renderCenter {
+      flex: 0; /* 不占据额外空间 */
+      margin: 0 auto; /* 在父容器中水平居中对齐 */
+    }
+
+    .renderRight {
+      display: flex;
+      flex: 1;
+      justify-content: flex-end; /* 将内容右对齐 */
+    }
   }
 
   &_body {
     flex: 1;
-    width: 100%;
     box-sizing: border-box;
-    padding: 0 10px 0 10px;
+    width: 100%;
     overflow: hidden;
   }
 }
@@ -50,7 +84,6 @@
   height: 2px;
   background: #22b9ff;
 }
-
 
 .module_container::after {
   position: absolute;

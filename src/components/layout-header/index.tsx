@@ -6,6 +6,7 @@ import { Badge, Button, Divider, Space } from 'antd'
 import { BellFilled, BellOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { useInterval } from 'ahooks'
+import { history } from '@umijs/max';
 
 
 const LayoutHeader = () => {
@@ -21,7 +22,7 @@ const LayoutHeader = () => {
     <div className={styles.headerLeft}>
       <img src={logo} alt="同华" />
     </div>
-    <div className={styles.headerMiddle}>
+    <div className={styles.headerMiddle} onClick={() => history.push('/big-screen/feature')}>
       <img src={title} alt="成都市龙泉驿虚拟电厂管理平台" />
     </div>
     <div className={styles.headerRight}>

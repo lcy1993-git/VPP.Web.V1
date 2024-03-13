@@ -1,4 +1,4 @@
-import { ConfigProvider, DatePicker, Space } from 'antd'
+import { ConfigProvider, DatePicker, Divider, Space } from 'antd'
 import BlockWrap from './components/BlockWrap'
 import title from '@/assets/image/big-screen/title.png'
 import styles from './index.less'
@@ -7,6 +7,15 @@ import { useEffect, useRef, useState } from 'react'
 import CustomCircle from './components/CustomCircle'
 import ScrollBoardItem from './components/ScrollBoardItem'
 import ThreeMap from './components/ThreeMap'
+import CustomCharts from '@/components/custom-charts'
+import { datePickerEnum, disableDate, elasticityOverviewOptions, energyOverviewOptions, INTERVALTIME } from './utils'
+import { useRequest } from 'ahooks'
+import { getCenterData, getElasticEnergyOverView, getnergyUse, getResponseStatistic, getTypicalResponseAnalyse } from '@/services/big-screen'
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // 引入中文语言包
+import CurrentTime from './components/CurrentTime'
+import { history } from '@umijs/max'
+dayjs.locale('zh-cn');
 
 /***
  *特色场景
@@ -16,26 +25,89 @@ const Feature = () => {
   const canvasWrapRef = useRef(null);
   // 典型响应统计表格
   const tableWrapRef = useRef(null);
-
   // 响应统计 圆环宽度
   const [circleWidth, setCircleWidth] = useState<number>(0)
   // 计算表格高度
   const [tableHeight, setTableHeight] = useState<number>(0)
+  // 区域用能 年月日 切换
+  const [fullAndPutDate, setFullAndPutDate] = useState<string>('日');
+  // 区域用能 日期组件切换
+  const [pickerType, setPickerType] = useState<'year' | 'month' | 'date'>('date');
+  // 区域用能 日期
+  const [dateValue, setDateValue] = useState<any>(dayjs(dayjs(`${new Date()}`), 'YYYY-MM-DD'));
+
+
+  // 区域用能概览数据请求
+  const { data: energyUseData, run: fetchEnergyUse } = useRequest(getnergyUse, {
+    manual: true,
+    pollingInterval: INTERVALTIME,
+    pollingErrorRetryCount: 3,
+  });
+
+  // 区域弹性负荷概览数据请求
+  const { data: elasticEnergyOverViewData, run: fetchElasticEnergyOverView } = useRequest(getElasticEnergyOverView, {
+    pollingInterval: INTERVALTIME,
+    pollingErrorRetryCount: 3,
+  });
+
+  // 页面中间数据
+  const { data: overviewData, run: fecthtCenterData } = useRequest(getCenterData, {
+    pollingInterval: INTERVALTIME,
+    pollingErrorRetryCount: 3,
+  });
+
+  // 响应统计
+  const { data: responseStatisticData, run: fetchResponseStatistic } = useRequest(getResponseStatistic, {
+    pollingInterval: INTERVALTIME,
+    pollingErrorRetryCount: 3,
+  });
+
+  // 典型响应分析
+  const { data: typicalResponseData, run: fetchTypicalResponseAnalyse } = useRequest(getTypicalResponseAnalyse, {
+    pollingInterval: INTERVALTIME,
+    pollingErrorRetryCount: 3,
+  });
+
+
+  /** 发电量 日期改变  */
+  const datePickerChange = (date: any) => {
+    if (!date) {
+      return;
+    }
+
+    let fetchDate: any;
+    datePickerEnum.forEach((item: any) => {
+      if (item.name === fullAndPutDate) {
+        fetchDate = dayjs(date).format(item.dayType);
+        setDateValue(dayjs(fetchDate, item.dayType));
+      }
+    });
+    // 请求数据
+    fetchEnergyUse({
+      date: fetchDate,
+      unit: pickerType === 'date' ? 'day' : pickerType,
+    });
+  };
+
   // 区域用能右侧render
   const energyOverviewRender = () => {
     return (
       <Space align="center" >
         <SegmentedTheme
           size="small"
-          options={['年', '月', '日']}
+          options={datePickerEnum.map((item: any) => item.name)}
+          getSelectedValue={(value) => setFullAndPutDate(value)}
         />
         <DatePicker
           size="small"
+          picker={pickerType}
+          onChange={datePickerChange}
+          value={dateValue}
+          disabledDate={disableDate}
         />
       </Space>
     )
   }
-
   // 典型响应分析右侧render
   const resultAnalysisRender = () => {
     return <SegmentedTheme
@@ -43,7 +115,6 @@ const Feature = () => {
       options={['负荷', '时长']}
     />
   }
-
   // 监听页面尺寸变化，重新绘制圆环 ---- 响应统计
   const handleWindowResize = () => {
     if (canvasWrapRef?.current) {
@@ -58,6 +129,27 @@ const Feature = () => {
     }
   }
 
+  // 处理页面所有请求返回的数据
+  const pageDataHandle = (data: any) => {
+    if (data?.code === 200) {
+      return data.data;
+    }
+    return null;
+  }
+
+  // 响应统计数据计算响应率
+  const responseDataHandle = (data: any, isFun: boolean) => {
+    if (!data) {
+      return 0
+    }
+    if (isFun) { // 计算企业响应率
+      return Number(data.responseEnterpriseNum / data.totalEnterpriseNum).toFixed(2)
+    } else { // 计算事件响应率
+      return Number(data.responseEventNum / data.totalInvitedEventNum).toFixed(2)
+    }
+  }
+
+  // 监听窗口尺寸变化
   useEffect(() => {
     handleWindowResize();
     window.addEventListener("resize", handleWindowResize)
@@ -66,17 +158,34 @@ const Feature = () => {
     }
   }, [])
 
-  // @ts-ignore TODO: 删除表格数据
-  const tableDataList = [...Array.apply(null, { length: 12 }).map((_item, index) => {
-    return {
-      id: index + 1,
-      name: '调峰',
-      a: '100kWh',
-      b: '-5%',
-      c: '100kW',
-      d: '华为科技'
-    }
-  })]
+  useEffect(() => {
+    // 区域弹性负荷
+    fetchElasticEnergyOverView()
+    // 页面中间数据请求
+    fecthtCenterData()
+    // 响应统计
+    fetchResponseStatistic()
+    // 典型响应分析
+    fetchTypicalResponseAnalyse()
+  }, [])
+
+  // 区域用能概览请求数据
+  useEffect(() => {
+    let date: any = null;
+    let unit: any = '';
+    datePickerEnum.forEach((item: any) => {
+      if (item.name === fullAndPutDate) {
+        date = dayjs().format(item.dayType);
+        setDateValue(dayjs(date, item.dayType));
+        setPickerType(item.type);
+        unit = item.type;
+      }
+    });
+    fetchEnergyUse({
+      date: date,
+      unit: unit === 'date' ? 'day' : unit,
+    });
+  }, [fullAndPutDate])
 
 
   return <ConfigProvider
@@ -108,13 +217,13 @@ const Feature = () => {
     <div className={styles.featurePage}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          2024年2月27日 12:00:00 星期五
+          <CurrentTime />
         </div>
         <div className={styles.middle}>
           <img src={title} alt="title" />
         </div>
         <div className={styles.headerRight}>
-          菜单
+          <div className={styles.menuButton} onClick={() => history.push('/energy-manage/realtime-detection')}>菜单</div>
         </div>
       </div>
       <div className={styles.content}>
@@ -124,51 +233,78 @@ const Feature = () => {
               title='区域用能概览'
               headerRightRender={energyOverviewRender}
             >
-              图表组件
+              <CustomCharts
+                options={energyOverviewOptions(pageDataHandle(energyUseData), fullAndPutDate)}
+                loading={false}
+              />
             </BlockWrap>
           </div>
           <div className={styles.sideItem}>
             <BlockWrap
               title='区域弹性负荷概览'
             >
-              图表组件
+              <div className={styles.elasticityBody}>
+                <div className={styles.elasticityTitle}>
+                  <div className={styles.titleIcon}></div>
+                  <div className={styles.elasticityValue}>
+                    <dl>
+                      <dt>{pageDataHandle(elasticEnergyOverViewData)?.totalPower}</dt>
+                      <dd>实时负荷(MW)</dd>
+                    </dl>
+                    <dl>
+                      <dt>{pageDataHandle(elasticEnergyOverViewData)?.basePower}</dt>
+                      <dd>基线负荷(MW)</dd>
+                    </dl>
+                  </div>
+                </div>
+                <div className={styles.elasticityChart}>
+                  <CustomCharts
+                    options={elasticityOverviewOptions(pageDataHandle(elasticEnergyOverViewData))}
+                    loading={false}
+                  />
+                </div>
+              </div>
             </BlockWrap>
           </div>
         </div>
+        {/* center */}
         <div className={styles.contentMiddle}>
           <div className={styles.middleTop}>
             <div className={styles.totalCount}>
               <p className={styles.title}>
-              总可调节负荷（MW）
+                总可调节负荷（MW）
               </p>
               <p className={styles.value}>
-                <span>2</span>
-                <span>6</span>
-                <span>7</span>
-                <span>3</span>
+                {
+                  pageDataHandle(overviewData)?.totalAdjustPower.toString().split('').map((item: string, index: any) => {
+                    return Number(item) ? <span key={`${item}-totalAdjustPower-${index}`}>{item}</span> : <i key={`${item}-${index}`}>{item}</i>
+                  })
+                }
+
               </p>
             </div>
             <div className={styles.totalCount}>
               <p className={styles.title}>
-              实时可上调功率（MW）
+                实时可上调功率（MW）
               </p>
               <p className={styles.value}>
-                <span>9</span>
-                <span>2</span>
-                <span>6</span>
-                <span>7</span>
-                <span>3</span>
+                {
+                  pageDataHandle(overviewData)?.maxUpAdjustPower.toString().split('').map((item: string, index: any) => {
+                    return Number(item) ? <span key={`${item}-maxUpAdjustPower-${index}`}>{item}</span> : <i key={`${item}-${index}`}>{item}</i>
+                  })
+                }
               </p>
             </div>
             <div className={styles.totalCount}>
               <p className={styles.title}>
-              实时可下调功率（MW）
+                实时可下调功率（MW）
               </p>
               <p className={styles.value}>
-                <span>2</span>
-                <span>6</span>
-                <span>7</span>
-                <span>3</span>
+                {
+                  pageDataHandle(overviewData)?.maxDownAdjustPower.toString().split('').map((item: string, index: any) => {
+                    return Number(item) ? <span key={`${item}-maxDownAdjustPower-${index}`}>{item}</span> : <i key={`${item}-${index}`}>{item}</i>
+                  })
+                }
               </p>
             </div>
           </div>
@@ -176,6 +312,7 @@ const Feature = () => {
             <ThreeMap />
           </div>
         </div>
+        {/* right */}
         <div className={styles.contentSide}>
           <div className={`${styles.sideItem} ${styles.marginB10}`}>
             <BlockWrap
@@ -189,15 +326,15 @@ const Feature = () => {
                         circleBgColor="#1a96ff"
                         circleColor="#33ec9b"
                         circleWidth={circleWidth}
-                        value={0.56}
+                        value={responseDataHandle(pageDataHandle(responseStatisticData), false)}
                       />
                     }
 
                   </div>
                   <div className={styles.chartsDesc}>
-                    <p className={styles.desc}>已响应事件(次)：<span>73</span></p>
-                    <p className={styles.desc}>未响应事件(次)：<span>73</span></p>
-                    <p className={styles.desc}>总受邀事件(次)：<span>100</span></p>
+                    <p className={styles.desc}>已响应事件(次)：<span>{pageDataHandle(responseStatisticData)?.responseEventNum}</span></p>
+                    <p className={styles.desc}>未响应事件(次)：<span>{pageDataHandle(responseStatisticData)?.unResponseEventNum}</span></p>
+                    <p className={styles.desc}>总受邀事件(次)：<span>{pageDataHandle(responseStatisticData)?.totalInvitedEventNum}</span></p>
                   </div>
                 </div>
                 <div className={styles.responseRight}>
@@ -207,14 +344,14 @@ const Feature = () => {
                         circleBgColor="#1a96ff"
                         circleColor="#95e129"
                         circleWidth={circleWidth}
-                        value={0.8}
+                        value={responseDataHandle(pageDataHandle(responseStatisticData), true)}
                       />
                     }
                   </div>
                   <div className={styles.chartsDesc}>
-                    <p className={styles.desc}>已响应事件(次)：<span>73</span></p>
-                    <p className={styles.desc}>未响应事件(次)：<span>73</span></p>
-                    <p className={styles.desc}>总受邀事件(次)：<span>100</span></p>
+                    <p className={styles.desc}>已响应企业(个)：<span>{pageDataHandle(responseStatisticData)?.responseEnterpriseNum}</span></p>
+                    <p className={styles.desc}>未响应企业(个)：<span>{pageDataHandle(responseStatisticData)?.unResponseEnterpriseNum}</span></p>
+                    <p className={styles.desc}>总受邀企业(个)：<span>{pageDataHandle(responseStatisticData)?.totalEnterpriseNum}</span></p>
                   </div>
                 </div>
               </div>
@@ -225,9 +362,9 @@ const Feature = () => {
               title='典型响应分析'
               headerRightRender={resultAnalysisRender}
             >
-              <div style={{ width: '100%', height: '100%', background: 'cyan' }} ref={tableWrapRef}>
+              <div style={{ width: '100%', height: '100%' }} ref={tableWrapRef}>
                 <ScrollBoardItem
-                  dataList={tableDataList}
+                  dataList={pageDataHandle(typicalResponseData)}
                   height={tableHeight}
                   visibleRows={5}
                 />
@@ -239,8 +376,5 @@ const Feature = () => {
       <div className={styles.footer}></div>
     </div>
   </ConfigProvider>
-
-
-
 }
 export default Feature

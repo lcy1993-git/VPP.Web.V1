@@ -12,15 +12,15 @@ interface Tprops {
 
 const SegmentedTheme = (props: Tprops) => {
 
-
   // @ts-ignore
   const [value, setValue] = useState();
   // 获取选中值
-  const { getSelectedValue } = props;
+  const { ...other } = props;
+
   const handleChange = (value: any) => {
     setValue(value);
-    if (getSelectedValue) {
-      getSelectedValue(value);
+    if (other.getSelectedValue) {
+      other.getSelectedValue(value);
     }
   }
 

@@ -75,12 +75,15 @@ export const errorConfig: RequestConfig = {
         message.error(`Response status:${error.response.status}`);
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
-        // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，
         // 而在node.js中是 http.ClientRequest 的实例
-        message.error('None response! Please retry.');
+        message.error('没有回应！请重试。');
       } else {
         // 发送请求时出了点问题
-        message.error('Request error, please retry.');
+        const reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
+        message.open({
+          type: 'error',
+          content: reg.test(error) ? error : '服务器内部错误！！！',
+        });
       }
     },
   },
@@ -88,9 +91,25 @@ export const errorConfig: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
-      // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
-      return { ...config, url };
+      const url = config?.url;
+      const token = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI2ZjA4ZWFkMmI0ZGU0YzdkOTBmNGM1NjgwMTFjYTQ4NyIsInVzZXIiOiJ7XCJpZFwiOjEsXCJuaWNrTmFtZVwiOlwi566h55CG5ZGYXCIsXCJpc1N1cGVyXCI6dHJ1ZX0iLCJpc3MiOiJhZG1pbiIsImlhdCI6MTcxMDMxNzI2NiwiZXhwIjoxNzEwOTIyMDY2fQ.EIYqMIms81M8-Ribwtm64YE8PZHTfSnpvNLUmUqF64g'
+      if (token) {
+        return {
+          ...config,
+          url,
+          headers: {
+            ...config.headers,
+            Authorization: token,
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': 'x-requested-with',
+            'X-Content-Type-Options': 'nosniff',
+          },
+        };
+      }
+      return {
+        ...config,
+        url,
+      };
     },
   ],
 
@@ -100,8 +119,15 @@ export const errorConfig: RequestConfig = {
       // 拦截响应数据，进行个性化处理
       const { data } = response as unknown as ResponseStructure;
 
-      if (data?.success === false) {
-        message.error('请求失败！');
+      if (data.code === 403) {
+        // history.push('/login');
+        return Promise.reject('登录超时，请重新登录！！！');
+      }
+      if (data.code && data.code !== 200) {
+        const reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
+        return reg.test(data.message)
+          ? Promise.reject(data.message)
+          : Promise.reject('服务器内部异常，请稍后再试');
       }
       return response;
     },

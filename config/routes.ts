@@ -29,20 +29,70 @@ export default [
     component: './big-screen/BulletinBoard',
   },
   {
-    path: '/energy-manage',
+    path: '/energy-monitor',
     name: '能耗监测',
+    component: './energy-monitor',
+  },
+  {
+    path: '/energy-analysis',
+    name: '能耗分析',
+    component: './energy-analysis',
+  },
+  {
+    path: '/enterprise-panel',
+    name: '企业面板',
+    component: './enterprise-panel',
+  },
+  {
+    path: '/dcs-energy-monitor',
+    name: '分布式能源监测',
+    component: './dcs-energy-monitor',
+  },
+  {
+    path: '/report-forms',
+    name: '报表报告',
+    component: './report-forms',
+  },
+  {
+    path: '/clear-consume',
+    name: '清洁能源消费管理',
     routes: [
       {
-        path: '/energy-manage/realtime-detection',
-        name: '能耗实时监测',
-        component: './energy-manage/realtime-detection',
+        path: '/clear-consume/carbon-overview',
+        name: '碳排放总览',
+        component: './clear-consume/carbon-overview',
       },
       {
-        path: '/energy-manage/structural-analysis',
-        name: '能耗结构分析',
-        component: './energy-manage/structural-analysis',
+        path: '/clear-consume/carbon-monitor',
+        name: '碳排放监测',
+        component: './clear-consume/carbon-monitor',
       },
-    ],
+      {
+        path: '/clear-consume/carbon-detail',
+        name: '碳排放详情',
+        component: './clear-consume/carbon-detail',
+      },
+      {
+        path: '/clear-consume/carbon-analysis',
+        name: '碳排放分析',
+        component: './clear-consume/carbon-analysis',
+      },
+    ]
+  },
+  {
+    path: '/enterprise-manage',
+    name: '企业管理',
+    component: './enterprise-manage',
+  },
+  {
+    path: '/devices-manage',
+    name: '设备管理',
+    component: './devices-manage',
+  },
+  {
+    path: '/energy-overview',
+    name: '用能总览',
+    component: './energy-overview',
   },
   {
     path: '/runtime-monitor',
@@ -58,79 +108,22 @@ export default [
         name: '历史数据',
         component: './runtime-monitor/history-data',
       },
-    ],
+    ]
   },
   {
-    path: '/energy-analysis',
-    name: '能耗分析',
-    component: './energy-analysis',
+    path: '/power-station',
+    name: '光伏电站',
+    component: './power-station',
   },
   {
-    path: '/enterprise-panel',
-    name: '企业面板',
-    component: './enterprise-panel',
+    path: '/energy-station',
+    name: '储能电站',
+    component: './energy-station',
   },
   {
-    path: '/smart-energy',
-    name: '智慧能源',
-    component: './smart-energy',
-  },
-  {
-    path: '/smart-analysis',
-    name: '智能分析',
-    component: './smart-analysis',
-  },
-  {
-    path: '/report-forms',
-    name: '报表报告',
-    component: './report-forms',
-  },
-  {
-    path: '/clear-consume',
-    name: '清洁能源消费管理',
-    routes: [
-      {
-        path: '/clear-consume/emission-overview',
-        name: '能源排放总览',
-        component: './clear-consume/emission-overview',
-      },
-      {
-        path: '/clear-consume/emission-monitor',
-        name: '能源排放在线监测',
-        component: './clear-consume/emission-monitor',
-      },
-      {
-        path: '/clear-consume/emission-detail',
-        name: '能源排放详情',
-        component: './clear-consume/emission-detail',
-      },
-      {
-        path: '/clear-consume/emssion-analysis',
-        name: '能源排放综合分析',
-        component: './clear-consume/emssion-analysis',
-      },
-    ],
-  },
-  {
-    path: '/energy-overview',
-    name: '用能总览',
-    component: './energy-overview',
-  },
-  {
-    path: '/energy-monitor',
-    name: '能耗监测',
-    routes: [
-      {
-        path: '/energy-monitor/realtime-data',
-        name: '实时数据',
-        component: './energy-monitor/realtime-data',
-      },
-      {
-        path: '/energy-monitor/history-data',
-        name: '历史数据',
-        component: './energy-monitor/history-data',
-      },
-    ],
+    path: '/charging-station',
+    name: '充电电站',
+    component: './charging-station',
   },
   {
     path: '/alarm-manage',
@@ -146,7 +139,7 @@ export default [
         name: '历史事件',
         component: './alarm-manage/history-event',
       },
-    ],
+    ]
   },
   {
     path: '/report-manage',

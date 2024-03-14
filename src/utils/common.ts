@@ -32,8 +32,6 @@ export const groupData = (data: any, isTable = false) => {
     return groups;
   }, {});
 
-  console.log(groupedData);
-
   // 日、月、年排序
   const sortDateType = (data: any) => {
     let dayData: any = [];

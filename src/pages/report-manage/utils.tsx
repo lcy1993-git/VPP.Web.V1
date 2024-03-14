@@ -100,8 +100,6 @@ const handleTable = (data: any) => {
         rowData[fieldDesc + '(' + fieldUnit + ')'] = timeDataMap[date];
       },
     );
-    console.log(rowData);
-
     return rowData;
   });
   return { columns, dataSource };

@@ -5,7 +5,7 @@ import SegmentedTheme from '@/components/segmented-theme';
 import { getDevicesInfo, getDevicesName } from '@/services/runtime-monitor/realtime';
 import { groupData } from '@/utils/common';
 import { useRequest } from '@umijs/max';
-import { Cascader, Form, Tooltip, message } from 'antd';
+import { Cascader, Form, Table, Tooltip, message } from 'antd';
 import { useEffect, useState } from 'react';
 import styles from './index.less';
 
@@ -15,6 +15,8 @@ const RealtimeData = () => {
   const [deviceNameSelect, setDeviceNameSelect] = useState<any[]>([]);
   // 遥测
   const [telemetry, setTelemetry] = useState([]);
+  // 色块or表格
+  const [cardOrTable, setCardOrTable] = useState<boolean>(true);
 
   // 获取设备名称
   const { run: fetchDevice } = useRequest(getDevicesName, {
@@ -67,7 +69,7 @@ const RealtimeData = () => {
   const renderTelemetry = () => {
     if (!telemetry || !telemetry.length) {
       return (
-        <div className={styles.emptyflexCenter}>
+        <div className={styles.emptyFlexCenter}>
           <Empty />
         </div>
       );
@@ -125,7 +127,7 @@ const RealtimeData = () => {
         const { code, data } = await getDevicesInfo({
           deviceCode: selectCode[selectCode.length - 1],
         });
-        if (code === 200 && data) {
+        if (code === 200 && data.ycDataList) {
           setTelemetry(data.ycDataList || []);
         }
       }
@@ -133,6 +135,34 @@ const RealtimeData = () => {
       message.warning('请选择设备');
     }
   };
+
+  // 测点表格 columns
+  const measurePointColumns = [
+    {
+      title: '序号',
+      key: 'index',
+      align: 'center' as any,
+      render: (text: any, record: any, index: number) => `${index < 9 ? '0' : ''}${index + 1}`, // 自动生成序号并补零
+    },
+    {
+      title: '数据类别',
+      dataIndex: 'dataDesc',
+      key: 'dataDesc',
+      align: 'center' as any,
+    },
+    {
+      title: '实时值',
+      dataIndex: 'data',
+      key: 'data',
+      align: 'center' as any,
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+      key: 'unit',
+      align: 'center' as any,
+    },
+  ];
 
   return (
     <ContentPage>
@@ -157,11 +187,32 @@ const RealtimeData = () => {
             </Form>
           </div>
           <div className={styles.segmentedTheme}>
-            <SegmentedTheme options={['色块', '表格']} />
+            <SegmentedTheme
+              options={['色块', '表格']}
+              getSelectedValue={(value) => setCardOrTable(value === '色块')}
+            />
           </div>
         </div>
         {/* 遥测 */}
-        <div className={styles.cardWrap}>{renderTelemetry()}</div>
+        {cardOrTable ? (
+          <div className={styles.cardWrap}>{renderTelemetry()}</div>
+        ) : (
+          <Table
+            rowKey="measurementId"
+            dataSource={groupData(telemetry, true)}
+            columns={measurePointColumns}
+            scroll={{ y: 660 }}
+            pagination={false}
+            locale={{
+              emptyText: (
+                <div style={{ marginTop: 25 }}>
+                  <Empty />
+                </div>
+              ),
+            }}
+            bordered={false}
+          />
+        )}
       </CustomCard>
     </ContentPage>
   );

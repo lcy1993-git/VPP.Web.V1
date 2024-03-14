@@ -1,0 +1,208 @@
+.overviewPage {
+  width: 100%;
+
+  .header {
+    height: 100px;
+
+    .overviewList {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100px;
+
+      .listItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 70px;
+
+        &:not(:last-child):after {
+          width: 1px;
+          height: 52px;
+          margin-left: 38px;
+          background: #0072ff;
+          content: '';
+        }
+
+        .listItemLabel dt {
+          color: #1292ff;
+          font-size: 16px;
+          line-height: 30px;
+        }
+
+        .listItemLabel dd {
+          color: #ffffff;
+          font-size: 26px;
+          line-height: 26px;
+        }
+
+        .listItemIcon:extend(.flex_center) {
+          width: 70px;
+          height: 60px;
+          margin-right: 15px;
+          background-image: url('@/assets/image/base/listItemBg.png');
+
+          .iconSize {
+            font-size: 28px;
+          }
+        }
+      }
+
+      .electricFlex {
+        flex: 1.2;
+      }
+
+      .chargeFlex {
+        flex: 1;
+      }
+    }
+  }
+  .centerContainer {
+    width: 100%;
+    height: 461px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+
+    .centerBody {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+      padding-top: 12px;
+
+      .leftContainer {
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        height: 100%;
+
+        .proportion {
+          flex: 1;
+
+          .title {
+            position: relative;
+            height: 36px;
+            color: #0084ff;
+            font-weight: bold;
+            font-size: 20px;
+            font-family: PingFang SC;
+            line-height: 32px;
+            text-align: center;
+
+            &::before {
+              position: absolute; /* 绝对定位 */
+              top: 0;
+              left: 90px;
+              width: 14px;
+              height: 36px;
+              background-image: url('@/assets/image/base/bracket.png');
+              content: '';
+            }
+
+            &::after {
+              position: absolute; /* 绝对定位 */
+              top: 0;
+              right: 100px;
+              width: 14px;
+              height: 36px;
+              background-image: url('@/assets/image/base/bracket.png');
+              transform: scaleX(-1);
+              content: '';
+            }
+          }
+        }
+      }
+
+      .rightContainer {
+        flex: 1;
+      }
+    }
+
+    .buttons {
+      display: flex;
+
+      .btn {
+        width: 101px;
+        height: 33px;
+        line-height: 33px;
+        text-align: center;
+      }
+
+      .btnLeft {
+        background: url('@/assets/image/base/leftButton.png');
+      }
+
+      .btnLeftActive {
+        background: url('@/assets/image/base/leftButtonActive.png');
+      }
+
+      .btnRight {
+        margin-left: 5px;
+        background: url('@/assets/image/base/rightButton.png');
+      }
+
+      .btnRightActive {
+        margin-left: 5px;
+        background: url('@/assets/image/base/rightButtonActive.png');
+      }
+    }
+  }
+
+  .bottomContainer {
+    width: 100%;
+    height: 360px;
+  }
+}
+
+.averageList {
+  display: flex;
+  align-items: center;
+  height: 140px;
+  margin-left: 10px;
+
+  .averageListItem {
+    display: flex;
+    align-items: center;
+    width: 222px;
+    height: 76px;
+    margin-left: 10px;
+    background: rgba(0, 132, 255, 0);
+    border: 1px solid;
+    border-radius: 8px;
+    border-image: linear-gradient(0deg, #00297c, #0054ee) 10 10;
+
+    .electricPrice {
+      width: 39px;
+      height: 45px;
+      margin-right: 12px;
+      margin-left: 8px;
+      background-image: url('@/assets/image/base/electricPrice.png');
+    }
+
+    .electricCharge {
+      width: 39px;
+      height: 45px;
+      margin-right: 12px;
+      margin-left: 29px;
+      background-image: url('@/assets/image/base/electricCharge.png');
+    }
+
+    .listItemLabel dt {
+      color: #ffffff;
+      font-weight: 400;
+      font-size: 14px;
+      font-family: PingFang SC;
+      line-height: 23px;
+      opacity: 0.8;
+    }
+
+    .listItemLabel dd {
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 24px;
+
+      font-family: DIN;
+      line-height: 23px;
+    }
+  }
+}

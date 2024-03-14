@@ -42,7 +42,23 @@ export default [
         name: '能耗结构分析',
         component: './energy-manage/structural-analysis',
       },
-    ]
+    ],
+  },
+  {
+    path: '/runtime-monitor',
+    name: '运行监测',
+    routes: [
+      {
+        path: '/runtime-monitor/realtime-data',
+        name: '实时数据',
+        component: './runtime-monitor/realtime-data',
+      },
+      {
+        path: '/runtime-monitor/history-data',
+        name: '历史数据',
+        component: './runtime-monitor/history-data',
+      },
+    ],
   },
   {
     path: '/energy-analysis',
@@ -93,7 +109,7 @@ export default [
         name: '能源排放综合分析',
         component: './clear-consume/emssion-analysis',
       },
-    ]
+    ],
   },
   {
     path: '/energy-overview',
@@ -114,7 +130,7 @@ export default [
         name: '历史数据',
         component: './energy-monitor/history-data',
       },
-    ]
+    ],
   },
   {
     path: '/alarm-manage',
@@ -130,7 +146,7 @@ export default [
         name: '历史事件',
         component: './alarm-manage/history-event',
       },
-    ]
+    ],
   },
   {
     path: '/report-manage',

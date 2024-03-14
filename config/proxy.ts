@@ -17,4 +17,10 @@ export default {
     // logLevel: 'debug',
     pathRewrite: { '^/sysApi': '/' },
   },
+  '/api': {
+    target: 'http://10.6.10.28:18181',
+    changeOrigin: true,
+    // logLevel: 'debug',
+    pathRewrite: { '^/api': '/' },
+  },
 };

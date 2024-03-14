@@ -89,8 +89,20 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
-      return { ...config, url };
+      const url = config?.url;
+      return {
+        ...config,
+        url,
+        headers: {
+          ...config.headers,
+          Authorization:
+            'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjN2JjYTU3MzVlY2E0NDk0YjU5ZTMzNWZkYzgwMGFjZSIsInVzZXIiOiJ7XCJpZFwiOjMyLFwibmlja05hbWVcIjpcIuiZmuaLn-eUteWOglwiLFwiaXNTdXBlclwiOmZhbHNlfSIsImlzcyI6ImFkbWluIiwiaWF0IjoxNzEwMzEyMDk2LCJleHAiOjE3MTA5MTY4OTZ9.foDUGeWaBvfHILmIDC7ebwFyQKRet1glF-DR2QtFuBc',
+          'Access-Control-Allow-Credentials': true,
+          'Access-Control-Allow-Headers': 'x-requested-with',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      };
+      // return { ...config, url };
     },
   ],
 

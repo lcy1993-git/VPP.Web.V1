@@ -8,7 +8,7 @@ import CustomCircle from './components/CustomCircle'
 import ScrollBoardItem from './components/ScrollBoardItem'
 import ThreeMap from './components/ThreeMap'
 import CustomCharts from '@/components/custom-charts'
-import { datePickerEnum, disableDate, elasticityOverviewOptions, energyOverviewOptions, INTERVALTIME } from './utils'
+import { datePickerEnum, disableDate, elasticityOverviewOptions, energyOverviewOptions, INTERVALTIME, typicalResponse } from './utils'
 import { useRequest } from 'ahooks'
 import { getCenterData, getElasticEnergyOverView, getnergyUse, getResponseStatistic, getTypicalResponseAnalyse } from '@/services/big-screen'
 import dayjs from 'dayjs';
@@ -45,31 +45,31 @@ const Feature = () => {
   });
 
   // 区域弹性负荷概览数据请求
-  const { data: elasticEnergyOverViewData, run: fetchElasticEnergyOverView } = useRequest(getElasticEnergyOverView, {
+  const { data: elasticEnergyOverViewData } = useRequest(getElasticEnergyOverView, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
 
   // 页面中间数据
-  const { data: overviewData, run: fecthtCenterData } = useRequest(getCenterData, {
+  const { data: overviewData } = useRequest(getCenterData, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
 
   // 响应统计
-  const { data: responseStatisticData, run: fetchResponseStatistic } = useRequest(getResponseStatistic, {
+  const { data: responseStatisticData } = useRequest(getResponseStatistic, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
 
   // 典型响应分析
-  const { data: typicalResponseData, run: fetchTypicalResponseAnalyse } = useRequest(getTypicalResponseAnalyse, {
+  const { data: typicalResponseData } = useRequest(getTypicalResponseAnalyse, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
 
 
-  /** 发电量 日期改变  */
+  /** 区域用能 右侧 日期改变  */
   const datePickerChange = (date: any) => {
     if (!date) {
       return;
@@ -156,17 +156,6 @@ const Feature = () => {
     return () => {
       window.removeEventListener("resize", handleWindowResize)
     }
-  }, [])
-
-  useEffect(() => {
-    // 区域弹性负荷
-    fetchElasticEnergyOverView()
-    // 页面中间数据请求
-    fecthtCenterData()
-    // 响应统计
-    fetchResponseStatistic()
-    // 典型响应分析
-    fetchTypicalResponseAnalyse()
   }, [])
 
   // 区域用能概览请求数据
@@ -367,6 +356,7 @@ const Feature = () => {
                   dataList={pageDataHandle(typicalResponseData)}
                   height={tableHeight}
                   visibleRows={5}
+                  columns={typicalResponse}
                 />
               </div>
             </BlockWrap>

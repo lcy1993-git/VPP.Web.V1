@@ -2,7 +2,6 @@
   margin-bottom: 10px;
 }
 
-/*------------------ 特色场景大屏样式文件 start --------------------*/
 
 .featurePage {
   width: 100%;
@@ -51,6 +50,20 @@
       justify-content: flex-end;
       padding-right: 20px;
       padding-top: 30px;
+
+      .menuButton {
+        width: 80px;
+        height: 28px;
+        background-image: url('@/assets/image/big-screen/btn.png');
+        background-size: 100% 100%;
+        background-position: center center;
+        text-align: center;
+        line-height: 28px;
+        font-weight: 400;
+        font-size: 16px;
+        color: #FFFFFF;
+        cursor: pointer;
+      }
     }
   }
 
@@ -154,7 +167,58 @@
           }
         }
 
+        // 区域弹性负荷概览
+        .elasticityBody {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .elasticityTitle {
+            width: 80%;
+            height: 65px;
+            background-image: url('@/assets/image/big-screen/title-bg.png');
+            background-size: cover;
+            background-position: center center;
+            display: flex;
+            box-sizing: border-box;
 
+            .titleIcon {
+              width: 80px;
+              height: 100%;
+              background-image: url('@/assets/image/big-screen/icon.png');
+              background-size: contain;
+              background-position: center center;
+            }
+
+            .elasticityValue {
+              flex: 1;
+              height: 100%;
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
+               dt {
+                  font-weight: 500;
+                  font-size: 22px;
+                  color: #fdfeff;
+                  text-align: center;
+               }
+               dd {
+                font-weight: 400;
+                font-size: 14px;
+                color: #E7FAFF;
+                opacity: 0.6;
+                text-align: center;
+               }
+            }
+          }
+
+          .elasticityChart {
+            width: 100%;
+            flex: 1;
+            overflow: hidden;
+          }
+        }
 
       }
     }
@@ -183,6 +247,7 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          overflow: hidden;
           .title {
             font-weight: 500;
             font-size: 20px;
@@ -207,7 +272,32 @@
               color: #FFFFFF;
               text-shadow: 0px 3px 5px rgba(0,0,0,0.35);
             }
+
+            i {
+              color: #fff;
+              font-size: 46px;
+              margin-left: 3px;
+            }
           }
+        }
+      }
+
+
+      .boardModdle {
+        justify-content: space-around;
+
+        dt {
+          font-weight: 500;
+          font-size: 20px;
+          color: #0084FF;
+          text-align: center;
+          margin-bottom: 10px;
+        }
+        dd {
+          font-weight: 600;
+          font-size: 32px;
+          color: #d3ebff;
+          text-align: center;
         }
       }
 
@@ -232,6 +322,23 @@
 
 }
 
-/*------------------ 特色场景大屏样式文件 end ---------------------*/
 
+.energyOverview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
+  .energyOverviewSearch {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .energyOverviewChart {
+    width: 100%;
+    flex: 1;
+    overflow: hidden;
+  }
+}

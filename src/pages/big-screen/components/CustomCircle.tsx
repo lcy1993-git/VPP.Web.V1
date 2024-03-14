@@ -7,7 +7,7 @@ interface propsType {
   circleColor: string; // canvas圈颜色
   circleWidth: number; // 圆圈宽度
   lineWidth?: number; // 圆圈宽度
-  value: number; // 0~1的小数
+  value: number | string; // 0~1的小数
 }
 
 // 圆圈图表组件

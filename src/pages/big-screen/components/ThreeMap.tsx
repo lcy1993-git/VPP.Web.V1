@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import * as d3 from 'd3';
 import * as turf from 'turf';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Outline from './outline.png';
+import Outline from './mapbg01.png';
+import mapBg from './outline01.png';
 
 const ThreeMap = () => {
   const chart_dom: any = useRef(null);
@@ -41,7 +42,7 @@ const ThreeMap = () => {
     // 初始化相机
     const initCamera = (divWidth: number, divHeight: number) => {
       const camera = new THREE.PerspectiveCamera(2, divWidth / divHeight, 0.1, 1000);
-      camera.position.set( 0.07495576553561131,  -0.8789913218408212, 9.961011790443024);
+      camera.position.set( 0.09495576553561131,  -1.0789913218408212, 9.961011790443024);
       viewCamera.current = camera;
     };
 
@@ -66,7 +67,7 @@ const ThreeMap = () => {
     // 是否可以缩放
     control.enableZoom = true;
     // 是否可以旋转
-    control.enableRotate = false;
+    control.enableRotate = true;
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点
@@ -80,16 +81,20 @@ const ThreeMap = () => {
 
     // 地图样式
     const normalStyle = () => {
-      const material = new THREE.MeshPhongMaterial({
-        color: '#4161ff',
-        transparent: true,
-        opacity: 0.8,
-        side: THREE.FrontSide,
-        depthTest: true,
-      });
+      // const material = new THREE.MeshPhongMaterial({
+      //   color: 'red',
+      //   transparent: true,
+      //   opacity: 0.8,
+      //   side: THREE.FrontSide,
+      //   depthTest: true,
+      // });
+      // 使用TextureLoader加载贴图
+      const textureLoader1 = new THREE.TextureLoader();
+      const texture1 = textureLoader1.load(Outline); // 替换为实际的图片路径
+      const material = new THREE.MeshBasicMaterial({ map: texture1 });
       // 使用TextureLoader加载贴图
       const textureLoader = new THREE.TextureLoader();
-      const texture = textureLoader.load(Outline); // 替换为实际的图片路径
+      const texture = textureLoader.load(mapBg); // 替换为实际的图片路径
       const material2 = new THREE.MeshBasicMaterial({ map: texture });
       return [material, material2];
     };
@@ -124,7 +129,7 @@ const ThreeMap = () => {
                 shape.moveTo(x, -y);
               }
               shape.lineTo(x, -y);
-              pointsArray.push(new THREE.Vector3(x, -y, 0.1 + 0.01));
+              pointsArray.push(new THREE.Vector3(x, -y, 0.1));
             }
             lineGeometry.setFromPoints(pointsArray);
             const extrudeSettings = {

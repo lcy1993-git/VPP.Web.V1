@@ -11,8 +11,6 @@ interface Tprops {
 }
 
 const SegmentedTheme = (props: Tprops) => {
-
-
   // @ts-ignore
   const [value, setValue] = useState();
   // 获取选中值

@@ -6,13 +6,14 @@ interface propsType {
   headerRightRender?: () => ReactElement; // card header 右侧内容
   title: string; // card header 左侧标题
   children: ReactElement | string; // card 内容
+  isPaddingTop?: boolean; // 内容区域是否显示上边距
 }
 /**
  * 特色场景大屏card
  * */
 const BlockWrap = (props: propsType) => {
 
-  const { title, headerRightRender } = props;
+  const { title, headerRightRender, isPaddingTop = true } = props;
 
   return <div className={styles.itemComponent}>
     <div className={styles.componentHead}>
@@ -23,7 +24,7 @@ const BlockWrap = (props: propsType) => {
         }
       </div>
     </div>
-    <div className={styles.componentBody}>
+    <div className={styles.componentBody} style={{paddingTop: isPaddingTop ? '20px' : '0px'}}>
       { props.children }
     </div>
   </div>

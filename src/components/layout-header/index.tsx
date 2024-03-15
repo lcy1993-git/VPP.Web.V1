@@ -17,6 +17,18 @@ const LayoutHeader = () => {
     setCurrentTime(dayjs().format('YYYY年MM月DD日 HH:mm:ss'));
   }, 1000);
 
+  // 退出登录
+  const logout = () => {
+    history.push('/login');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('token');
+    localStorage.setItem('userName', '');
+    localStorage.setItem('userId', '');
+    // 关闭音频
+    localStorage.setItem('whetherPlay', '0');
+    localStorage.setItem('closeAudio', 'false');
+  }
+
 
   return <div className={styles.pageHeader}>
     <div className={styles.headerLeft}>
@@ -34,7 +46,14 @@ const LayoutHeader = () => {
         <Divider type="vertical" className={styles.divider}/>
         <Button size="small" type="text" icon={<UserOutlined />}>管理员</Button>
         <Divider type="vertical" className={styles.divider}/>
-        <Button size="small" type="text" icon={<LogoutOutlined />}>退出</Button>
+        <Button
+          size="small"
+          type="text"
+          icon={<LogoutOutlined />}
+          onClick={logout}
+        >
+          退出
+        </Button>
     </div>
   </div>
 }

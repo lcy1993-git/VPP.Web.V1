@@ -51,7 +51,7 @@ const HeatMap = () => {
 
     // 初始化地图对象
     new Map({
-      target: mapRef.current,
+      target: mapRef.current!,
       layers: [arcGISLayer, geoJSONLayer],
       view: view
     });

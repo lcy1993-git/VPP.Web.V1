@@ -7,7 +7,7 @@ import styles from './index.less';
 const ContentPage = ({ children }: any) => {
   return (
     <div className={styles.layoutPage}>
-      <div className={styles.layoutPageContainer} style={{background: 'pink'}}>{children}</div>
+      <div className={styles.layoutPageContainer}>{children}</div>
     </div>
   );
 };

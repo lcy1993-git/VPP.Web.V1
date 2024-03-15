@@ -1,4 +1,149 @@
+import styles from './index.less'
+import logo from '@/assets/image/base/logo1.png';
+import title from '@/assets/image/base/title.png'
+import { Button, Col, ConfigProvider, Form, Input, message, Row } from 'antd';
+import Captcha from 'react-captcha-code';
+import { useCallback, useRef, useState } from 'react';
+import { md5 } from 'js-md5';
+import { loginRequest } from '@/services/login';
+import { history } from '@umijs/max';
+
 const Login = () => {
-return <div>登录页面</div>
+  // 页面forn
+  const [form] = Form.useForm();
+    // 消息提示框
+    const [messageApi, contextHolder] = message.useMessage();
+    // 验证码实例
+    const captchaRef = useRef(null);
+  // 验证码
+  const [verificationCode, setVerificationCode] = useState<any>('');
+
+    const handleChange = useCallback((captcha: any) => {
+      setVerificationCode(captcha);
+    }, []);
+
+      /**
+   * 点击登录
+   * */
+  const onFinish = async (values: any) => {
+    if (verificationCode !== values.captcha) {
+      messageApi.warning('验证码错误，请重新输入');
+      // @ts-ignore
+      captchaRef.current?.refresh();
+      return;
+    }
+
+    const params = {
+      name: values.userName,
+      password: md5(values.password),
+    };
+    // @ts-ignore
+    captchaRef.current?.refresh();
+    const { code, data } = await loginRequest(params);
+    if (code === 200 && data) {
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userName', data?.name);
+      localStorage.setItem('userId', data?.id);
+      // 播放音频
+      localStorage.setItem('closeAudio', 'true');
+
+      history.push('/big-screen/feature');
+
+    }
+  };
+
+
+  return <div className={styles.loginPage}>
+    <div className={styles.loginLogo}>
+      <img src={logo} alt="同华" />
+    </div>
+    <div className={styles.loginPageContent}>
+      <div className={styles.formWrap}>
+          <div className={styles.title}>
+            <img src={title} alt="" />
+            <p>欢迎登录</p>
+          </div>
+          <div className={styles.form}>
+          <ConfigProvider
+              theme={{
+                token: {
+                  borderRadius: 2,
+                  colorTextPlaceholder: '#7993b0',
+                  controlOutline: 'transparent', // 输入组件 激活边框颜色
+                  colorBorder: '#16489f', // checkout 边框
+                  colorBgBase: '#032566', // 所有组件的基础背景色
+                  colorIcon: '#6189dd',
+                  colorText: '#FFF',
+                  colorPrimaryHover: '#0143cc',
+                },
+              }}
+            >
+              <Form onFinish={onFinish} form={form}>
+                <Form.Item
+                  className={`${styles.formItem} ${styles.user}`}
+                  name="userName"
+                  rules={[{ required: true, message: '请输入用户名！' }]}
+                >
+                  <Input
+                    placeholder="请输入用户名"
+                    bordered={false}
+                    className={styles.formItemInput}
+                    autoComplete="off"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  className={`${styles.formItem} ${styles.password}`}
+                  name="password"
+                  rules={[{ required: true, message: '请输入密码！' }]}
+                >
+                  <Input.Password
+                    placeholder="请输入密码"
+                    bordered={false}
+                    className={styles.formItemInput}
+                    autoComplete="off"
+                  />
+                </Form.Item>
+                <Row>
+                  <Col span={16}>
+                    <Form.Item
+                      className={`${styles.formItem} ${styles.code}`}
+                      name="captcha"
+                      rules={[{ required: true, message: '请输入验证码！' }]}
+                    >
+                      <Input
+                        placeholder="请输入验证码"
+                        bordered={false}
+                        className={styles.formItemInput}
+                        autoComplete="off"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={7} offset={1} className={styles.codeWrap}>
+                    <Captcha
+                      ref={captchaRef}
+                      charNum={4}
+                      width={110}
+                      height={46}
+                      onChange={handleChange}
+                      bgColor="#072c70"
+                      onClick={() => (captchaRef as any).current.refresh()}
+                    />
+                  </Col>
+                </Row>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block className={styles.submitBtn}>
+                    登录
+                  </Button>
+                </Form.Item>
+              </Form>
+              {contextHolder}
+            </ConfigProvider>
+          </div>
+      </div>
+    </div>
+    <div className={styles.loginPageFooter}><p>Powered by ©cdsrth</p></div>
+  </div>
 }
 export default Login

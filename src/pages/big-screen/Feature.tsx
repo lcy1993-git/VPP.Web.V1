@@ -212,7 +212,7 @@ const Feature = () => {
           <img src={title} alt="title" />
         </div>
         <div className={styles.headerRight}>
-          <div className={styles.menuButton} onClick={() => history.push('/energy-manage/realtime-detection')}>菜单</div>
+          <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>菜单</div>
         </div>
       </div>
       <div className={styles.content}>

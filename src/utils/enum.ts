@@ -20,3 +20,24 @@ export const ALARMLEVEL = [
   { value: 3, label: '三级告警' },
   { value: 4, label: '预警' },
 ];
+
+// 告警对应的颜色和文字
+export const ALARMCOLORANDSCRIPT = [
+  { color: '', script: '' },
+  { color: '#FF0F00', script: '一级告警' },
+  { color: '#FF7800', script: '二级告警' },
+  { color: '#FFDE00', script: '三级告警' },
+  { color: '#09b1ff', script: '预警' },
+];
+
+// 实时告警事项状态对应的颜色和文字
+export const EVENTSTATUSCOLORANDSCRIPT = [
+  { color: '#00FF96', script: '复位' },
+  { color: '#FF0F00', script: '动作' },
+];
+
+// 处理状态
+export const DEALSTATUS = [
+  { value: 0, label: '未处理' },
+  { value: 1, label: '已处理' },
+];

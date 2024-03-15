@@ -36,15 +36,8 @@ interface Option {
 
 const { RangePicker } = DatePicker;
 export const RenderSearch = (props: any) => {
-  const {
-    form,
-    searchHistoryData,
-    tableSelectRows,
-    setTableQuery,
-    setPointOption,
-    pointOption,
-    onValuesChange,
-  } = props;
+  const { form, searchHistoryData, setTableQuery, setPointOption, pointOption, onValuesChange } =
+    props;
   // 设备 options
   const [deviceOptions, setDeviceOptions] = useState<Option[]>([]);
   // number inpit

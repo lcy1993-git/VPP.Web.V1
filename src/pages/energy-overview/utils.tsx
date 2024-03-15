@@ -1,10 +1,4 @@
-import annualElectricityConsumption from '@/assets/image/energy-overview/annualElectricityConsumption.png';
-import annualElectricityCost from '@/assets/image/energy-overview/annualElectricityCost.png';
-import dailyElectricityConsumption from '@/assets/image/energy-overview/dailyElectricityConsumption.png';
-import dailyElectricityCost from '@/assets/image/energy-overview/dailyElectricityCost.png';
-import monthlyElectricityConsumption from '@/assets/image/energy-overview/monthlyElectricityConsumption.png';
-import monthlyElectricityCost from '@/assets/image/energy-overview/monthlyElectricityCost.png';
-import realTimePower from '@/assets/image/energy-overview/realTimePower.png';
+import { formatXAxis } from '@/utils/common';
 import styles from './index.less';
 import Unit from './unit';
 /** header区域 数据总览 */
@@ -16,49 +10,49 @@ export const renderOverviewData = (info: any) => {
       unit: load,
       id: 1,
       value: info?.realTimePower,
-      img: realTimePower,
+      icon: '',
     },
     {
       label: '日用电量',
       unit: electricQuantity,
       id: 2,
       value: info?.dailyElectricityConsumption,
-      img: dailyElectricityConsumption,
+      icon: 'icon-riyongdianliang',
     },
     {
       label: '月用电量',
       unit: electricQuantity,
       id: 3,
       value: info?.monthlyElectricityConsumption,
-      img: monthlyElectricityConsumption,
+      icon: 'icon-yueyongdianliang',
     },
     {
       label: '年用电量',
       unit: electricQuantity,
       id: 4,
       value: info?.annualElectricityConsumption,
-      img: annualElectricityConsumption,
+      icon: 'icon-nianyongdianliang',
     },
     {
       label: '日电费',
       unit: electricCharge,
       id: 5,
       value: info?.dailyElectricityCost,
-      img: dailyElectricityCost,
+      icon: 'icon-ridianfei',
     },
     {
       label: '月电费',
       unit: electricCharge,
       id: 6,
       value: info?.monthlyElectricityCost,
-      img: monthlyElectricityCost,
+      icon: 'icon-yuedianfei',
     },
     {
       label: '年电费',
       unit: electricCharge,
       id: 7,
       value: info?.annualElectricityCost,
-      img: annualElectricityCost,
+      icon: 'icon-niandianfei',
     },
   ];
 
@@ -69,8 +63,7 @@ export const renderOverviewData = (info: any) => {
         return (
           <div className={`${styles.listItem} ${listStyle}`} key={item.id}>
             <div className={styles.listItemIcon}>
-              {/* <i className={`${item.icon} iconfont ${styles.iconSize}`} /> */}
-              <img src={item.img} alt="" />
+              <i className={`${item.icon} iconfont ${styles.iconSize}`} />
             </div>
             <dl className={styles.listItemLabel}>
               <dt>
@@ -87,33 +80,54 @@ export const renderOverviewData = (info: any) => {
 
 /* 用电概览-平均电价、电费 */
 export const renderAverageData = (
+  chargeOrQuantity: boolean,
   averageElectricityPrice: string,
   averageElectricityCost: string,
+  averageElectricityConsumption: string,
 ) => {
-  const { electricCharge, averageElectricPrice } = Unit;
-  const averageData = [
-    {
-      label: '日平均电价',
-      unit: averageElectricPrice,
-      id: 1,
-      value: averageElectricityPrice,
-      iconClassName: 'electricPrice',
-    },
-    {
-      label: '日平均电费',
-      unit: electricCharge,
-      id: 2,
-      value: averageElectricityCost,
-      iconClassName: 'electricCharge',
-    },
-  ];
+  const { electricCharge, averageElectricPrice, electricQuantity } = Unit;
+  const averageData = chargeOrQuantity
+    ? [
+        {
+          label: '日平均电价',
+          unit: averageElectricPrice,
+          id: 1,
+          value: averageElectricityPrice,
+          icon: 'icon-ripingjundianjia',
+        },
+        {
+          label: '日平均电费',
+          unit: electricCharge,
+          id: 2,
+          value: averageElectricityCost,
+          icon: 'icon-ripingjundianfei',
+        },
+      ]
+    : [
+        {
+          label: '日平均电价',
+          unit: averageElectricPrice,
+          id: 1,
+          value: averageElectricityPrice,
+          icon: 'icon-ripingjundianjia',
+        },
+        {
+          label: '日平均电量',
+          unit: electricQuantity,
+          id: 2,
+          value: averageElectricityConsumption,
+          icon: 'icon-dianliang',
+        },
+      ];
 
   return (
     <div className={styles.averageList}>
       {averageData.map((item) => {
         return (
           <div className={styles.averageListItem} key={item.id}>
-            <div className={styles[item.iconClassName]} />
+            <div className={styles.listItemIcon}>
+              <i className={`${item.icon} iconfont ${styles.iconSize}`} />
+            </div>
             <dl className={styles.listItemLabel}>
               <dt>
                 {item.label} ({item.unit})
@@ -261,7 +275,9 @@ export const pieChart = (
   };
 };
 
+// 用电概览柱状图
 export const stackedBarChart = (
+  type: string,
   peakElectricityMap: any,
   highElectricityMap: any,
   normalElectricityMap: any,
@@ -296,7 +312,7 @@ export const stackedBarChart = (
           color: 'rgba(231, 250, 255, 0.6)', // 设置 x 轴刻度文字颜色
         },
       },
-      data: Array.from({ length: 24 }, (_, index) => String(index).padStart(2, '0') + ':00'),
+      data: formatXAxis(Object.keys(valleyElectricityMap), type),
     },
     yAxis: {
       splitLine: {

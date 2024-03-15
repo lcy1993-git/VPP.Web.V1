@@ -43,7 +43,7 @@
           background-image: url('@/assets/image/base/listItemBg.png');
 
           .iconSize {
-            font-size: 28px;
+            font-size: 26px;
           }
         }
       }
@@ -115,6 +115,12 @@
 
       .rightContainer {
         flex: 1;
+
+        .datePicker {
+          display: flex;
+          justify-content: flex-end;
+          margin-right: 12px;
+        }
       }
     }
 
@@ -171,20 +177,15 @@
     border-radius: 8px;
     border-image: linear-gradient(0deg, #00297c, #0054ee) 10 10;
 
-    .electricPrice {
-      width: 39px;
+    .listItemIcon:extend(.flex_center) {
+      width: 40px;
       height: 45px;
-      margin-right: 12px;
-      margin-left: 8px;
-      background-image: url('@/assets/image/base/electricPrice.png');
-    }
+      margin: 0 12px;
+      background-image: url('@/assets/image/icon/iconBg.png');
 
-    .electricCharge {
-      width: 39px;
-      height: 45px;
-      margin-right: 12px;
-      margin-left: 29px;
-      background-image: url('@/assets/image/base/electricCharge.png');
+      .iconSize {
+        font-size: 18px;
+      }
     }
 
     .listItemLabel dt {

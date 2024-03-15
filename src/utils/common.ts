@@ -105,3 +105,11 @@ export const judgmentIsToday = (date: any) => {
   // 判断是否是当天
   return date.isSame(today, 'day');
 };
+
+// 根据日期类型格式化x轴数据
+export const formatXAxis = (data: any, type: string) => {
+  const formatType: any = { month: 'DD', year: 'MM' };
+  return data.map((item: any) => {
+    return type === 'day' ? item.substring(0, 5) : dayjs(item).format(formatType[type]);
+  });
+};

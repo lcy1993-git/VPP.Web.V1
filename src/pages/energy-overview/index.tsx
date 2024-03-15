@@ -1,17 +1,10 @@
-/*
- * @Author: lzq 1204263312@qq.com
- * @Date: 2024-03-11 09:58:25
- * @LastEditors: lzq 1204263312@qq.com
- * @LastEditTime: 2024-03-13 16:21:21
- * @FilePath: \VPP.Web.V1\src\pages\energy-overview\index.tsx
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import ContentPage from '@/components/content-page';
 import CustomCard from '@/components/custom-card';
 import CustomCharts from '@/components/custom-charts';
+import CustomDatePicker from '@/components/custom-datePicker';
 import { getElectricOverview, getInformation, getPowerOverview } from '@/services/energy-overview';
 import { useRequest } from '@umijs/max';
-import { DatePicker, Space } from 'antd';
+import { Space } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import styles from './index.less';
@@ -28,6 +21,10 @@ const EnergyOverview = () => {
   const date = dayjs(new Date()).format('YYYY-MM-DD');
   // 用电概览按钮组（默认电费）
   const [chargeOrQuantity, setChargeOrQuantity] = useState<boolean>(true);
+  // 用电概览日期
+  const [dateValue, setDateValue] = useState<string>(date);
+  // 用电概览日期类型
+  const [type, setType] = useState<string>('day');
 
   // 查询上方信息
   const { data: information } = useRequest(getInformation, {
@@ -58,19 +55,21 @@ const EnergyOverview = () => {
       <div className={styles.buttons}>
         <div
           className={`${styles.btn} ${chargeOrQuantity ? styles.btnLeftActive : styles.btnLeft} `}
+          style={{ paddingLeft: '10px' }}
           onClick={() => setChargeOrQuantity(true)}
         >
           <Space>
-            {/* <i className="iconfont">&#xe620;</i> */}
+            <i className="iconfont">&#xe63d;</i>
             <span>电费</span>
           </Space>
         </div>
         <div
           className={`${styles.btn} ${chargeOrQuantity ? styles.btnRight : styles.btnRightActive} `}
           onClick={() => setChargeOrQuantity(false)}
+          style={{ paddingRight: '10px' }}
         >
           <Space>
-            {/* <i className="iconfont">&#xe621;</i> */}
+            <i className="iconfont">&#xe644;</i>
             <span>电量</span>
           </Space>
         </div>
@@ -81,18 +80,21 @@ const EnergyOverview = () => {
   // 负荷概览日历
   const renderRight = () => {
     return (
-      <DatePicker
-        defaultValue={dayjs(date, 'YYYY-MM-DD')}
-        onChange={(value) => fetchPowerOverview(dayjs(value).format('YYYY-MM-DD'))}
-        allowClear={false}
+      <CustomDatePicker
+        datePickerType={'day'}
+        onChange={(value: string) => fetchPowerOverview(dayjs(value).format('YYYY-MM-DD'))}
       />
     );
   };
 
   useEffect(() => {
     fetchPowerOverview(date);
-    fetchElectricOverview(date, 1, 'day');
   }, []);
+
+  // 电费/电量切换
+  useEffect(() => {
+    fetchElectricOverview(dateValue, chargeOrQuantity, type);
+  }, [chargeOrQuantity, dateValue, type]);
 
   return (
     <ContentPage>
@@ -112,8 +114,10 @@ const EnergyOverview = () => {
                 {/* 平均电价及电费 */}
                 <div>
                   {renderAverageData(
+                    chargeOrQuantity,
                     electricOverview?.averageElectricityPrice,
                     electricOverview?.averageElectricityCost,
+                    electricOverview?.averageElectricityConsumption,
                   )}
                 </div>
                 {/* 尖峰平台占比 */}
@@ -132,12 +136,22 @@ const EnergyOverview = () => {
               </div>
               {/* 右侧柱状 */}
               <div className={styles.rightContainer}>
+                <div className={styles.datePicker}>
+                  <CustomDatePicker
+                    datePickerType={''}
+                    getTypeAndDate={(type, date) => {
+                      setDateValue(date);
+                      setType(type);
+                    }}
+                  />
+                </div>
                 <CustomCharts
                   options={stackedBarChart(
+                    type,
                     electricOverview?.peakElectricityMap,
                     electricOverview?.highElectricityMap,
                     electricOverview?.normalElectricityMap,
-                    electricOverview?.valleyElectricityMap
+                    electricOverview?.valleyElectricityMap,
                   )}
                   loading={electricOverviewLoading}
                 />

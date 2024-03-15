@@ -75,7 +75,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // 自定义导航栏折叠按钮
       <div style={{ width: '100%', paddingLeft: '7px' }} onClick={onCollapse}>
           <i className="iconfont" style={{ fontSize: 12 }}>
-          &#xe63c;
+          &#xe631;
           </i>
       </div>
     ),

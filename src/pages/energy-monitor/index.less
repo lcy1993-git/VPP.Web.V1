@@ -1,0 +1,262 @@
+.monitorPage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+
+  .pageLeft {
+    width: 320px;
+    height: 100%;
+    margin-right: 20px;
+
+    .pageLeftSide {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        height: 60px;
+        font-weight: bold;
+        font-size: 20px;
+        color: #0190FF;
+        line-height: 60px;
+        padding-left: 12px;
+        border-bottom: 1px solid #003199;
+      }
+
+      .content {
+        flex: 1;
+        width: 100%;
+        padding: 0 12px;
+        display: flex;
+        flex-direction: column;
+
+        .search {
+          width: 100%;
+          height: 68px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .table {
+          width: 100%;
+          flex: 1;
+          overflow: hidden;
+          border: 1px solid #003199;
+          border-bottom: none;
+        }
+      }
+    }
+
+  }
+
+  .pageRight {
+    flex: 1;
+    height: 100%;
+
+    .content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .contentTitle {
+        width: 100%;
+        height: 60px;
+        border-bottom: 1px solid #003199;
+        display: flex;
+        align-items: center;
+
+        .name {
+          font-weight: 600;
+          font-size: 20px;
+          color: #FFFFFF;
+          text-indent: 20px;
+        }
+      }
+
+      .contentMain {
+        flex: 1;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .mainBody {
+          width: 100%;
+          flex: 1;
+          border-bottom: 1px solid #003199;
+          display: flex;
+
+          .mainBodyLeft {
+            width: 470px;
+            height: 100%;
+            border-right: 1px solid #003199;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .mainBodyRight {
+            flex: 1;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+          }
+        }
+
+
+        .mainBody:nth-of-type(2) {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  // 模块布局样式
+  .areaHead {
+    width: 100%;
+    height: 54px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px 0 30px;
+
+    .areaHeadTitle {
+      font-weight: bold;
+      font-size: 16px;
+      color: #FFFFFF;
+      position: relative
+    }
+
+    .areaHeadTitle::after {
+      position: absolute;
+      content: '';
+      width: 2px;
+      height: 16px;
+      background: #fff;
+      left: -10px;
+      top: 2px;
+    }
+  }
+
+  .areaBody {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 30px;
+  }
+
+  // 能耗总览
+  .overview {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-bottom: 20px;
+  }
+
+  // 能源结构
+  .structure {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .structureHead {
+      width: 100%;
+      height: 150px;
+      display: flex;
+      justify-content: space-between;
+
+      .listTtem {
+        width: 116px;
+        height: 120px;
+        background-image: url('@/assets/image/energy-monitor/01.png');
+        background-position: bottom center;
+        background-repeat: no-repeat;
+      }
+
+      .listTtem:nth-of-type(2) {
+        background-image: url('@/assets/image/energy-monitor/02.png');
+      }
+
+      .listTtem:nth-of-type(3) {
+        background-image: url('@/assets/image/energy-monitor/03.png');
+      }
+
+      .itemHead {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        p:nth-of-type(1) {
+          font-weight: bold;
+          font-size: 20px;
+          color: #FFFFFF;
+          line-height: 30px;
+        }
+
+        p:nth-of-type(2) {
+          font-weight: 400;
+          font-size: 16px;
+          color: #FFFFFF;
+          opacity: 0.8;
+        }
+      }
+
+      .itemTitle {
+        font-weight: 400;
+        font-size: 16px;
+        color: #39ADFF;
+        text-align: center;
+      }
+    }
+
+    .structureChart {
+      width: 100%;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+
+
+// 进度条样式
+.progress {
+  width: 100%;
+  height: 50px;
+
+  .title {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+
+    span:nth-of-type(1) {
+      font-weight: 400;
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+
+    span:nth-of-type(2) {
+      font-weight: bold;
+      font-size: 16px;
+      color: #0084FF;
+    }
+  }
+
+  .canvas {
+    width: 100%;
+    height: 20px;
+  }
+}

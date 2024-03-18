@@ -113,3 +113,72 @@ export const formatXAxis = (data: any, type: string) => {
     return type === 'day' ? item.substring(0, 5) : dayjs(item).format(formatType[type]);
   });
 };
+
+/**
+ * 去掉小数点
+ * */
+export const roundNumbers = (value: string) => {
+  if (!value) return 0;
+  return parseFloat(value).toFixed(2);
+};
+
+/**
+ * 轮询时间间隔
+ * */
+export const INTERVALTIME = 1000 * 60 * 1;
+
+// psc状态
+export const handleInverterStatus_psc = (status: any) => {
+  const inverterStatus = parseInt(status);
+  if (inverterStatus === 1) {
+    return '运行';
+  } else {
+    return '停止';
+  }
+};
+
+// 电池簇状态
+export const handleInverterStatus_cluster = (status: any) => {
+  const inverterStatus = parseInt(status);
+  if (inverterStatus === 0) {
+    return '运行';
+  } else if (inverterStatus === 1) {
+    return '禁冲';
+  } else if (inverterStatus === 2) {
+    return '禁放';
+  } else if (inverterStatus === 3) {
+    return '待机';
+  } else {
+    return '停机';
+  }
+};
+
+// 空调状态
+export const handleInverterStatus_air = (status: any) => {
+  const inverterStatus = parseInt(status);
+  if (inverterStatus === 0) {
+    return '停止';
+  } else if (inverterStatus === 1) {
+    return '制冷';
+  } else if (inverterStatus === 2) {
+    return '制冷';
+  } else if (inverterStatus === 3) {
+    return '制热';
+  } else if (inverterStatus === 4) {
+    return '自动';
+  } else if (inverterStatus === 5) {
+    return '-';
+  } else if (inverterStatus === 6) {
+    return '通风';
+  } else if (inverterStatus === 7) {
+    return '除湿';
+  } else if (inverterStatus === 8) {
+    return '待机';
+  } else if (inverterStatus === 9) {
+    return '运行';
+  } else if (inverterStatus === 10) {
+    return '故障';
+  } else {
+    return '停机';
+  }
+};

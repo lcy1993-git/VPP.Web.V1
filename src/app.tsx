@@ -75,7 +75,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // 自定义导航栏折叠按钮
       <div style={{ width: '100%', paddingLeft: '7px' }} onClick={onCollapse}>
           <i className="iconfont" style={{ fontSize: 12 }}>
-          &#xe63c;
+          &#xe631;
           </i>
       </div>
     ),
@@ -96,11 +96,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 colorBgBase: '#032566', // 所有组件的基础背景色
                 colorBgContainer: 'transparent',
                 colorError: '#ff0000',
-                colorBgElevated: ' #001d51', // 模态框、悬浮框背景色
+                colorBgElevated: '#03225b', // 模态框、悬浮框背景色
                 controlItemBgActiveHover: 'rgba(0, 84, 255, 0.2)', // 控制组件项在鼠标悬浮且激活状态下的背景颜色
                 controlItemBgHover: 'rgba(0, 84, 255, 0.2)', // 下拉框，手鼠hover背景色
                 controlItemBgActive: 'rgba(0, 84, 255, 0.3)', // 控制组件项在激活状态下的背景颜色
               },
+              components: {
+                Segmented: {
+                  itemSelectedBg: '#1292ff',
+                }
+              }
             }}
           >
             {children}

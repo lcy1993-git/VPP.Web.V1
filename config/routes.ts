@@ -29,20 +29,9 @@ export default [
     component: './big-screen/BulletinBoard',
   },
   {
-    path: '/energy-manage',
+    path: '/energy-monitor',
     name: '能耗监测',
-    routes: [
-      {
-        path: '/energy-manage/realtime-detection',
-        name: '能耗实时监测',
-        component: './energy-manage/realtime-detection',
-      },
-      {
-        path: '/energy-manage/structural-analysis',
-        name: '能耗结构分析',
-        component: './energy-manage/structural-analysis',
-      },
-    ]
+    component: './energy-monitor',
   },
   {
     path: '/energy-analysis',
@@ -55,14 +44,9 @@ export default [
     component: './enterprise-panel',
   },
   {
-    path: '/smart-energy',
-    name: '智慧能源',
-    component: './smart-energy',
-  },
-  {
-    path: '/smart-analysis',
-    name: '智能分析',
-    component: './smart-analysis',
+    path: '/dcs-energy-monitor',
+    name: '分布式能源监测',
+    component: './dcs-energy-monitor',
   },
   {
     path: '/report-forms',
@@ -74,26 +58,36 @@ export default [
     name: '清洁能源消费管理',
     routes: [
       {
-        path: '/clear-consume/emission-overview',
-        name: '能源排放总览',
-        component: './clear-consume/emission-overview',
+        path: '/clear-consume/carbon-overview',
+        name: '碳排放总览',
+        component: './clear-consume/carbon-overview',
       },
       {
-        path: '/clear-consume/emission-monitor',
-        name: '能源排放在线监测',
-        component: './clear-consume/emission-monitor',
+        path: '/clear-consume/carbon-monitor',
+        name: '碳排放监测',
+        component: './clear-consume/carbon-monitor',
       },
       {
-        path: '/clear-consume/emission-detail',
-        name: '能源排放详情',
-        component: './clear-consume/emission-detail',
+        path: '/clear-consume/carbon-detail',
+        name: '碳排放详情',
+        component: './clear-consume/carbon-detail',
       },
       {
-        path: '/clear-consume/emssion-analysis',
-        name: '能源排放综合分析',
-        component: './clear-consume/emssion-analysis',
+        path: '/clear-consume/carbon-analysis',
+        name: '碳排放分析',
+        component: './clear-consume/carbon-analysis',
       },
     ]
+  },
+  {
+    path: '/enterprise-manage',
+    name: '企业管理',
+    component: './enterprise-manage',
+  },
+  {
+    path: '/devices-manage',
+    name: '设备管理',
+    component: './devices-manage',
   },
   {
     path: '/energy-overview',
@@ -101,20 +95,35 @@ export default [
     component: './energy-overview',
   },
   {
-    path: '/energy-monitor',
-    name: '能耗监测',
+    path: '/runtime-monitor',
+    name: '运行监测',
     routes: [
       {
-        path: '/energy-monitor/realtime-data',
+        path: '/runtime-monitor/realtime-data',
         name: '实时数据',
-        component: './energy-monitor/realtime-data',
+        component: './runtime-monitor/realtime-data',
       },
       {
-        path: '/energy-monitor/history-data',
+        path: '/runtime-monitor/history-data',
         name: '历史数据',
-        component: './energy-monitor/history-data',
+        component: './runtime-monitor/history-data',
       },
     ]
+  },
+  {
+    path: '/power-station',
+    name: '光伏电站',
+    component: './power-station',
+  },
+  {
+    path: '/energy-station',
+    name: '储能电站',
+    component: './energy-station',
+  },
+  {
+    path: '/charging-station',
+    name: '充电电站',
+    component: './charging-station',
   },
   {
     path: '/alarm-manage',

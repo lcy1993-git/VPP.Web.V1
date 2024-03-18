@@ -8,6 +8,7 @@ interface CurrentFileInfo {
   height: number;// 列表高度
   visibleRows?: number;// 可视行数(默认5行)
   interval?: number;// 滚动速度(默认2500ms)
+  columns: any[]
 }
 
 // 典型响应分析---目前计划名称枚举
@@ -15,7 +16,7 @@ const emunName = ['调峰', '填谷']
 
 // 电站概览
 const ScrollBoardItem = (props: CurrentFileInfo) => {
-  const { dataList, height, visibleRows = 5, interval = 2500 } = props;
+  const { dataList, height, visibleRows = 5, interval = 2500, columns } = props;
   const containerRef = useRef(null);
   // 定时器
   const timerRef = useRef();
@@ -83,12 +84,12 @@ const ScrollBoardItem = (props: CurrentFileInfo) => {
     <table className={styles.theadContainer}>
       <thead>
         <tr>
-          <th>排名</th>
-          <th>目前计<br />划名称</th>
-          <th>累计偏<br />差值</th>
-          <th>响应偏<br />差值</th>
-          <th>负荷偏<br />差功率</th>
-          <th>响应企业</th>
+          {
+            columns?.map(item => {
+              return <th key={item.key} style={{width: item.width}}
+              >{item.name}</th>
+            })
+          }
         </tr>
       </thead>
     </table>
@@ -106,45 +107,22 @@ const ScrollBoardItem = (props: CurrentFileInfo) => {
     >
       <table className={styles.tbodyContainer} >
         <colgroup>
-          <col className={styles.colContainer} />
-          <col className={styles.colContainer} />
-          <col className={styles.colContainer} />
-          <col className={styles.colContainer} />
-          <col className={styles.colContainer} />
-          <col className={styles.colContainer} />
+        {
+            columns?.map(item => {
+              return <col key={item.key} className={styles.colContainer} style={{width: item.width}}/>
+            })
+          }
+
         </colgroup>
         <tbody>
           {dataList &&
             dataList.map((item: any, index: number) => (
               <tr key={item.planId} style={{ height: `${calculatedRowHeight}px` }}>
-                <td className={styles.tdContainer} >
-                  {index + 1}
-                </td>
-                <td className={styles.tdContainer}>
-                  <Tooltip title={emunName[item?.planType] || '未知'}>
-                    {emunName[item?.planType] || '未知'}
-                  </Tooltip>
-                </td>
-                <td className={styles.tdContainer}>
-                  <Tooltip title={item?.totalDeviation}>
-                    {item?.totalDeviation}
-                  </Tooltip>
-                </td>
-                <td className={styles.tdContainer}>
-                  <Tooltip title={item?.responseDeviationRate}>
-                    {item?.responseDeviationRate}
-                  </Tooltip>
-                </td>
-                <td className={styles.tdContainer}>
-                  <Tooltip title={parseFloat(item?.deviationPower).toFixed(2)}>
-                    {parseFloat(item?.deviationPower).toFixed(2)}
-                  </Tooltip>
-                </td>
-                <td className={styles.tdContainer}>
-                  <Tooltip title={item?.enterprise}>
-                    {item?.enterprise}
-                  </Tooltip>
-                </td>
+                {
+                  columns?.map(col => {
+                    return col.render(item, col, index)
+                  })
+                }
               </tr>
             ))
           }

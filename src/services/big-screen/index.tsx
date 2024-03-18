@@ -39,3 +39,48 @@ export const getTypicalResponseAnalyse = () => {
   });
 }
 
+/*--------------------------能源综合看板-------------------------------*/
+// 综能看板--- 区域用能管理 --- 现状
+export const getStatusQuo = () => {
+  return request(`/api/bigScreen/energyBoard/energyManageCurrent`, {
+    method: 'GET',
+  });
+}
+
+// 综能看板--- 区域用能管理 --- 趋势
+export const getEnergyTrend = (params: any) => {
+  return request(`/api/bigScreen/energyBoard/energyManageTrend`, {
+    method: 'GET',
+    params
+  });
+}
+
+// 综能看板--- 区域用能管理 --- 特征
+export const getEnergyManageFeature = (params: any) => {
+  return request(`/api/bigScreen/energyBoard/energyManageFeature`, {
+    method: 'GET',
+    params
+  });
+}
+
+// 综能看板--- 企业用能监测
+export const getEnterpriseEnergyMonitor = (params: any) => {
+  return request(`/api/bigScreen/energyBoard/enterpriseEnergyMonitor`, {
+    method: 'GET',
+    params
+  });
+}
+
+// 综能看板--- 企业用能监测
+export const getElasticEnergyManage = () => {
+  return request(`/api/bigScreen/energyBoard/elasticEnergyManage`, {
+    method: 'GET',
+  });
+}
+
+// 综能看板--- 中间数据
+export const getBoardCenterData = () => {
+  return request(`/api/bigScreen/energyBoard/centerData`, {
+    method: 'GET',
+  });
+}

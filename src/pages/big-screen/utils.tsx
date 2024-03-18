@@ -248,12 +248,6 @@ export const elasticityOverviewOptions = (data: any) => {
   return {
     tooltip: {
       trigger: 'axis',
-      // axisPointer: {
-      //   type: 'cross',
-      //   label: {
-      //     backgroundColor: '#6a7985'
-      //   }
-      // }
     },
     legend: {
       data: ['实时负荷', '基线负荷'],

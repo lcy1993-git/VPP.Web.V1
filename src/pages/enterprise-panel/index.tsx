@@ -118,6 +118,7 @@ const EnterprisePanel = () => {
 
   return <ContainerPage>
     <ContentComponent title="企业看板" renderSearch={renderSearch}>
+      <div className={styles.panelPage}>
       <GeneralTable
         ref={tableRef}
         initTableAjax={false}
@@ -144,6 +145,7 @@ const EnterprisePanel = () => {
           />
         </div>
       </Modal>
+      </div>
     </ContentComponent>
   </ContainerPage>
 }

@@ -1,3 +1,4 @@
+import ContainerPage from '@/components/container-page';
 import ContentComponent from '@/components/content-component';
 import ContentPage from '@/components/content-page';
 import GeneralTable from '@/components/general-table';
@@ -163,7 +164,7 @@ const HistoryData = () => {
   };
 
   return (
-    <ContentPage>
+    <ContainerPage>
       <ContentComponent title="历史数据">
         <div className={styles.pageContainer}>
           <div className={styles.searchItem} ref={searchItemRef}>
@@ -210,7 +211,7 @@ const HistoryData = () => {
           </div>
         </div>
       </ContentComponent>
-    </ContentPage>
+    </ContainerPage>
   );
 };
 export default HistoryData;

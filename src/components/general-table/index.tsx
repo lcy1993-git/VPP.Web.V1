@@ -111,8 +111,6 @@ const withGeneralTable =
           tableData?.data &&
           Object.prototype.toString.call(tableData.data.dataList) === '[object Array]'
         ) {
-          console.log(2);
-
           const {
             dataList: data,
             pageNum: currentPage,

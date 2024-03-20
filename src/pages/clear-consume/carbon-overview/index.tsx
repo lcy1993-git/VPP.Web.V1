@@ -212,7 +212,7 @@ const CarbonOvervirw = () => {
         </CustomCard>
       </div>
       <div className={styles.contentRight}>
-        <CustomCard title="碳排放热力图">
+        <CustomCard>
           <HeatMap />
         </CustomCard>
       </div>

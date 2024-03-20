@@ -608,7 +608,7 @@ const EnergyStation = () => {
               </div>
               {substationId ? (
                 <GeneralTable
-                  url="/homeApi/alarm/getRealTimeAlarmEvent"
+                  url="/api/alarm/getRealTimeAlarmEvent"
                   ref={tableRef}
                   columns={columns}
                   rowKey="id"

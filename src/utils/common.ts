@@ -12,6 +12,7 @@ export const handleInverterStatus = (status: any) => {
     return '异常';
   }
 };
+
 // 遥测分组
 export const groupData = (data: any, isTable = false) => {
   // 根据单位进行分组
@@ -108,9 +109,9 @@ export const judgmentIsToday = (date: any) => {
 
 // 根据日期类型格式化x轴数据
 export const formatXAxis = (data: any, type: string) => {
-  const formatType: any = { month: 'DD', year: 'MM' };
+  const formatType: any = { day: 'HH:mm', month: 'DD', year: 'MM' };
   return data.map((item: any) => {
-    return type === 'day' ? item.substring(0, 5) : dayjs(item).format(formatType[type]);
+    return dayjs(item).format(formatType[type]);
   });
 };
 

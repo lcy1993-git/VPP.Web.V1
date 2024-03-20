@@ -1,5 +1,6 @@
 import Empty from '@/components/empty';
 import {
+  handleDiffMins,
   handleInverterStatus,
   handleInverterStatus_air,
   handleInverterStatus_cluster,

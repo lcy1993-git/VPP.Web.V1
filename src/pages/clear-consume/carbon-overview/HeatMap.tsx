@@ -124,7 +124,16 @@ const extent = transformExtent([102.989623, 30.090979, 104.896262, 31.437765], '
       blur: 15, // 模糊程度，可调整
       radius: 8 // 半径，可调整
     })
+
+   
     map.addLayer(heatMapLayer);
+
+    map.on('click', function(evt:any) {
+      map.forEachFeatureAtPixel(evt.pixel, (feature: any, layer: any) =>{
+        if(layer !== geoJSONLayer)
+        console.log(feature);
+      })
+  });
   }
 
   useEffect(() => {

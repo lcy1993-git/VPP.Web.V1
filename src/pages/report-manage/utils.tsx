@@ -86,7 +86,7 @@ const handleTable = (data: any) => {
   ];
   // 构建表格数据
   const dataSource = dates.map((date) => {
-    const rowData = { date };
+    const rowData: any = { date };
     data.forEach(
       ({
         timeDataMap,

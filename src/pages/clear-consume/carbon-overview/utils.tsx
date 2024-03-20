@@ -1,3 +1,4 @@
+import * as echarts from 'echarts';
 
 // 水波图配置
 export const waterWaveOption = (data: any) => {
@@ -102,6 +103,16 @@ export const carbonTrendsOption = (data: any, type: string) => {
           valueFormatter: function (value: string) {
             return value + ' 吨';
           }
+        },
+        itemStyle: {
+          borderRadius: [5, 5, 0, 0],
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 1,
+            color: '#eee41e'
+          }, {
+            offset: 0,
+            color: '#fc7007'
+          }])
         },
         data: Object.values(data[item])
       }

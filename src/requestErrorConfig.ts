@@ -92,8 +92,7 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       const url = config?.url;
-      const token =
-        'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI2ZjA4ZWFkMmI0ZGU0YzdkOTBmNGM1NjgwMTFjYTQ4NyIsInVzZXIiOiJ7XCJpZFwiOjEsXCJuaWNrTmFtZVwiOlwi566h55CG5ZGYXCIsXCJpc1N1cGVyXCI6dHJ1ZX0iLCJpc3MiOiJhZG1pbiIsImlhdCI6MTcxMDMxNzI2NiwiZXhwIjoxNzEwOTIyMDY2fQ.EIYqMIms81M8-Ribwtm64YE8PZHTfSnpvNLUmUqF64g';
+      const token = localStorage.getItem('token');
       if (token) {
         return {
           ...config,

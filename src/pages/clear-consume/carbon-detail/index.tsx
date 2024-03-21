@@ -6,7 +6,10 @@ import { exportExcel } from "@/utils/xlsx"
 import { SearchOutlined } from "@ant-design/icons"
 import { Button, Col, Form, Input, message, Row, Select, Tag } from "antd"
 import { useEffect, useRef, useState } from "react"
-
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // 引入中文语言包
+import React from "react";
+dayjs.locale('zh-cn');
 
 const CarbonDetail = () => {
   // form
@@ -165,7 +168,7 @@ const CarbonDetail = () => {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="关键字" name="name">
+              <Form.Item label="关键字" name="search">
                 <Input placeholder="请输入关键字" style={{ width: 200 }}/>
               </Form.Item>
             </Col>
@@ -177,12 +180,6 @@ const CarbonDetail = () => {
               </Form.Item>
             </Col>
           </Row>
-
-
-
-
-
-
         </Form>
       </>
     );
@@ -207,9 +204,9 @@ const CarbonDetail = () => {
         requestType="get"
         type="checkbox"
         filterParams={{
-          date: '2024-03-20',
-          type: 'area',
-          unit: 'year'
+          date: dayjs(new Date()).format("YYYY-MM-DD"),
+          type: 'null',
+          unit: 'day'
         }}
       />
       {contextHolder}

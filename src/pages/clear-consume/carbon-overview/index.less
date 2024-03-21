@@ -1,4 +1,3 @@
-
 .marginLR30 {
   margin: 0 30px;
 }
@@ -18,6 +17,7 @@
   .carbonHead {
     width: 100%;
     height: auto;
+
     .headSide {
       width: 100%;
       height: 108px;
@@ -44,7 +44,7 @@
 
           i {
             font-size: 40px;
-            color:#00a2eb;
+            color: #00a2eb;
           }
         }
 
@@ -88,6 +88,7 @@
       flex: 2;
       height: 100%;
       margin-right: 20px;
+
       .waterWrap {
         width: 100%;
         height: 100%;
@@ -98,6 +99,7 @@
           height: 100%;
           overflow: hidden;
         }
+
         .chartsDesc {
           flex: 2;
           height: 100%;
@@ -105,8 +107,10 @@
           flex-direction: column;
           justify-content: center;
           padding-bottom: 40px;
+
           p {
             line-height: 40px;
+
             span {
               font-weight: 400;
               font-size: 16px;
@@ -120,13 +124,16 @@
               font-size: 28px;
             }
           }
-          p:nth-of-type(1) i{
+
+          p:nth-of-type(1) i {
             color: #FFFFFF;
           }
-          p:nth-of-type(2) i{
+
+          p:nth-of-type(2) i {
             color: #ff0101;
           }
-          p:nth-of-type(3) i{
+
+          p:nth-of-type(3) i {
             color: #27fda3;
           }
         }
@@ -145,4 +152,120 @@
     height: 370px;
     margin-bottom: 20px;
   }
+}
+
+.olPopup {
+  position: absolute;
+  background-color: white;
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 1px 4px #FFC125);
+  padding: 15px;
+  border-radius: 10px;
+  // border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 200px;
+  color: #000;
+
+  // background: linear-gradient(0deg, #0A2251 0%, #093173 99%);
+border: 2px solid;
+
+  .olPopup:after,
+  .olPopup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .olPopup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+  }
+
+  .olPopup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+  }
+
+  .olPopupCloser {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    color: red;
+  }
+
+  .olPopupCloser:after {
+    content: "✖";
+  }
+
+  .olPopupContentLable {
+    font-family: PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #000000;
+  }
+
+  .olPopupContentValue {
+    font-family: PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FF6B12;
+  }
+}
+
+.mapText {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: 2px;
+  height: 16px;
+  background: #fff;
+  content: '';
+  z-index: 99;
+}
+
+.mapHead {
+  position: absolute;
+  padding-left: 23px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: left;
+  margin-top: 10px;
+  z-index: 99;
+}
+.legend {
+  width: 200px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.legendGradient {
+  height: 20px;
+  background: linear-gradient(to right, green, yellow, red);
+  border-radius: 5px;
+}
+
+.legendLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.legendLabel {
+  font-size: 12px;
+  color: #333;
 }

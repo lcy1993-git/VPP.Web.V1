@@ -1,13 +1,10 @@
-import ContentPage from '@/components/content-page'
 import CustomCard from '@/components/custom-card'
-import { DatePicker, Form, Select, Space } from 'antd'
+import {  Form, Select } from 'antd'
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import 'echarts-liquidfill';
 import styles from './index.less'
 import { carbonTrendsOption, waterWaveOption } from './utils';
-import SegmentedTheme from '@/components/segmented-theme';
-import { datePickerEnum, disableDate } from '@/pages/big-screen/utils';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
@@ -167,7 +164,7 @@ const CarbonOvervirw = () => {
         </CustomCard>
       </div>
       <div className={styles.contentRight}>
-        <CustomCard title="碳排放热力图">
+        <CustomCard>
           <HeatMap />
         </CustomCard>
       </div>

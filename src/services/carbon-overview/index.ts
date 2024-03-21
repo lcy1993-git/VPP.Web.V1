@@ -7,6 +7,7 @@ export const getCarbonOverviewHead = () => {
   });
 };
 
+
 // 碳排放总览趋势数据
 export const getCarbonTrend = (params: {date: string; unit: string}) => {
   return request(`/sysApi/cleanEnergyConsumeManage/carbonOverview/carbonTrend`, {

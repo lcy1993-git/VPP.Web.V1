@@ -22,7 +22,7 @@ export const modifyUserSite = (params: any) => {
 
 // 保存系统配置
 export const saveSystemConfig = (params: any) => {
-  return request(`/devAndFlawApi/sys/config/save`, {
+  return request(`/sysApi/sys/config/save`, {
     method: 'POST',
     data: params,
   });

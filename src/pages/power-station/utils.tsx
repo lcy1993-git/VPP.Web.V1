@@ -568,6 +568,9 @@ export const powerGenerationOptions = (data: any, timeType: string) => {
           color: '#0054FF',
         },
       },
+      nameTextStyle: {
+        align: 'right'
+      },
       name: '电量/kWh',
       type: 'value',
     },
@@ -628,7 +631,7 @@ export const powerCountOptions = (powerGenerationTrends: any, isToday: boolean) 
     color: ['#4B85FF', '#FF3838'],
     xAxis: {
       type: 'category',
-      boundaryGap: false,
+      boundaryGap: true,
       axisLine: {
         lineStyle: {
           color: '#0054FF',
@@ -641,6 +644,7 @@ export const powerCountOptions = (powerGenerationTrends: any, isToday: boolean) 
           width: 0.5,
         },
       },
+      nameLocation: 'end',
       data: xAxisData,
     },
     yAxis: {
@@ -657,6 +661,9 @@ export const powerCountOptions = (powerGenerationTrends: any, isToday: boolean) 
         },
       },
       name: '有功/kW',
+      nameTextStyle: {
+        align: 'right'
+      },
       type: 'value',
     },
     series: [

@@ -37,7 +37,7 @@ const SvgModal = (props: any) => {
       open={modalVisible}
       width={window.innerWidth}
       style={{ top: 0 }}
-      bodyStyle={{ height: 'calc(100vh - 50px)', overflow: 'hidden' }}
+      bodyStyle={{ height: 'calc(100vh - 100px)', overflow: 'hidden' }}
       centered
       title="一次性接线图"
       closeIcon={

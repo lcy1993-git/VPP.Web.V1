@@ -391,7 +391,7 @@ const PowerStation = () => {
                         options={allSubStation}
                       />
                     )}
-                    <Button style={{ marginTop: '5px' }} onClick={() => setModalVisible(true)}>
+                    <Button style={{ marginTop: '5px', width: 140 }} onClick={() => setModalVisible(true)}>
                       <i className="iconfont" style={{ fontSize: 14, marginRight: '6px' }}>
                         &#xe637;
                       </i>
@@ -487,7 +487,7 @@ const PowerStation = () => {
                     <div className={styles.powerCountEchart}>
                       <CustomCharts
                         options={powerCountOptions(powerGenerationTrends, isTodayRef.current)}
-                        height="230px"
+                        height="250px"
                         loading={powerTrendLoading}
                       />
                     </div>
@@ -516,7 +516,7 @@ const PowerStation = () => {
                     />
                   </Space>
                 </div>
-                <div className={styles.moduleMain} style={{ height: '250px' }}>
+                <div className={styles.moduleMain} style={{ height: '280px', paddingBottom: 20}}>
                   <CustomCharts
                     options={powerGenerationOptions(powerGeneration, fullAndPutDate)}
                     loading={powerGenerationLoading}

@@ -179,8 +179,8 @@ const ReportManage = () => {
             type="checkbox"
             bordered={false}
             requestType="get"
-            hasPage={false}
             getCheckData={(data) => setTableSelectRows(data)}
+            hasPage={true}
           />
         </div>
         {/* 查看报表弹框 */}

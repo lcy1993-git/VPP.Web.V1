@@ -1,13 +1,10 @@
-import ContentPage from '@/components/content-page'
 import CustomCard from '@/components/custom-card'
-import { DatePicker, Form, Select, Space } from 'antd'
+import {  Form, Select } from 'antd'
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import 'echarts-liquidfill';
 import styles from './index.less'
 import { carbonTrendsOption, waterWaveOption } from './utils';
-import SegmentedTheme from '@/components/segmented-theme';
-import { datePickerEnum, disableDate } from '@/pages/big-screen/utils';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
@@ -16,16 +13,13 @@ import { useRequest } from 'ahooks';
 import { getCarbonOverviewHead, getCarbonTargetProgress, getCarbonTrend } from '@/services/carbon-overview';
 import Empty from '@/components/empty';
 import HeatMap from './HeatMap';
+import SegmentDatepicker from '@/components/segment-datepicker';
 dayjs.locale('zh-cn');
 
 
 const CarbonOvervirw = () => {
-  // 区域用能 年月日 切换
-  const [fullAndPutDate, setFullAndPutDate] = useState<string>('日');
-  // 区域用能 日期组件切换
-  const [pickerType, setPickerType] = useState<'year' | 'month' | 'date'>('date');
-  // 区域用能 日期
-  const [dateValue, setDateValue] = useState<any>(dayjs(dayjs(`${new Date()}`), 'YYYY-MM-DD'));
+  // 能源碳排放趋势 选中的当前日期
+  const [selectDate, setSelectDate] = useState<string>('')
 
   // 碳排放总览head部分数据
   const { data: carbonOverviewHead } = useRequest(getCarbonOverviewHead);
@@ -46,63 +40,21 @@ const CarbonOvervirw = () => {
     return null;
   }
 
-
-  /** 能源碳排放趋势 右侧 日期改变  */
-  const datePickerChange = (date: any) => {
-    if (!date) {
-      return;
-    }
-
-    let fetchDate: any;
-    datePickerEnum.forEach((item: any) => {
-      if (item.name === fullAndPutDate) {
-        fetchDate = dayjs(date).format(item.dayType);
-        setDateValue(dayjs(fetchDate, item.dayType));
-      }
-    });
-    // 请求数据
-    fecthCarbonTrend({
-      date: fetchDate,
-      unit: pickerType === 'date' ? 'day' : pickerType,
-    });
-  };
-
   // 区域用能概览请求数据
   useEffect(() => {
-    let date: any = null;
-    let unit: any = '';
-    datePickerEnum.forEach((item: any) => {
-      if (item.name === fullAndPutDate) {
-        date = dayjs().format(item.dayType);
-        setDateValue(dayjs(date, item.dayType));
-        setPickerType(item.type);
-        unit = item.type;
-      }
-    });
-    fecthCarbonTrend({
-      date: date,
-      unit: unit === 'date' ? 'day' : unit,
-    });
-  }, [fullAndPutDate])
+    if (selectDate) {
+      fecthCarbonTrend({
+        date: selectDate,
+        unit: ['year','month', 'day'][selectDate.split('-').length - 1]
+      })
+    }
+  }, [selectDate])
 
   // 能源碳排放趋势 右侧组件
   const carbonFooterRender = () => {
-    return (
-      <Space>
-        <SegmentedTheme
-          size="small"
-          options={datePickerEnum.map((item: any) => item.name)}
-          getSelectedValue={(value) => setFullAndPutDate(value)}
-        />
-        <DatePicker
-          size="small"
-          picker={pickerType}
-          onChange={datePickerChange}
-          value={dateValue}
-          disabledDate={disableDate}
-        />
-      </Space>
-    )
+    return <SegmentDatepicker
+    setSelectDate={setSelectDate}
+  />
   }
 
 
@@ -212,7 +164,7 @@ const CarbonOvervirw = () => {
         </CustomCard>
       </div>
       <div className={styles.contentRight}>
-        <CustomCard title="碳排放热力图">
+        <CustomCard>
           <HeatMap />
         </CustomCard>
       </div>
@@ -224,7 +176,7 @@ const CarbonOvervirw = () => {
         renderRight={carbonFooterRender}
       >
         <CustomCharts
-          options={carbonTrendsOption(dataFilter(carbonTrend), fullAndPutDate)}
+          options={carbonTrendsOption(dataFilter(carbonTrend), ['year','month', 'day'][selectDate?.split('-').length - 1])}
           loading={false}
         />
       </CustomCard>

@@ -1,7 +1,31 @@
 import * as echarts from 'echarts';
 
 // 用能详情charts options
-export const energyDetail = () => {
+export const energyDetail = (data: any, selectDate: any) => {
+
+  if (!data) {
+    return false
+  }
+
+  let type = 'day'
+  if (selectDate) {
+    type = ['year','month', 'day'][selectDate?.split('-').length - 1]
+  }
+  // X轴
+  let XData
+  if (type === 'day') {
+    XData = Object.keys(data.eneryMap).map(item => item.split(' ')[1].slice(0, 5))
+  } else if (type === 'month') {
+    XData = Object.keys(data.eneryMap).map(item => item.split(' ')[0].slice(8, 10) + '日')
+  } else {
+    XData = Object.keys(data.eneryMap).map(item => item.split(' ')[0].slice(5, 7) + '月')
+  }
+
+  if (!XData.length) {
+    return false;
+  }
+
+
   return {
     tooltip: {
       trigger: 'axis',
@@ -17,14 +41,16 @@ export const energyDetail = () => {
     },
     xAxis: {
       type: 'category',
-      name: '月',
-      data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+      data: XData,
       axisLine: {
         show: true,
         lineStyle: {
           color: '#8396ad',
         },
       },
+      axisLable:{
+        interval:0
+      }
     },
     yAxis: {
       type: 'value',
@@ -48,7 +74,7 @@ export const energyDetail = () => {
     },
     series: [
       {
-        data: [120, 200, 150, 80, 70, 110, 130],
+        data: Object.values(data.eneryMap),
         type: 'bar',
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -65,7 +91,8 @@ export const energyDetail = () => {
 }
 
 // 能源结构 charts options
-export const energyStructureOptions = () => {
+export const energyStructureOptions = (data: any) => {
+
   return {
     tooltip: {
       trigger: 'item'
@@ -90,8 +117,8 @@ export const energyStructureOptions = () => {
         type: 'pie',
         radius: '50%',
         data: [
-          { value: 1048, name: '清洁能源' },
-          { value: 735, name: '传统能源' },
+          { value: data?.cleanEnergyElectricity, name: '清洁能源' },
+          { value: data?.conventionalEnergyElectricity, name: '传统能源' },
         ],
         emphasis: {
           itemStyle: {
@@ -108,7 +135,15 @@ export const energyStructureOptions = () => {
 
 
 // 负荷详情 charts options
-export const loadDetail = () => {
+export const loadDetail = (data: any) => {
+  if (!data) {
+    return false
+  }
+
+  if (!Object.keys(data.eneryMap).length) {
+    return false
+  }
+
   return {
     tooltip: {
       trigger: 'axis',
@@ -127,7 +162,7 @@ export const loadDetail = () => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'],
+      data: Object.keys(data.eneryMap).map(item => item.split(' ')[1].slice(0, 5)),
       axisLine: {
         show: true,
         lineStyle: {
@@ -157,7 +192,7 @@ export const loadDetail = () => {
     },
     series: [
       {
-        data: [820, 932, 901, 934, 1290, 1330, 1320,820, 932, 901, 934, 1290, 100],
+        data: Object.values(data.eneryMap),
         type: 'line',
         smooth: true,
         areaStyle: {

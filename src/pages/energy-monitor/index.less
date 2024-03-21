@@ -69,10 +69,12 @@
         align-items: center;
 
         .name {
-          font-weight: 600;
+          font-weight: bold;
           font-size: 20px;
-          color: #FFFFFF;
+          color: #0190FF;
+          line-height: 60px;
           text-indent: 20px;
+          padding-bottom: 4px;
         }
       }
 
@@ -111,6 +113,14 @@
         .mainBody:nth-of-type(2) {
           border-bottom: none;
         }
+      }
+    }
+
+    :global {
+      .ant-form-item .ant-form-item-label >label {
+        font-size: 20px;
+        padding-left: 20px;
+        font-weight: 500;
       }
     }
   }

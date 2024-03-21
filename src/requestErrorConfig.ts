@@ -93,7 +93,7 @@ export const errorConfig: RequestConfig = {
     (config: RequestOptions) => {
       const url = config?.url;
       const token =
-        'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI2ZjA4ZWFkMmI0ZGU0YzdkOTBmNGM1NjgwMTFjYTQ4NyIsInVzZXIiOiJ7XCJpZFwiOjEsXCJuaWNrTmFtZVwiOlwi566h55CG5ZGYXCIsXCJpc1N1cGVyXCI6dHJ1ZX0iLCJpc3MiOiJhZG1pbiIsImlhdCI6MTcxMDMxNzI2NiwiZXhwIjoxNzEwOTIyMDY2fQ.EIYqMIms81M8-Ribwtm64YE8PZHTfSnpvNLUmUqF64g';
+        'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMzc3ZmE1ODVkYTM0MjVhYmE4MDY3YjFjNmE5NThiYiIsInVzZXIiOiJ7XCJpZFwiOjEsXCJuaWNrTmFtZVwiOlwi566h55CG5ZGYXCIsXCJpc1N1cGVyXCI6dHJ1ZX0iLCJpc3MiOiJhZG1pbiIsImlhdCI6MTcxMDkyMjMyNSwiZXhwIjoxNzExNTI3MTI1fQ.0G5E-7IhU0e2WYgZOWg6P7KXcaVxriZ38KWcdY3J38o';
       if (token) {
         return {
           ...config,

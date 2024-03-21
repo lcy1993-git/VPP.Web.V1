@@ -93,7 +93,7 @@ const PowerStation = () => {
   // 获取站点数据
   const { run: fetchSubstation } = useRequest(getSubstation, {
     manual: true,
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       if (result && result.length) {
         const substation = result.map((item: any) => {
           return {

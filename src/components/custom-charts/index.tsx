@@ -11,7 +11,7 @@ import styles from './index.less';
  * */
 interface propsType {
   options: any;
-  loading: boolean; // 图表加载状态
+  loading?: boolean; // 图表加载状态
   width?: string;
   height?: string;
 }

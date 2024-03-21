@@ -41,3 +41,13 @@ export const DEALSTATUS = [
   { value: 0, label: '未处理' },
   { value: 1, label: '已处理' },
 ];
+
+// 站点设备类型
+export const SUBSTASIONDEVICETYPE = [
+  // { label: '电池簇', value: 'cluster', code: 104 },
+  { label: '逆变器', value: 'inverter', code: 27 },
+  { label: 'PCS', value: 'PCS', code: 108 },
+  { label: 'BMS', value: 'BMS', code: 115 },
+  { label: '直流充电桩', value: 'DC', code: 41 },
+  { label: '交流充电桩', value: 'AC', code: 40 },
+];

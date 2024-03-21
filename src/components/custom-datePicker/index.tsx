@@ -15,6 +15,7 @@ interface propsType {
   disabledDate?: any;
   onChange?: any;
   getTypeAndDate?: (type: string, date: string) => void | undefined;
+  getDate?: (date: string) => void | undefined;
 }
 
 // 日历枚举值
@@ -43,6 +44,7 @@ const CustomDatePicker = (props: propsType) => {
     onChange,
     disabledDate,
     getTypeAndDate,
+    getDate,
   } = props;
   // 日期类型 默认日
   const [type, setType] = useState<string>('day');
@@ -90,7 +92,10 @@ const CustomDatePicker = (props: propsType) => {
         <DatePicker
           picker={datePickerEnum[datePickerType].type}
           defaultValue={dayjs(defaultDate, datePickerEnum[datePickerType])}
-          onChange={onChange}
+          onChange={(value) => {
+            if (onChange) onChange();
+            if (getDate) getDate(value.format(datePickerEnum[datePickerType].dayType));
+          }}
           allowClear={false}
           disabledDate={disabledDate ? disabledDate : disableDate}
         />

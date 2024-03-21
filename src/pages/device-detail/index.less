@@ -1,0 +1,392 @@
+.marginL20 {
+  margin-left: 20px;
+}
+
+.marginB20 {
+  margin-bottom: 20px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+// 页面主体接口
+.detailPage {
+  width: 100%;
+  height: 100%;
+
+  .detailHead {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 50px;
+  }
+
+  .detailBody {
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .echartWrap {
+      display: flex;
+      height: 300px;
+
+      .echartWrapLeft {
+        flex: 3;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .echartWrapRight {
+        flex: 2;
+        height: 100%;
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+// 圆环图外出容器样式
+.circleWrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
+
+  .circleItem {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 100%;
+
+    .circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 180px;
+
+      .circleTitle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+
+    .circleDes {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+
+      .circleDesTitle {
+        color: #b0b3bd;
+        font-size: 12px;
+      }
+
+      .circleDesValue {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 30px;
+      }
+
+      .circleDesUnit {
+        color: #4b85ff;
+        font-weight: 400;
+        font-size: 16px;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+// 设备运行状态 页面右上角
+.deviceRunStatus {
+  width: 100%;
+  height: 100%;
+
+  .statusTitle {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    font-weight: 600;
+    font-size: 16px;
+
+    .icon:extend(.flex_center) {
+      width: 40px;
+      height: 40px;
+      font-weight: bold;
+      font-size: 20px;
+      animation: rotate 2s linear infinite;
+    }
+  }
+
+  .statusMain {
+    width: 100%;
+    height: calc(100% - 50px);
+  }
+}
+
+.boxWrap:extend(.flex_center) {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .runTimeWrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    width: 100%;
+    height: 100%;
+    padding-left: 7px;
+
+    .itemRunStatus {
+      width: 305px;
+      height: 46px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+// 中间图表
+.echartsModule {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-right: 5px;
+  padding-left: 10px;
+
+  .echartsModuleTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+  }
+
+  .echartTitle {
+    position: relative;
+    height: 50px;
+    padding-left: 16px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 50px;
+  }
+
+  .echartTitle::before {
+    position: absolute;
+    top: 16px;
+    left: 6px;
+    width: 2px;
+    height: 18px;
+    background: #fff;
+    content: '';
+  }
+
+  .echartsModuleBody {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+
+    .information {
+      margin-right: 10px;
+      text-align: end;
+      span {
+        padding-right: 7px;
+        padding-left: 5px;
+      }
+    }
+  }
+}
+
+// 遥测值
+.listItem {
+  display: flex;
+  flex-direction: column;
+  width: 243px;
+  height: 96px;
+  margin-right: 25px;
+  margin-bottom: 20px;
+  background: linear-gradient(270deg, #4879f8 0%, #2aa0d8 100%);
+  border-radius: 4px;
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+
+    & span {
+      font-size: 14px;
+    }
+  }
+
+  .itemContent {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .value {
+    overflow: hidden;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 36px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+// 遥信值
+.remoteItem {
+  width: 244px;
+  height: 68px;
+  margin: 0 10px 20px 10px;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 68px;
+  text-align: center;
+  border-radius: 4px;
+
+  .remoteItem {
+    span {
+      display: inline-block;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: center;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+// 测点样式
+.powerCurve {
+  width: 100%;
+  height: auto;
+  padding-right: 10px;
+  padding-left: 10px;
+
+  .powerCurveHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 50px;
+
+    .headleft {
+      position: relative;
+      padding-left: 16px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .headleft::before {
+      position: absolute;
+      left: 6px;
+      width: 2px;
+      height: 18px;
+      background: #fff;
+      content: '';
+    }
+  }
+
+  .powerCurveBody:extend(.flex_center) {
+    padding-top: 20px;
+
+    .powerList {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      min-height: 300px;
+    }
+  }
+}
+
+.emptyStyle {
+  height: calc(100% + 50px);
+}
+
+.electryWrap {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+// 电量概览
+.electryModule {
+  margin-right: 10px;
+}
+.itemContent {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 46px;
+  margin-bottom: 9px;
+
+  .content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .electricType:extend(.flex_center) {
+      width: 40px;
+      height: 100%;
+      text-align: center;
+      background: #7ebbff;
+
+      i {
+        font-size: 22px;
+      }
+    }
+
+    .electricData {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      height: 100%;
+      padding-right: 2px;
+      padding-left: 5px;
+      overflow: hidden;
+      line-height: 46px;
+
+      .electricTitle {
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 16px;
+      }
+
+      .value {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 18px;
+      }
+    }
+  }
+}

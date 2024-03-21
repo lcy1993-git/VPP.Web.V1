@@ -77,7 +77,7 @@ export default [
         name: '碳排放分析',
         component: './clear-consume/carbon-analysis',
       },
-    ]
+    ],
   },
   {
     path: '/enterprise-manage',
@@ -108,7 +108,7 @@ export default [
         name: '历史数据',
         component: './runtime-monitor/history-data',
       },
-    ]
+    ],
   },
   {
     path: '/power-station',
@@ -126,6 +126,11 @@ export default [
     component: './charging-station',
   },
   {
+    path: '/device-detail',
+    name: '设备详情',
+    component: './device-detail',
+  },
+  {
     path: '/alarm-manage',
     name: '告警管理',
     routes: [
@@ -139,7 +144,7 @@ export default [
         name: '历史事件',
         component: './alarm-manage/history-event',
       },
-    ]
+    ],
   },
   {
     path: '/report-manage',

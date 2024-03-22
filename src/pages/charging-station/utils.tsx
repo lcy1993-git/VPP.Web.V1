@@ -1,8 +1,8 @@
 import { handleInverterStatus, roundNumbers } from '@/utils/common';
+import { history } from '@umijs/max';
 import { Divider, Tooltip } from 'antd';
 import styles from './index.less';
 import Unit from './unit';
-import { history } from '@umijs/max';
 
 // header数据
 export const renderChargeList = (data: any) => {
@@ -62,7 +62,7 @@ export const renderChargeList = (data: any) => {
 };
 
 // 充电桩运行状态
-export const renderList = (data: any) => {
+export const renderList = (data: any, subStationCode: string) => {
   const { outPower, generateDay } = Unit;
   return (
     <div className={styles.inverterWrap}>
@@ -96,10 +96,10 @@ export const renderList = (data: any) => {
                   <span
                     onClick={() =>
                       history.push('/device-detail', {
-                        // devicetype: 'inverter',
-                        // deviceCode: item.deviceCode,
-                        // siteType: 'solar',
-                        // subStationCode: subStationCode,
+                        devicetype: item.type === 41 ? 'DC' : 'AC',
+                        deviceCode: item.deviceCode,
+                        siteType: 'charge',
+                        subStationCode: subStationCode,
                       })
                     }
                   >

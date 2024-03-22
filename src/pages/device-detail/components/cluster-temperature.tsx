@@ -103,7 +103,6 @@ const ClusterTemperature = (props: any) => {
             clusterType,
             isTodayRef.current,
           )}
-          height="200px"
         />
       </div>
     </div>

@@ -22,7 +22,7 @@ import PcsMiddleRight from './components/pcs-middle-right';
 import PowerStatistics from './components/pcs-power-statistics';
 import styles from './index.less';
 
-type currentDevType = 'PCS' | 'BMS' | 'inverter' | null;
+type currentDevType = 'PCS' | 'BMS' | 'inverter' | 'DC' | 'AC' | null;
 type circleDataType = {
   pathColor?: string; // 圆环颜色
   value: string | number; // 值
@@ -61,7 +61,7 @@ const DeviceDetail = () => {
   // 获取用户可以访问的站点名称
   const {} = useRequest(getUserStation, {
     manual: false,
-    onSuccess: (resolve) => {
+    onSuccess: (resolve: any) => {
       const { dataList } = resolve;
       if (dataList) {
         setCurrUserSite(dataList);
@@ -72,7 +72,7 @@ const DeviceDetail = () => {
   // 或者站点下的设备
   const { run: fetchSubstationDevice } = useRequest(getSubstationDevice, {
     manual: true,
-    onSuccess: (resolve) => {
+    onSuccess: (resolve: any) => {
       if (resolve) {
         setDeviceList(resolve);
       }
@@ -82,7 +82,7 @@ const DeviceDetail = () => {
   // PCS设备详情数据 head 圆环数据
   const { run: fetchPcsBasisData } = useRequest(getPcsBasisData, {
     manual: true,
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       if (result) {
         const dataList: circleDataType[] = [
           {
@@ -201,7 +201,7 @@ const DeviceDetail = () => {
   // 电磁簇设备详情 head 圆环\设备运行状态数据
   const { run: fetchClusterBasisData } = useRequest(getClusterBasisData, {
     manual: true,
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       if (result) {
         const dataList: circleDataType[] = [
           {
@@ -299,7 +299,7 @@ const DeviceDetail = () => {
   // 逆变器设备详情 head 圆环数据
   const { run: fetchInverterPower } = useRequest(getInverterPower, {
     manual: true,
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       if (result) {
         const dataList: circleDataType[] = [
           {
@@ -357,7 +357,7 @@ const DeviceDetail = () => {
     },
   });
 
-  // middle 中间图标显示 render
+  // middle 左侧
   const renderMiddleLeft = () => {
     if (deviceType) {
       switch (deviceType) {
@@ -366,7 +366,10 @@ const DeviceDetail = () => {
         case 'BMS':
           return <ClusterTemperature deviceCode={deviceId} />;
         case 'inverter': // 逆变器
-          return <InverterPowerCurve deviceCode={deviceId} />;
+          return <InverterPowerCurve deviceCode={deviceId} type="inverter" />;
+        case 'AC':
+        case 'DC':
+          return <InverterPowerCurve deviceCode={deviceId} type="charge" />;
       }
     } else {
       return (
@@ -383,7 +386,7 @@ const DeviceDetail = () => {
       switch (deviceType) {
         case 'PCS':
           return <PcsMiddleRight deviceCode={deviceId} />;
-        case 'BMS': // 电池簇
+        case 'BMS':
           return <ClusterMiddleRight deviceCode={deviceId} />;
         case 'inverter': // 逆变器
           return <InverterMiddleRight deviceCode={deviceId} />;
@@ -401,11 +404,15 @@ const DeviceDetail = () => {
   const backPage = () => {
     if (state?.siteType === 'energy') {
       // 从储能电站过来的
-      history.push('/energy-storage', { subStationCode: state?.subStationCode });
+      history.push('/energy-station', { subStationCode: state?.subStationCode });
     } else if (state?.siteType === 'solar') {
       // 从光伏电站过来的
-      history.push('/solar', { subStationCode: state?.subStationCode });
-    } else if (state?.siteType === 'tourActive') {
+      history.push('/power-station', { subStationCode: state?.subStationCode });
+    } else if (state?.siteType === 'charge') {
+      // 从充电电站过来的
+      history.push('/charging-station', { subStationCode: state?.subStationCode });
+    } else if (state?.siteType === 'dcs') {
+      // 从分布式能源
       history.back();
     }
   };
@@ -530,57 +537,57 @@ const DeviceDetail = () => {
 
         <div className={styles.detailBody}>
           {/* top */}
-          <div className={`${styles.echartWrap} ${styles.marginB20}`}>
-            <div className={styles.echartWrapLeft}>
-              <CustomCard>
-                <CircularChart circleRingData={circleRingData} />
-              </CustomCard>
-            </div>
-            <div className={`${styles.echartWrapRight} ${styles.marginL20}`}>
-              <CustomCard>
-                <div className={styles.deviceRunStatus}>
-                  {runTimeData.length ? (
-                    <div className={styles.statusTitle}>
-                      {deviceRunStatus === '运行' ? (
-                        <i className={`iconfont ${styles.icon}`} style={{ color: '#00FF90' }}>
-                          &#xe662;
-                        </i>
-                      ) : (
-                        <i className={`iconfont ${styles.icon}`} style={{ color: '#FF3838' }}>
-                          &#xe661;
-                        </i>
-                      )}
-                      <span style={{ color: deviceRunStatus === '运行' ? '#00FF90' : '#FF3838' }}>
-                        {deviceRunStatus}
-                      </span>
-                    </div>
-                  ) : null}
+          {deviceType === 'AC' || deviceType === 'DC' ? (
+            <></>
+          ) : (
+            <div className={`${styles.echartWrap} ${styles.marginB20}`}>
+              <div className={styles.echartWrapLeft}>
+                <CustomCard>
+                  <CircularChart circleRingData={circleRingData} />
+                </CustomCard>
+              </div>
+              <div className={`${styles.echartWrapRight} ${styles.marginL20}`}>
+                <CustomCard>
+                  <div className={styles.deviceRunStatus}>
+                    {runTimeData.length ? (
+                      <div className={styles.statusTitle}>
+                        {deviceRunStatus === '运行' ? (
+                          <i className={`iconfont ${styles.icon}`} style={{ color: '#00FF90' }}>
+                            &#xe662;
+                          </i>
+                        ) : (
+                          <i className={`iconfont ${styles.icon}`} style={{ color: '#FF3838' }}>
+                            &#xe661;
+                          </i>
+                        )}
+                        <span style={{ color: deviceRunStatus === '运行' ? '#00FF90' : '#FF3838' }}>
+                          {deviceRunStatus}
+                        </span>
+                      </div>
+                    ) : null}
 
-                  <div className={styles.statusMain}>
-                    <DeviceRunTime runTimeData={runTimeData} />
+                    <div className={styles.statusMain}>
+                      <DeviceRunTime runTimeData={runTimeData} />
+                    </div>
                   </div>
-                </div>
-              </CustomCard>
+                </CustomCard>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* middle */}
           <div className={`${styles.echartWrap} ${styles.marginB20}`}>
             <div className={styles.echartWrapLeft}>
               <CustomCard>{renderMiddleLeft()}</CustomCard>
             </div>
-            <div className={`${styles.echartWrapRight} ${styles.marginL20}`}>
-              <CustomCard>{renderMiddleRight()}</CustomCard>
-            </div>
+            {deviceType === 'AC' || deviceType === 'DC' ? (
+              <></>
+            ) : (
+              <div className={`${styles.echartWrapRight} ${styles.marginL20}`}>
+                <CustomCard>{renderMiddleRight()}</CustomCard>
+              </div>
+            )}
           </div>
-
-          {/* 新增电量统计 */}
-          {/* <div className={`${styles.echartWrap} ${styles.marginB20}`}>
-            <CustomCard>
-              <OnGridStatistics deviceCode={deviceId} />
-            </CustomCard>
-          </div> */}
-
           {/* bottom */}
           <div className={`${styles.echartWrap}`} style={{ height: 'auto' }}>
             <div className={styles.echartWrapLeft}>

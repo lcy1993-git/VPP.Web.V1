@@ -251,14 +251,14 @@ export const renderInverter = (inverterData: any, subStationCode: string, module
                 <dl className={styles.moduleText}>
                   <dt
                     className={styles.deviceName}
-                    onClick={() => {
-                      history.push('/device-detail', {
-                        devicetype: 'onGrid',
-                        deviceCode: item.deviceCode,
-                        siteType: 'solar',
-                        subStationCode: subStationCode,
-                      });
-                    }}
+                    // onClick={() => {
+                    //   history.push('/device-detail', {
+                    //     devicetype: 'onGrid',
+                    //     deviceCode: item.deviceCode,
+                    //     siteType: 'solar',
+                    //     subStationCode: subStationCode,
+                    //   });
+                    // }}
                   >
                     {item.deviceName}
                   </dt>

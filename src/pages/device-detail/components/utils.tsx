@@ -206,7 +206,7 @@ export const deviceTemperature = (data: any, clusterType: number, isToday: boole
 
   if (data) {
     if (clusterType === 1) {
-      //TODO 温度
+      // 温度
       xAxisData = Object.keys(data);
       seriesData = [
         {
@@ -238,7 +238,7 @@ export const deviceTemperature = (data: any, clusterType: number, isToday: boole
       top: '14%',
       left: '3%',
       right: '4%',
-      bottom: '1%',
+      bottom: '11%',
       containLabel: true,
     },
     legend: {
@@ -268,8 +268,7 @@ export const deviceTemperature = (data: any, clusterType: number, isToday: boole
           width: 0.5,
         },
       },
-      // @ts-ignore
-      data: xAxisData,
+      data: formatXAxis(xAxisData, 'day'),
     },
     yAxis: {
       splitLine: {
@@ -378,6 +377,89 @@ export const powerCountOptions = (inverterLineData: any, isToday: boolean) => {
         barWidth: 16,
         smooth: true,
         name: '辐照度',
+      },
+    ],
+  };
+};
+
+// 充电桩 --功率曲线
+export const chargePowerOptions = (inverterLineData: any, isToday: boolean) => {
+  let xAxisData: string[] = [];
+  let photovoltaic: any[] = []; // 功率
+  if (inverterLineData) {
+    const xAxis = Object.keys(inverterLineData?.powerMap)
+      .map((item) => item.split(' ')[1])
+      .map((item) => `${item.split(':')[0]}:${item.split(':')[1]}`);
+    xAxisData.push(...xAxis);
+    photovoltaic = [...Object.values(inverterLineData?.powerMap)];
+  }
+
+  if (!xAxisData.length) {
+    return false;
+  }
+  return {
+    grid: {
+      top: '15%',
+      left: '1%',
+      right: '2%',
+      bottom: '1%',
+      containLabel: true,
+    },
+    legend: {
+      data: ['功率'],
+      x: 'center',
+      textStyle: {
+        color: '#fff',
+        fontSize: '12px',
+        fontWeight: 400,
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    color: ['#FF8F44', '#39FFC5'],
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      axisLine: {
+        lineStyle: {
+          color: '#0054FF',
+        },
+      },
+      splitLine: {
+        show: false,
+        lineStyle: {
+          color: '#0065D7',
+          width: 0.5,
+        },
+      },
+      // @ts-ignore
+      data: xAxisData,
+    },
+    yAxis: {
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#0065D7',
+          width: 0.5,
+        },
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#0054FF',
+        },
+      },
+      name: '功率/kW',
+      type: 'value',
+    },
+    series: [
+      {
+        data: isToday ? photovoltaic.slice(0, handleDiffMins() + 1) : photovoltaic,
+        type: 'line',
+        symbol: 'none',
+        barWidth: 16,
+        smooth: true,
+        name: '功率',
       },
     ],
   };

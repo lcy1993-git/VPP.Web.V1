@@ -1,4 +1,21 @@
 const reportType: any = { day: '日报', month: '月报', year: '年报' };
+
+// 转换成树形结构
+export const transformData = (data: any) => {
+  return data.map((item: any) => ({
+    value: item.deviceCode,
+    title: item.name,
+    level: 1,
+    children: item.children
+      ? item.children.map((child: any) => ({
+          value: child.deviceCode,
+          title: child.name,
+          level: 2,
+        }))
+      : null,
+  }));
+};
+
 export const columns = [
   {
     title: '序号',
@@ -40,6 +57,7 @@ export const columns = [
 
 export // 处理表头和表格数据
 const handleTable = (data: any) => {
+  if (data.length === 0) return { columns: [], dataSource: [] };
   // 获取所有时间点
   let timeDataMap = data[0].timeDataMap;
   if (Object.keys(timeDataMap).length === 0) {

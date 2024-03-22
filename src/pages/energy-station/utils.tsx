@@ -269,21 +269,21 @@ const navigatorHandle = (currentRender: string, deviceCode: string, subStationCo
       break;
     case '电池簇概览':
       // history.push(`/energy-storage/cluster-detail/${deviceCode}`)
-      history.push('/device-detail', {
-        devicetype: 'cluster',
-        deviceCode: deviceCode,
-        siteType: 'energy',
-        subStationCode: subStationCode,
-      });
+      // history.push('/device-detail', {
+      //   devicetype: 'cluster',
+      //   deviceCode: deviceCode,
+      //   siteType: 'energy',
+      //   subStationCode: subStationCode,
+      // });
       break;
     case '电表概览':
       // history.push(`/energy-storage/on-grid-detail/${deviceCode}`)
-      history.push('/device-detail', {
-        devicetype: 'onGrid',
-        deviceCode: deviceCode,
-        siteType: 'energy',
-        subStationCode: subStationCode,
-      });
+      // history.push('/device-detail', {
+      //   devicetype: 'onGrid',
+      //   deviceCode: deviceCode,
+      //   siteType: 'energy',
+      //   subStationCode: subStationCode,
+      // });
       break;
   }
 };

@@ -269,7 +269,7 @@ const AddModal = (props: propsType) => {
                         />
                       </Form.Item>
                       <Form.Item
-                        label="站点选择"
+                        label="电站/设备选择"
                         name="stationName"
                         required
                         rules={[{ required: true, message: '请选择查询测点' }]}

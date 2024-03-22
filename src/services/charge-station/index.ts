@@ -1,5 +1,13 @@
 import { request } from '@umijs/max';
 
+// 使用功率以及总充电量等。
+export const getChargeOverview = (substationCode: string) => {
+  return request(`/api/charge/overview`, {
+    method: 'get',
+    params: { substationCode },
+  });
+};
+
 // 充电电站
 export const getChargeStation = () => {
   return request(`/api/charge/substation`, {

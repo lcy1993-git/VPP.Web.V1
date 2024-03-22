@@ -1,5 +1,5 @@
 import CircleRingChart from '@/components/circle-ring-chart';
-import ContentPage from '@/components/content-page';
+import ContainerPage from '@/components/container-page';
 import CustomCard from '@/components/custom-card';
 import CustomCharts from '@/components/custom-charts';
 import CustomDatePicker from '@/components/custom-datePicker';
@@ -278,7 +278,7 @@ const DcsEnergyMonitor = () => {
   }, [enterpriseOverviewType]);
 
   return (
-    <ContentPage>
+    <ContainerPage>
       <div className={styles.container}>
         <div className={styles.leftContainer}>
           <div className={styles.topContainer}>
@@ -287,18 +287,18 @@ const DcsEnergyMonitor = () => {
               isTitleCenter={false}
               renderRight={renderEnergyRight}
             >
-              <div className={styles.segmented}>
-                <SegmentedTheme
-                  options={['光伏', '储能', '充电']}
-                  getSelectedValue={(value) => setEnergyOverviewType(value)}
-                />
+              <div className={styles.energyOverview}>
+                <div className={styles.segmented}>
+                  <SegmentedTheme
+                    options={['光伏', '储能', '充电']}
+                    getSelectedValue={(value) => setEnergyOverviewType(value)}
+                  />
+                </div>
+                <div>
+                  <CustomListItem data={renderListItem()} />
+                </div>
+                <CustomCharts options={renderChart().chart} loading={renderChart().loading} />
               </div>
-              <CustomListItem data={renderListItem()} />
-              <CustomCharts
-                options={renderChart().chart}
-                loading={renderChart().loading}
-                height="270px"
-              />
             </CustomCard>
           </div>
           <div className={styles.bottomContainer}>
@@ -309,24 +309,24 @@ const DcsEnergyMonitor = () => {
         </div>
         <div className={styles.rightContainer}>
           <CustomCard>
-            <div className={styles.select}>
-              企业名称：
-              <Select
-                options={stationNames}
-                placeholder="请选择企业"
-                allowClear={false}
-                fieldNames={{
-                  label: 'name',
-                  value: 'substationCode',
-                }}
-                value={substationCode}
-                onChange={(value) => setSubstationCode(value)}
-                style={{ width: '280px', height: '35px' }}
-              />
-            </div>
-            <div className={styles.line} />
-            {/* 企业概览 */}
-            <div className={styles.enterprise}>
+            <div className={styles.enterpriseContainer}>
+              <div className={styles.select}>
+                企业名称：
+                <Select
+                  options={stationNames}
+                  placeholder="请选择企业"
+                  allowClear={false}
+                  fieldNames={{
+                    label: 'name',
+                    value: 'substationCode',
+                  }}
+                  value={substationCode}
+                  onChange={(value) => setSubstationCode(value)}
+                  style={{ width: '280px', height: '35px' }}
+                />
+              </div>
+              <div className={styles.line} />
+              {/* 企业概览 */}
               <div className={styles.title}>
                 <span className={styles.titleText}>企业概览</span>
                 <SegmentedTheme
@@ -338,47 +338,48 @@ const DcsEnergyMonitor = () => {
                   getDate={(value) => setEnterpriseOverviewDate(value)}
                 />
               </div>
-              {enterpriseOverviewType === '充电' ? (
-                <div className={styles.charge}>
-                  <div className={styles.circleRingChart}>
-                    <CircleRingChart
-                      textName="功率"
-                      pathColor="#60ACFC"
-                      value={substationCode ? singleChargeOverview?.power || 0 : 0}
-                      circleRingChartRatio={
-                        substationCode
-                          ? (
-                              (singleChargeOverview?.ratePower / singleChargeOverview?.ratePower ||
-                                0) * 100
-                            ).toFixed(2)
-                          : 0
-                      }
-                      subTitle="kW"
-                      breadth="210px"
-                    />
-                    <CircleRingChart
-                      textName="使用率"
-                      pathColor="#5BC49F"
-                      value={substationCode ? singleChargeOverview?.utilizationRate || 0 : 0}
-                      subTitle="%"
-                      breadth="210px"
-                    />
+              <div className={styles.dataContainer}>
+                {enterpriseOverviewType === '充电' ? (
+                  <div className={styles.charge}>
+                    <div className={styles.circleRingChart}>
+                      <CircleRingChart
+                        textName="功率"
+                        pathColor="#60ACFC"
+                        value={substationCode ? singleChargeOverview?.power || 0 : 0}
+                        circleRingChartRatio={
+                          substationCode
+                            ? (
+                                (singleChargeOverview?.ratePower /
+                                  singleChargeOverview?.ratePower || 0) * 100
+                              ).toFixed(2)
+                            : 0
+                        }
+                        subTitle="kW"
+                        breadth="210px"
+                      />
+                      <CircleRingChart
+                        textName="使用率"
+                        pathColor="#5BC49F"
+                        value={substationCode ? singleChargeOverview?.utilizationRate || 0 : 0}
+                        subTitle="%"
+                        breadth="210px"
+                      />
+                    </div>
+                    {renderChargeList(substationCode ? singleChargeOverview : {})}
                   </div>
-                  {renderChargeList(substationCode ? singleChargeOverview : {})}
-                </div>
-              ) : (
-                <>
-                  <CustomListItem data={renderEnterpriseListItem()} />
-                  <CustomCharts
-                    options={renderEnterpriseChart().chart}
-                    loading={renderEnterpriseChart().loading}
-                    height="270px"
-                  />
-                </>
-              )}
-            </div>
-            {/* 企业设备状况 */}
-            <div className={styles.enterprise}>
+                ) : (
+                  <div className={styles.chart}>
+                    <CustomListItem data={renderEnterpriseListItem()} />
+                    <div className={styles.customCharts}>
+                      <CustomCharts
+                        options={renderEnterpriseChart().chart}
+                        loading={renderEnterpriseChart().loading}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* 企业设备状况 */}
               <div className={styles.title}>
                 <span className={styles.titleText}>企业设备概况</span>
                 {enterpriseOverviewType === '储能' && (
@@ -396,12 +397,12 @@ const DcsEnergyMonitor = () => {
                   getSelectedValue={(value) => setRunStatus(value)}
                 />
               </div>
-              {renderDeviceList(enterpriseOverviewType, deviceData, essType)}
+              {renderDeviceList(enterpriseOverviewType, deviceData, essType, substationCode)}
             </div>
           </CustomCard>
         </div>
       </div>
-    </ContentPage>
+    </ContainerPage>
   );
 };
 export default DcsEnergyMonitor;

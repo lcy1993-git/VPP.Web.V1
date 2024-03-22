@@ -546,7 +546,7 @@ export const onlineChart = (data: any) => {
 };
 
 // 企业设备概览-逆变器
-export const renderInverterList = (data: any, type: string) => {
+export const renderInverterList = (data: any, type: string, subStationCode: string) => {
   const { outPower, generateDay } = Unit;
   return (
     <div className={styles.inverterWrap}>
@@ -579,12 +579,19 @@ export const renderInverterList = (data: any, type: string) => {
                 <div className={styles.headerTitle}>
                   <span
                     onClick={() =>
-                      history.push('/device-detail', {
-                        // devicetype: 'inverter',
-                        // deviceCode: item.deviceCode,
-                        // siteType: 'solar',
-                        // subStationCode: subStationCode,
-                      })
+                      type === '光伏'
+                        ? history.push('/device-detail', {
+                            devicetype: 'inverter',
+                            deviceCode: item.deviceCode,
+                            siteType: 'dcs',
+                            subStationCode: subStationCode,
+                          })
+                        : history.push('/device-detail', {
+                            devicetype: item.type === 40 ? 'AC' : 'DC',
+                            deviceCode: item.deviceCode,
+                            siteType: 'dcs',
+                            subStationCode: subStationCode,
+                          })
                     }
                   >
                     #{item.deviceName}
@@ -639,7 +646,7 @@ export const renderInverterList = (data: any, type: string) => {
 };
 
 // 企业设备概览-pcs
-export const renderPcsList = (data: any) => {
+export const renderPcsList = (data: any, subStationCode: string) => {
   const { outPower, generateDay } = Unit;
   return (
     <div className={styles.inverterWrap}>
@@ -675,10 +682,10 @@ export const renderPcsList = (data: any) => {
                   <span
                     onClick={() =>
                       history.push('/device-detail', {
-                        // devicetype: 'PCS',
-                        // deviceCode: deviceCode,
-                        // siteType: 'energy',
-                        // subStationCode: subStationCode,
+                        devicetype: 'PCS',
+                        deviceCode: item.deviceCode,
+                        siteType: 'dcs',
+                        subStationCode: subStationCode,
                       })
                     }
                   >
@@ -759,7 +766,7 @@ export const renderPcsList = (data: any) => {
 
 // TODO status
 // 企业设备概览-BMS
-export const renderBmsList = (data: any) => {
+export const renderBmsList = (data: any, subStationCode: string) => {
   const { outPower, generateDay } = Unit;
   return (
     <div className={styles.inverterWrap}>
@@ -793,10 +800,10 @@ export const renderBmsList = (data: any) => {
                   <span
                     onClick={() =>
                       history.push('/device-detail', {
-                        // devicetype: 'inverter',
-                        // deviceCode: item.deviceCode,
-                        // siteType: 'solar',
-                        // subStationCode: subStationCode,
+                        devicetype: 'BMS',
+                        deviceCode: item.deviceCode,
+                        siteType: 'dcs',
+                        subStationCode: subStationCode,
                       })
                     }
                   >
@@ -844,16 +851,25 @@ export const renderBmsList = (data: any) => {
 };
 
 // 企业设备概览
-export const renderDeviceList = (type: string, data: any, essType: string) => {
+export const renderDeviceList = (
+  type: string,
+  data: any,
+  essType: string,
+  subStationCode: string,
+) => {
   if (!data || data.length === 0) {
-    return <Empty />;
+    return (
+      <div className={styles.inverterWrap}>
+        <Empty />
+      </div>
+    );
   }
   if (type === '光伏') {
-    return renderInverterList(data, type);
+    return renderInverterList(data, type, subStationCode);
   } else if (type === '储能') {
-    if (essType === 'PCS') return renderPcsList(data);
-    else return renderBmsList(data);
+    if (essType === 'PCS') return renderPcsList(data, subStationCode);
+    else return renderBmsList(data, subStationCode);
   } else {
-    return renderInverterList(data, type);
+    return renderInverterList(data, type, subStationCode);
   }
 };

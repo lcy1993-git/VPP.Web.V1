@@ -421,7 +421,7 @@ const EnergyStation = () => {
                         options={allSubStation}
                       />
                     )}
-                    <Button style={{ marginTop: '5px' }} onClick={() => setModalVisible(true)}>
+                    <Button style={{ marginTop: '5px', width: 140 }} onClick={() => setModalVisible(true)}>
                       <i className="iconfont" style={{ fontSize: 14, marginRight: '6px' }}>
                         &#xe637;
                       </i>
@@ -584,7 +584,7 @@ const EnergyStation = () => {
               <div className={styles.titleBase}>
                 <div className={styles.titleBaseText}>告警详情</div>
               </div>
-              <div className={styles.flex_between}>
+              <div className={styles.flex_between} style={{padding: '0 20px'}}>
                 <SegmentedTheme options={ALARMLEVEL} getSelectedValue={alarmLevelChange} />
                 <Space>
                   <Button

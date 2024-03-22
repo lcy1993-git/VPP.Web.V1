@@ -12,7 +12,7 @@ import {
   getRanking,
 } from '@/services/energy-monitor';
 import { useRequest } from 'ahooks';
-import { Button, DatePicker, Form, message, Select, Table, Tooltip } from 'antd';
+import { Button, DatePicker, Form, Select, Table, Tooltip, message } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
@@ -217,17 +217,21 @@ const EnergyMonitor = () => {
       industry: type === 2 ? form.getFieldsValue()?.industry : '',
       substationCode: type === 1 ? form.getFieldsValue()?.substationCode : '',
     };
+
+    const unit = ['year', 'month', 'day'][selectDate.split('-').length - 1];
+    const dateType: any = { year: 'YYYY', month: 'YYYY-MM', day: 'YYYY-MM-DD' };
+
     // 用能详情数据请求
     fetchMonitorDetails({
       ...params,
-      date: structureDate,
-      unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
+      date: dayjs(structureDate).format(dateType[unit]),
+      unit,
     });
     // 能源结构
     fetchEnergyStructure({
       ...params,
-      date: structureDate,
-      unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
+      date: dayjs(structureDate).format(dateType[unit]),
+      unit,
     });
     // 用能总览
     fetchMonitorOverview({ ...params });

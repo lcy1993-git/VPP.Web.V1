@@ -30,7 +30,7 @@ const CustomCharts = (props: propsType) => {
             notMerge={true}
             lazyUpdate={false}
             theme={'theme_name'}
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: width, height: height }}
           />
         </div>
       ) : (

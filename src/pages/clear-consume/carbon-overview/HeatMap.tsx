@@ -176,7 +176,7 @@ const HeatMap = () => {
         }),
         fill: new Fill({
           // color: "#ff000020" // 填充红色透明
-          color: "rgba(255, 0, 0, 0)" // 填充红色半透明  
+          color: "rgba(255, 0, 0, 0)" // 填充红色半透明
         })
       })
     });

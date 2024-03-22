@@ -35,9 +35,6 @@ const EnergyMonitor = () => {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-
-
-
   const columns = [
     {
       title: '排名',
@@ -205,24 +202,26 @@ const EnergyMonitor = () => {
       return false;
     }
 
-
-
     const params = {
       type: type,
       industry: type === 2 ? form.getFieldsValue()?.industry : '',
       substationCode: type === 1 ? form.getFieldsValue()?.substationCode : '',
     }
+
+    const unit = ['year', 'month', 'day'][selectDate.split('-').length - 1]
+    const dateType: any = {year: 'YYYY', month: 'YYYY-MM', day: 'YYYY-MM-DD'}
+
     // 用能详情数据请求
     fetchMonitorDetails({
       ...params,
-      date: structureDate,
-      unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
+      date: dayjs(structureDate).format(dateType[unit]),
+      unit,
     })
     // 能源结构
     fetchEnergyStructure({
       ...params,
-      date: structureDate,
-      unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
+      date: dayjs(structureDate).format(dateType[unit]),
+      unit,
     })
     // 用能总览
     fetchMonitorOverview({ ...params })

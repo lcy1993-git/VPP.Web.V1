@@ -28,6 +28,8 @@ const ChargingStation = () => {
   const [chargeDate, setChargeDate] = useState<string>(dayjs(`${new Date()}`).format('YYYY-MM-DD'));
   // 充电桩运行状态类型
   const [type, setType] = useState<string>('全部');
+  // 充电功率趋势是否当天
+  const [chargePowerIsToday, setChargePowerIsToday] = useState<boolean>(true);
 
   // 获取站点数据
   const {} = useRequest(getChargeStation, {
@@ -84,7 +86,13 @@ const ChargingStation = () => {
 
   // 充电功率趋势日期
   const renderDateRight = () => {
-    return <CustomDatePicker datePickerType="day" getDate={(value) => setChargeDate(value)} />;
+    return (
+      <CustomDatePicker
+        datePickerType="day"
+        getDate={(value) => setChargeDate(value)}
+        setIsToday={setChargePowerIsToday}
+      />
+    );
   };
 
   // 充电桩运行状态SegmentedTheme
@@ -182,7 +190,10 @@ const ChargingStation = () => {
           <div className={styles.charge}>
             <CustomCard title="充电功率趋势" isTitleCenter={false} renderRight={renderDateRight}>
               <CustomCharts
-                options={chargeOverviewChart(substationCode ? chargePower?.powerMap : {})}
+                options={chargeOverviewChart(
+                  substationCode ? chargePower?.powerMap : {},
+                  chargePowerIsToday,
+                )}
               />
             </CustomCard>
           </div>

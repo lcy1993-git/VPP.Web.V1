@@ -391,7 +391,10 @@ const PowerStation = () => {
                         options={allSubStation}
                       />
                     )}
-                    <Button style={{ marginTop: '5px', width: 140 }} onClick={() => setModalVisible(true)}>
+                    <Button
+                      style={{ marginTop: '5px', width: 140 }}
+                      onClick={() => setModalVisible(true)}
+                    >
                       <i className="iconfont" style={{ fontSize: 14, marginRight: '6px' }}>
                         &#xe637;
                       </i>
@@ -516,7 +519,7 @@ const PowerStation = () => {
                     />
                   </Space>
                 </div>
-                <div className={styles.moduleMain} style={{ height: '280px', paddingBottom: 20}}>
+                <div className={styles.moduleMain} style={{ height: '280px', paddingBottom: 20 }}>
                   <CustomCharts
                     options={powerGenerationOptions(powerGeneration, fullAndPutDate)}
                     loading={powerGenerationLoading}

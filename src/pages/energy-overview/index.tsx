@@ -25,6 +25,8 @@ const EnergyOverview = () => {
   const [dateValue, setDateValue] = useState<string>(date);
   // 用电概览日期类型
   const [type, setType] = useState<string>('day');
+  // 负荷概览是否当天
+  const [powerOverviewIsToday, setPowerOverviewIsToday] = useState<boolean>(true);
 
   // 查询上方信息
   const { data: information } = useRequest(getInformation, {
@@ -83,6 +85,7 @@ const EnergyOverview = () => {
       <CustomDatePicker
         datePickerType={'day'}
         onChange={(value: string) => fetchPowerOverview(dayjs(value).format('YYYY-MM-DD'))}
+        setIsToday={setPowerOverviewIsToday}
       />
     );
   };
@@ -114,6 +117,7 @@ const EnergyOverview = () => {
                 {/* 平均电价及电费 */}
                 <div>
                   {renderAverageData(
+                    type,
                     chargeOrQuantity,
                     electricOverview?.averageElectricityPrice,
                     electricOverview?.averageElectricityCost,
@@ -122,7 +126,9 @@ const EnergyOverview = () => {
                 </div>
                 {/* 尖峰平台占比 */}
                 <div className={styles.proportion}>
-                  <div className={styles.title}>日电量尖峰平谷占比（%）</div>
+                  <div className={styles.title}>
+                    {type === 'day' ? '日' : type === 'month' ? '月' : '年'}电量尖峰平谷占比（%）
+                  </div>
                   <CustomCharts
                     options={pieChart(
                       electricOverview?.peakElectricity,
@@ -163,7 +169,7 @@ const EnergyOverview = () => {
         <div className={styles.bottomContainer}>
           <CustomCard title="负荷概览" isTitleCenter={false} renderRight={renderRight}>
             <CustomCharts
-              options={powerOverviewOptions(powerOverview)}
+              options={powerOverviewOptions(powerOverview, powerOverviewIsToday)}
               loading={powerOverviewLoading}
             />
           </CustomCard>

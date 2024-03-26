@@ -1,6 +1,7 @@
 import Empty from '@/components/empty';
 import {
   formatXAxis,
+  handleDiffMins,
   handleInverterStatus,
   handleInverterStatus_psc,
   roundNumbers,
@@ -89,10 +90,12 @@ export const handleChargeData = (data: any) => {
 };
 
 // 分布式能源总览-光伏-曲线
-export const solarOverviewChart = (powerMap: any, irradianceMap: any) => {
+export const solarOverviewChart = (powerMap: any, irradianceMap: any, isToday: boolean) => {
   if (!powerMap || !irradianceMap) return false;
   const powerKeys = Object.keys(powerMap);
   const irradianceKeys = Object.keys(irradianceMap);
+  const powerData = powerKeys ? Object.values(powerMap) : [];
+  const irradianceData = powerKeys ? Object.values(irradianceMap) : [];
 
   return {
     grid: {
@@ -172,7 +175,7 @@ export const solarOverviewChart = (powerMap: any, irradianceMap: any) => {
       {
         name: '有功',
         type: 'line',
-        data: powerKeys ? Object.values(powerMap) : [],
+        data: isToday ? powerData.slice(0, handleDiffMins() + 1) : powerData,
         yAxisIndex: 0, // 指定使用第一个 y 轴
         smooth: true, // 设置为 true，使折线变得平滑
         showSymbol: false, // 设置为 false，隐藏数据点
@@ -186,7 +189,7 @@ export const solarOverviewChart = (powerMap: any, irradianceMap: any) => {
       {
         name: '辐照',
         type: 'line',
-        data: irradianceKeys ? Object.values(irradianceMap) : [],
+        data: isToday ? irradianceData.slice(0, handleDiffMins() + 1) : irradianceData,
         yAxisIndex: 1, // 指定使用第二个 y 轴
         smooth: true, // 设置为 true，使折线变得平滑
         showSymbol: false, // 设置为 false，隐藏数据点
@@ -202,10 +205,14 @@ export const solarOverviewChart = (powerMap: any, irradianceMap: any) => {
 };
 
 // 分布式能源总览-储能-曲线
-export const essOverviewChart = (chargePower: any, disChargePower: any) => {
+export const essOverviewChart = (chargePower: any, disChargePower: any, isToday: boolean) => {
   if (!chargePower || !disChargePower) return false;
+  // x轴
   const chargeKeys = Object.keys(chargePower);
   const dischargeKeys = Object.keys(disChargePower);
+  // y轴
+  const chargeData = chargeKeys ? Object.values(chargePower) : [];
+  const dischargeData = dischargeKeys ? Object.values(disChargePower) : [];
 
   return {
     grid: {
@@ -285,7 +292,7 @@ export const essOverviewChart = (chargePower: any, disChargePower: any) => {
       {
         name: '充电',
         type: 'line',
-        data: chargeKeys ? Object.values(chargePower) : [],
+        data: isToday ? chargeData.slice(0, handleDiffMins() + 1) : chargeData,
         yAxisIndex: 0, // 指定使用第一个 y 轴
         smooth: true, // 设置为 true，使折线变得平滑
         showSymbol: false, // 设置为 false，隐藏数据点
@@ -299,7 +306,7 @@ export const essOverviewChart = (chargePower: any, disChargePower: any) => {
       {
         name: '放电',
         type: 'line',
-        data: dischargeKeys ? Object.values(disChargePower) : [],
+        data: isToday ? dischargeData.slice(0, handleDiffMins() + 1) : dischargeData,
         yAxisIndex: 1, // 指定使用第二个 y 轴
         smooth: true, // 设置为 true，使折线变得平滑
         showSymbol: false, // 设置为 false，隐藏数据点
@@ -315,7 +322,7 @@ export const essOverviewChart = (chargePower: any, disChargePower: any) => {
 };
 
 // 分布式能源总览-充电-曲线
-export const chargeOverviewChart = (powerMap: any) => {
+export const chargeOverviewChart = (powerMap: any, isToday: boolean) => {
   if (!powerMap) return false;
   const powerKeys = Object.keys(powerMap);
   if (powerKeys.length === 0) return false;
@@ -378,7 +385,9 @@ export const chargeOverviewChart = (powerMap: any) => {
       {
         name: '充电桩总功率',
         type: 'line',
-        data: Object.values(powerMap),
+        data: isToday
+          ? Object.values(powerMap).slice(0, handleDiffMins() + 1)
+          : Object.values(powerMap),
         yAxisIndex: 0, // 指定使用第一个 y 轴
         smooth: true, // 设置为 true，使折线变得平滑
         showSymbol: false, // 设置为 false，隐藏数据点

@@ -1,19 +1,18 @@
+import { judgmentIsToday } from '@/utils/common';
 import { DatePicker, Space } from 'antd';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import SegmentedTheme from '../segmented-theme';
+
 /**
  * 通用日期segmented+日历datePicker组件
- * @params datePickerType 日历类型（day、month、year）,为空''代表可切换日期类型segmented
- * @params defaultDate 选择器默认日期，不传值默认当天/月/年
- * @params disabledDate 禁用日期选择，默认禁用当天/月/年
- * @params isChangeType 是否有segmented来切换日历类型，默认true
+ * @datePickerType 日历类型（day、month、year）,为空''代表可切换日期类型segmented
+ * @setIsToday 修改父组件勾选日期是否当天
  * */
 interface propsType {
   datePickerType: string;
-  defaultDate?: string;
-  disabledDate?: any;
   onChange?: any;
+  setIsToday?: Dispatch<SetStateAction<any>>;
   getTypeAndDate?: (type: string, date: string) => void | undefined;
   getDate?: (date: string) => void | undefined;
 }
@@ -38,14 +37,9 @@ const datePickerEnum: any = {
 };
 
 const CustomDatePicker = (props: propsType) => {
-  const {
-    datePickerType,
-    defaultDate = dayjs(`${new Date()}`),
-    onChange,
-    disabledDate,
-    getTypeAndDate,
-    getDate,
-  } = props;
+  const { datePickerType, onChange, getTypeAndDate, getDate, setIsToday } = props;
+  // 默认当天
+  const defaultDate = dayjs(`${new Date()}`);
   // 日期类型 默认日
   const [type, setType] = useState<string>('day');
   // 日历选中值
@@ -83,9 +77,12 @@ const CustomDatePicker = (props: propsType) => {
           <DatePicker
             picker={datePickerEnum[type].type}
             value={dayjs(datePickerValue, datePickerEnum[type].dayType)}
-            onChange={(value) => setDatePickerValue(value)}
+            onChange={(value) => {
+              setDatePickerValue(value);
+              if (setIsToday) setIsToday(judgmentIsToday(value));
+            }}
             allowClear={false}
-            disabledDate={disabledDate ? disabledDate : disableDate}
+            disabledDate={disableDate}
           />
         </Space>
       ) : (
@@ -93,11 +90,12 @@ const CustomDatePicker = (props: propsType) => {
           picker={datePickerEnum[datePickerType].type}
           defaultValue={dayjs(defaultDate, datePickerEnum[datePickerType])}
           onChange={(value) => {
-            if (onChange) onChange();
+            if (onChange) onChange(value);
             if (getDate) getDate(value.format(datePickerEnum[datePickerType].dayType));
+            if (setIsToday) setIsToday(judgmentIsToday(value));
           }}
           allowClear={false}
-          disabledDate={disabledDate ? disabledDate : disableDate}
+          disabledDate={disableDate}
         />
       )}
     </>

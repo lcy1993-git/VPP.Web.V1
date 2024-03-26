@@ -3,11 +3,11 @@ import { getDevicesInfo, updateDeviceInfo } from '@/services/devices-manage';
 import { downloadFile, getQRCode } from '@/utils/utils';
 import { CloseCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
-import { Button, Col, Form, Input, message, Modal, Row, Space } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Space, message } from 'antd';
 import { MessageInstance } from 'antd/es/message/interface';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from './index.less';
-import { basicInfo, deviceParams, factoryInfo, SIMBasicInfo } from './utlis';
+import { SIMBasicInfo, basicInfo, deviceParams, factoryInfo } from './utlis';
 
 interface propsType {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>; // 修改模态框状态
@@ -30,14 +30,12 @@ const DeviceModal = (props: propsType) => {
   // loading
   const [loading, setLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
-
   // 设备参数表单
   const [deviceParamsFormItem, setDeviceParamsFormItem] = useState<any[]>([]);
   // 基本信息表单
   const [basicInfoFormItem, setBasicInfoFormItem] = useState<any[]>(basicInfo);
-
   // 二维码地址
-  const [qrcodeUrl, setQrcodeUrl] = useState<{ codeUrl: string; name: string } | null>(null);
+  const [QRcodeUrl, setQRcodeUrl] = useState<{ codeUrl: string; name: string } | null>(null);
 
   /** 请求设备详情 */
   const { run: fetchDevicesInfo } = useRequest(() => getDevicesInfo(currDeviceInfo?.deviceCode), {
@@ -66,9 +64,8 @@ const DeviceModal = (props: propsType) => {
   // 生成二维码
   const createQRCode = async () => {
     const landingPageUrl = JSON.stringify({ id: currDeviceInfo?.deviceCode });
-
     const code = await getQRCode(landingPageUrl, currDeviceInfo?.name);
-    setQrcodeUrl(code);
+    setQRcodeUrl(code);
   };
 
   //保存
@@ -211,8 +208,8 @@ const DeviceModal = (props: propsType) => {
               }
             </Form>
             <div className={styles.qrcodeUrl}>
-              <img src={qrcodeUrl?.codeUrl} alt="" />
-              <Button onClick={() => downloadFile(qrcodeUrl?.codeUrl, currDeviceInfo.name)}>
+              <img src={QRcodeUrl?.codeUrl} alt="" />
+              <Button onClick={() => downloadFile(QRcodeUrl?.codeUrl, currDeviceInfo.name)}>
                 下载二维码
               </Button>
             </div>

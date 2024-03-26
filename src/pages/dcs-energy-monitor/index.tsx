@@ -44,10 +44,14 @@ const DcsEnergyMonitor = () => {
   const [energyOverviewType, setEnergyOverviewType] = useState<string>('光伏');
   // 分布式能源总览查询日期
   const [energyOverviewDate, setEnergyOverviewDate] = useState<string>(DATE);
+  // 分布式能源总览查询日期是否当天
+  const [energyOverviewIsToday, setEnergyOverviewIsToday] = useState<boolean>(true);
   // 企业概览查询类型（默认光伏）
   const [enterpriseOverviewType, setEnterpriseOverviewType] = useState<string>('光伏');
   // 企业概览查询日期
   const [enterpriseOverviewDate, setEnterpriseOverviewDate] = useState<string>(DATE);
+  // 企业概览查询日期是否当天
+  const [enterpriseOverviewIsToday, setEnterpriseOverviewIsToday] = useState<boolean>(true);
   // 企业概览查询电站Id
   const [substationCode, setSubstationCode] = useState<string>('');
   // 企业设备概览运行状态
@@ -147,7 +151,11 @@ const DcsEnergyMonitor = () => {
   // 分布式能源总览右侧日历
   const renderEnergyRight = () => {
     return (
-      <CustomDatePicker datePickerType="day" getDate={(value) => setEnergyOverviewDate(value)} />
+      <CustomDatePicker
+        datePickerType="day"
+        getDate={(value) => setEnergyOverviewDate(value)}
+        setIsToday={setEnergyOverviewIsToday}
+      />
     );
   };
 
@@ -165,15 +173,26 @@ const DcsEnergyMonitor = () => {
   // 根据模块查询类型返回分布式能源总览图表
   const renderChart = () => {
     const res: any = {};
-    if (energyOverviewType === '光伏') {
-      res.chart = solarOverviewChart(solarOverview?.powerMap, solarOverview?.irradianceMap);
-      res.loading = solarOverviewLoading;
-    } else if (energyOverviewType === '储能') {
-      res.chart = essOverviewChart(essOverview?.chargePower, essOverview?.disChargePower);
-      res.loading = essOverviewLoading;
-    } else {
-      res.chart = chargeOverviewChart(chargeOverview?.powerMap);
-      res.loading = chargeOverviewLoading;
+    switch (energyOverviewType) {
+      case '光伏':
+        res.chart = solarOverviewChart(
+          solarOverview?.powerMap,
+          solarOverview?.irradianceMap,
+          energyOverviewIsToday,
+        );
+        res.loading = solarOverviewLoading;
+        break;
+      case '储能':
+        res.chart = essOverviewChart(
+          essOverview?.chargePower,
+          essOverview?.disChargePower,
+          energyOverviewIsToday,
+        );
+        res.loading = essOverviewLoading;
+        break;
+      default:
+        res.chart = chargeOverviewChart(chargeOverview?.powerMap, energyOverviewIsToday);
+        res.loading = chargeOverviewLoading;
     }
     return res;
   };
@@ -195,12 +214,14 @@ const DcsEnergyMonitor = () => {
       res.chart = solarOverviewChart(
         singleSolarOverview?.powerMap,
         singleSolarOverview?.irradianceMap,
+        enterpriseOverviewIsToday,
       );
       res.loading = singleSolarOverviewLoading;
     } else {
       res.chart = essOverviewChart(
         singleEssOverview?.chargePower,
         singleEssOverview?.disChargePower,
+        enterpriseOverviewIsToday,
       );
       res.loading = singleEssOverviewLoading;
     }
@@ -336,6 +357,7 @@ const DcsEnergyMonitor = () => {
                 <CustomDatePicker
                   datePickerType="day"
                   getDate={(value) => setEnterpriseOverviewDate(value)}
+                  setIsToday={setEnterpriseOverviewIsToday}
                 />
               </div>
               <div className={styles.dataContainer}>

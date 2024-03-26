@@ -34,7 +34,7 @@ const ReportManage = () => {
   // 批量导出报表
   const { run: fetchReportDataList } = useRequest(getReportDataList, {
     manual: true,
-    onSuccess: (res) => {
+    onSuccess: (res: any) => {
       res.forEach((item: any, index: number) => {
         // 处理数据
         const transformedData = handleTable(item).dataSource.map(({ date, ...rest }) => {

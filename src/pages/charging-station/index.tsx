@@ -174,7 +174,6 @@ const ChargingStation = () => {
                     // breadth="210px"
                   />
                 </div>
-
                 <div style={{ marginLeft: '20px' }}>
                   <CircleRingChart
                     textName="使用率"

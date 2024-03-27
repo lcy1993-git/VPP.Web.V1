@@ -331,7 +331,7 @@ export const powerIndexOptions = (data: any, unit: string) => {
       bottom: '12%',
       containLabel: true,
     },
-    color: ['#39FFC5', '#0090FF'],
+    color: ['#39FFC5', '#0090FF', '#FB8D44', '#FFEA00'],
     legend: {
       data: ['用电增长指数', '用电活跃指数', '用电预期指数', '综合用电指数'],
       textStyle: {

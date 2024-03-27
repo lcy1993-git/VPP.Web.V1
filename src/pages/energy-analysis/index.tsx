@@ -228,28 +228,28 @@ const EnergyAnalysis = () => {
                     <b className="iconfont">&#xe64b;</b>
                     <span className={styles.label}>当前用电增长指数:</span>
                     <span className={styles.value} style={{ color: '#39FFC5' }}>
-                      {trendConsumption?.growthIndex || '-'}kW
+                      {trendConsumption?.growthIndex || '-'}
                     </span>
                   </p>
                   <p>
                     <b className="iconfont">&#xe64b;</b>
                     <span className={styles.label}>当前用电活跃指数:</span>
                     <span className={styles.value} style={{ color: '#0090FF' }}>
-                      {trendConsumption?.activityIndex || '-'}kW
+                      {trendConsumption?.activityIndex || '-'}
                     </span>
                   </p>
                   <p>
                     <b className="iconfont">&#xe64b;</b>
                     <span className={styles.label}>当前用电预期指数:</span>
                     <span className={styles.value} style={{ color: '#FB8D44' }}>
-                      {trendConsumption?.expectationIndex || '-'}kW
+                      {trendConsumption?.expectationIndex || '-'}
                     </span>
                   </p>
                   <p>
                     <b className="iconfont">&#xe64b;</b>
                     <span className={styles.label}>当前综合用电指数:</span>
                     <span className={styles.value} style={{ color: '#FFEA00' }}>
-                      {trendConsumption?.electricityIndex || '-'}kW
+                      {trendConsumption?.electricityIndex || '-'}
                     </span>
                   </p>
                 </div>

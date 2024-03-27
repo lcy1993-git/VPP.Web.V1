@@ -30,7 +30,7 @@ const EnterprisePanel = () => {
   // 日期
   const [date, setDate] = useState<string>(dayjs(new Date()).format('YYYY-MM-DD'));
   // 图表查询电站code
-  const [substationCode, setSubstationCode] = useState<string>();
+  const [substationCode, setSubstationCode] = useState<string>('');
 
   // 企业名称
   const { data: substationName } = useRequest(getSubstationName, {

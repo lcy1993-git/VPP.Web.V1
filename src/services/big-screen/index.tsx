@@ -1,7 +1,7 @@
 import { request } from '@umijs/max';
 
 // 特色场景-区域用能概览
-export const getnergyUse = (params: any) => {
+export const getEnergyUse = (params: any) => {
   return request(`/api/bigScreen/scene/energyUse`, {
     method: 'GET',
     params,
@@ -30,9 +30,10 @@ export const getResponseStatistic = () => {
 };
 
 // 特色场景-典型响应分析
-export const getTypicalResponseAnalysis = () => {
+export const getTypicalResponseAnalysis = (type: string) => {
   return request(`/api/bigScreen/scene/typicalResponseAnalysis`, {
     method: 'GET',
+    params: { type: type === '负荷' ? 0 : 1 },
   });
 };
 

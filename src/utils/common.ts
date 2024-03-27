@@ -183,3 +183,6 @@ export const handleInverterStatus_air = (status: any) => {
     return '停机';
   }
 };
+
+// 当天日期
+export const currentDay = dayjs(new Date()).format('YYYY-MM-DD');

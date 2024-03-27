@@ -1,4 +1,4 @@
-import { SpaceContext } from 'antd/es/space';
+import { formatXAxis } from '@/utils/common';
 import * as echarts from 'echarts';
 
 // 计算排名编号
@@ -10,22 +10,7 @@ const contains = (arr: any[], dst: string): number => {
     }
   }
   return 0;
-}
-
-// 鼠标移入 tooptip 提示
-const handleTooltip = () => {
-  return {
-    appendToBody: true,
-    trigger: 'item',
-    axisPointer: {
-      type: 'shadow',
-    },
-    formatter: function ({ name, value }: any) {
-      return `${name}-${value}kW`
-    },
-  }
 };
-
 
 // 赋值每行数据
 const dataFormat = (data: any) => {
@@ -36,108 +21,57 @@ const dataFormat = (data: any) => {
     });
   });
   return arr;
-}
+};
 
 // 能源结构排行 chart options
 export const energyRankOptions = (dataList: any[] = []) => {
   // 站点名称
   const stationData: any = [];
-  // 站点数据
+  // 站点总数据
   const values: any = [];
+  // 清洁能源用电量
+  const cleanEnergyElectricity: any = [];
+  // 传统能源用电量
+  const conventionalEnergyElectricity: any = [];
   // 用于添加排名图标
-  const yAxisRich: any = {}
-
-  dataList = [
-    {
-      "substationName": "德龙钢铁1",
-      "substationCode": "dl_substation",
-      "alarmCount": 285,
-      "deviceAlarmCountVOS": [
-        {
-          "deviceName": "逆变器",
-          "alarmCount": 285
-        }
-      ]
-    },
-    {
-      "substationName": "华皓总站测试",
-      "substationCode": "hh_substation",
-      "alarmCount": 96,
-      "deviceAlarmCountVOS": [
-        {
-          "deviceName": "逆变器",
-          "alarmCount": 96
-        }
-      ]
-    },
-    {
-      "substationName": "华皓总站2",
-      "substationCode": "hh_substation",
-      "alarmCount": 110,
-      "deviceAlarmCountVOS": [
-        {
-          "deviceName": "逆变器",
-          "alarmCount": 96
-        }
-      ]
-    },
-    {
-      "substationName": "华皓总站3",
-      "substationCode": "hh_substation",
-      "alarmCount": 120,
-      "deviceAlarmCountVOS": [
-        {
-          "deviceName": "逆变器",
-          "alarmCount": 96
-        }
-      ]
-    },
-    {
-      "substationName": "华皓总站4",
-      "substationCode": "hh_substation",
-      "alarmCount": 160,
-      "deviceAlarmCountVOS": [
-        {
-          "deviceName": "逆变器",
-          "alarmCount": 96
-        }
-      ]
-    },
-    {
-      "substationName": "华皓总站5",
-      "substationCode": "hh_substation",
-      "alarmCount": 190,
-      "deviceAlarmCountVOS": [
-        {
-          "deviceName": "逆变器",
-          "alarmCount": 96
-        }
-      ]
-    }
-  ]
+  const yAxisRich: any = {};
 
   if (!dataList || dataList.length === 0) {
     return false;
   }
 
   dataList.forEach((item: any, index: number) => {
-    stationData.push(item.substationName);
-    values.push(item.alarmCount);
+    stationData.push(item.companyName);
+    values.push(item.energyElectricity);
+    cleanEnergyElectricity.push(item.cleanEnergyElectricity);
+    conventionalEnergyElectricity.push(item.conventionalEnergyElectricity);
     yAxisRich[`nt${index + 1}`] = {
       color: '#fff',
-      backgroundColor: (index) < 3 ? '#00bc9b' : 'transparent',
+      backgroundColor: index < 3 ? '#00bc9b' : 'transparent',
       width: 20,
       height: 18,
       fontSize: 12,
       align: 'center',
       borderRadius: 50,
       padding: [2, 0, 0, 0],
-    }
+    };
   });
 
-
   return {
-    tooltip: handleTooltip(),
+    tooltip: {
+      appendToBody: true,
+      trigger: 'item',
+      axisPointer: {
+        type: 'shadow',
+      },
+      formatter: function ({ name, value, seriesName }: any) {
+        if (seriesName === '清洁能源用电量') {
+          return `${name}-清洁能源用电量  ${value}kW`;
+        } else if (seriesName === '传统能源用电量') {
+          return `${name}-传统能源用电量  ${value}kW`;
+        }
+      },
+    },
     grid: {
       left: '0%',
       right: '2%',
@@ -181,18 +115,15 @@ export const energyRankOptions = (dataList: any[] = []) => {
           width: 100,
           lineHeight: 40,
           overflow: 'truncate',
-          verticalAlign : 'middle',
+          verticalAlign: 'middle',
           rich: yAxisRich,
           formatter: function (value: string) {
             const index = contains(stationData, value);
             if (Object.prototype.toString.call(index) === '[object Number]') {
               const _index = index + 1;
-              return [
-                '{nt' + _index + '|' + _index + '}',
-                `{b|${value}}`
-              ].join(' ')
+              return ['{nt' + _index + '|' + _index + '}', `{b|${value}}`].join(' ');
             } else {
-              return ''
+              return '';
             }
           },
         },
@@ -250,14 +181,14 @@ export const energyRankOptions = (dataList: any[] = []) => {
     series: [
       {
         zlevel: 1,
-        name: '',
+        name: '清洁能源用电量',
         type: 'bar',
+        stack: 'total', // 设置堆叠的标识
         barWidth: 18,
-        data: dataFormat(values),
+        data: dataFormat(cleanEnergyElectricity), // 第一类数据
         barCategoryGap: '10%',
         align: 'center',
         itemStyle: {
-          barBorderRadius: [0, 10, 10, 0],
           color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
             { offset: 1, color: 'rgba(0, 161, 159, 1)' },
             { offset: 0, color: 'rgba(0, 226, 144, 1)' },
@@ -266,20 +197,46 @@ export const energyRankOptions = (dataList: any[] = []) => {
         label: {
           show: true,
           fontSize: 10,
-          color: '#fff', //条装中字体颜色
+          color: '#fff',
           position: 'insideLeft',
-          formatter: () => {
-            return '';
-          },
+          formatter: '{c}', // 显示数值
+        },
+      },
+      {
+        zlevel: 1,
+        name: '传统能源用电量',
+        type: 'bar',
+        stack: 'total', // 设置堆叠的标识（与第一类数据相同）
+        barWidth: 18,
+        data: dataFormat(conventionalEnergyElectricity), // 第二类数据
+        barCategoryGap: '10%',
+        itemStyle: {
+          barBorderRadius: [0, 10, 10, 0],
+          color: 'rgba(0, 226, 144, 0.3)', // 设置另一类数据的颜色
+        },
+        label: {
+          show: true,
+          fontSize: 10,
+          color: '#fff',
+          position: 'insideRight',
+          formatter: '{c}', // 显示数值
         },
       },
     ],
   };
 };
 
-
 // 用电量趋势 chart options
-export const powerTrendOptions = () => {
+export const powerTrendOptions = (data: any, unit: string) => {
+  if (!data) return false;
+
+  // 同比
+  const yearOnYearKeys = Object.keys(data?.yearOnYearMap);
+  // 环比
+  const quarterOnQuarterKeys = Object.keys(data?.quarterOnQuarter);
+
+  // x轴均无数据，false
+  if (yearOnYearKeys.length === 0 && quarterOnQuarterKeys.length === 0) return false;
   return {
     tooltip: {
       trigger: 'axis',
@@ -291,20 +248,19 @@ export const powerTrendOptions = () => {
       left: '3%',
       right: '4%',
       bottom: '12%',
-      containLabel: true
+      containLabel: true,
     },
     color: ['#39FFC5', '#0090FF'],
     legend: {
       data: ['同比增长率', '环比增长率'],
       textStyle: {
-        color: '#d7eaef'
+        color: '#d7eaef',
       },
       bottom: 6,
     },
     xAxis: {
       type: 'category',
-      name: '月',
-      data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+      data: formatXAxis(yearOnYearKeys || quarterOnQuarterKeys, unit),
       axisLine: {
         show: true,
         lineStyle: {
@@ -314,7 +270,7 @@ export const powerTrendOptions = () => {
     },
     yAxis: {
       type: 'value',
-      name: 'kWh',
+      name: '增长率',
       nameTextStyle: {
         align: 'right',
       },
@@ -334,22 +290,34 @@ export const powerTrendOptions = () => {
     },
     series: [
       {
-        data: [120, 200, 150, 80, 70, 110, 130],
+        data: yearOnYearKeys ? Object.values(data?.yearOnYearMap) : [],
         type: 'line',
-        name: '同比增长率'
+        name: '同比增长率',
       },
       {
-        data: [100, 220, 10, 90, 170, 10, 330],
+        data: quarterOnQuarterKeys ? Object.values(data?.quarterOnQuarter) : [],
         type: 'line',
-        name: '环比增长率'
-      }
-    ]
+        name: '环比增长率',
+      },
+    ],
   };
-}
-
+};
 
 // 用电指数
-export const powerIndexOptions = () => {
+export const powerIndexOptions = (data: any, unit: string) => {
+  if (!data) return false;
+  // 	用电活跃指数
+  const activityIndexKeys = Object.keys(data?.activityIndexMap);
+  const electricityIndexKeys = Object.keys(data?.electricityIndexMap);
+  const expectationIndexKeys = Object.keys(data?.expectationIndexMap);
+  const growthIndexKeys = Object.keys(data?.growthIndexMap);
+  if (
+    activityIndexKeys.length === 0 &&
+    electricityIndexKeys.length === 0 &&
+    expectationIndexKeys.length === 0 &&
+    growthIndexKeys.length === 0
+  )
+    return false;
   return {
     tooltip: {
       trigger: 'axis',
@@ -361,20 +329,22 @@ export const powerIndexOptions = () => {
       left: '3%',
       right: '4%',
       bottom: '12%',
-      containLabel: true
+      containLabel: true,
     },
     color: ['#39FFC5', '#0090FF'],
     legend: {
-      data: ['同比增长率', '环比增长率'],
+      data: ['用电增长指数', '用电活跃指数', '用电预期指数', '综合用电指数'],
       textStyle: {
-        color: '#d7eaef'
+        color: '#d7eaef',
       },
       bottom: 6,
     },
     xAxis: {
       type: 'category',
-      name: '月',
-      data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+      data: formatXAxis(
+        activityIndexKeys || electricityIndexKeys || expectationIndexKeys || growthIndexKeys,
+        unit,
+      ),
       axisLine: {
         show: true,
         lineStyle: {
@@ -384,7 +354,7 @@ export const powerIndexOptions = () => {
     },
     yAxis: {
       type: 'value',
-      name: 'kWh',
+      name: '增长指数',
       nameTextStyle: {
         align: 'right',
       },
@@ -404,15 +374,25 @@ export const powerIndexOptions = () => {
     },
     series: [
       {
-        data: [120, 200, 150, 80, 70, 110, 130],
+        data: growthIndexKeys ? Object.values(data?.growthIndexMap) : [],
         type: 'line',
-        name: '同比增长率'
+        name: '用电增长指数',
       },
       {
-        data: [100, 220, 10, 90, 170, 10, 330],
+        data: activityIndexKeys ? Object.values(data?.activityIndexMap) : [],
         type: 'line',
-        name: '环比增长率'
-      }
-    ]
+        name: '用电活跃指数',
+      },
+      {
+        data: expectationIndexKeys ? Object.values(data?.expectationIndexMap) : [],
+        type: 'line',
+        name: '用电预期指数',
+      },
+      {
+        data: electricityIndexKeys ? Object.values(data?.electricityIndexMap) : [],
+        type: 'line',
+        name: '综合用电指数',
+      },
+    ],
   };
-}
+};

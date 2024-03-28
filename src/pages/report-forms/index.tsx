@@ -232,13 +232,7 @@ const ReportForms = () => {
   const renderTitleRight = () => {
     return (
       <Space size={10}>
-        <CustomDatePicker
-          datePickerType=""
-          getTypeAndDate={(type, date) => {
-            setUnit(type);
-            setDate(date);
-          }}
-        />
+        <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
         <Button onClick={() => setIsModalOpen(true)}>
           <PlusCircleOutlined />
           新增模版

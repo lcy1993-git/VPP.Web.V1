@@ -1,25 +1,24 @@
-import ContentComponent from "@/components/content-component"
-import ContentPage from "@/components/content-page"
-import GeneralTable from "@/components/general-table"
-import SegmentDatepicker from "@/components/segment-datepicker"
-import { SearchOutlined } from "@ant-design/icons"
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Segmented, Select, Space } from "antd"
-import { useEffect, useRef, useState } from "react"
-import styles from './index.less'
+import ContentComponent from '@/components/content-component';
+import ContentPage from '@/components/content-page';
+import GeneralTable from '@/components/general-table';
+import SegmentDatepicker from '@/components/segment-datepicker';
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Modal, Row, Select, Space } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
-import React from "react";
+import { useEffect, useRef, useState } from 'react';
+import styles from './index.less';
 dayjs.locale('zh-cn');
 
 const CarbonAnalysis = () => {
   // form
   const [searchForm] = Form.useForm();
   // table 示例
-  const tableRef = useRef(null)
+  const tableRef = useRef(null);
   // 表格 checkbox 被选中
   const [tableSelectRows, setTableSelectRows] = useState<any[]>([]);
   // 碳排放监测 日期组件
-  const [selectDate, setSelectDate] = useState<string>('')
+  const [selectDate, setSelectDate] = useState<string>('');
   // modal状态
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -105,11 +104,15 @@ const CarbonAnalysis = () => {
       key: 'x',
       width: 200,
       render: () => {
-        return <Space>
-          <Button size="small" type="default">报告查询</Button>
-          <Button size="small">报告下载</Button>
-        </Space>
-      }
+        return (
+          <Space>
+            <Button size="small" type="default">
+              报告查询
+            </Button>
+            <Button size="small">报告下载</Button>
+          </Space>
+        );
+      },
     },
   ];
 
@@ -119,32 +122,26 @@ const CarbonAnalysis = () => {
     const params = {
       ...formParams,
       unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
-      type: formParams.type === '全部' ? 'null' : formParams.type
-    }
+      type: formParams.type === '全部' ? 'null' : formParams.type,
+    };
 
     if (tableRef && tableRef.current) {
       //@ts-ignore
       tableRef.current?.searchByParams(params);
     }
-  }
+  };
 
   useEffect(() => {
     if (selectDate) {
-      searchForm.setFieldValue('date', selectDate)
+      searchForm.setFieldValue('date', selectDate);
     }
-  }, [selectDate])
-
+  }, [selectDate]);
 
   /** 搜索区域 */
   const renderSearch = () => {
     return (
       <>
-        <Form
-          name="basic"
-          autoComplete="off"
-          form={searchForm}
-          initialValues={{type: '全部'}}
-        >
+        <Form name="basic" autoComplete="off" form={searchForm} initialValues={{ type: '全部' }}>
           <Row>
             <Col span={6}>
               <Form.Item label="分类" name="type">
@@ -163,9 +160,7 @@ const CarbonAnalysis = () => {
             </Col>
             <Col span={6}>
               <Form.Item label="时间" name="date">
-                <SegmentDatepicker
-                  setSelectDate={setSelectDate}
-                />
+                <SegmentDatepicker setSelectDate={setSelectDate} />
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -184,51 +179,65 @@ const CarbonAnalysis = () => {
         </Form>
       </>
     );
-  }
+  };
 
   const renderTitleRight = () => {
-    return <Button>批量下载</Button>
-  }
+    return <Button>批量下载</Button>;
+  };
 
-  return <ContentPage>
-    <ContentComponent title="碳排放分析"
-      renderSearch={renderSearch}
-      renderTitleRight={renderTitleRight}
-    >
-      <GeneralTable
-        url="/api/cleanEnergyConsumeManage/analyse"
-        ref={tableRef}
-        columns={initTableColumns}
-        rowKey="uuid"
-        bordered={false}
-        requestType="get"
-        type="checkbox"
-        filterParams={{
-          date: dayjs(new Date()).format("YYYY-MM-DD"),
-          type: 'null',
-          unit: 'day'
-        }}
-      />
+  return (
+    <ContentPage>
+      <ContentComponent
+        title="碳排放分析"
+        renderSearch={renderSearch}
+        renderTitleRight={renderTitleRight}
+      >
+        <GeneralTable
+          url="/api/cleanEnergyConsumeManage/analyse"
+          ref={tableRef}
+          columns={initTableColumns}
+          rowKey="uuid"
+          bordered={false}
+          requestType="get"
+          type="checkbox"
+          filterParams={{
+            date: dayjs(new Date()).format('YYYY-MM-DD'),
+            type: 'null',
+            unit: 'day',
+          }}
+        />
 
-      <Modal title="一汽大众负荷趋势"
-        centered
-        width={1000}
-        open={visible}
-        footer={false}
-        onCancel={() => setVisible(false)}>
-        <div className={styles.pdfView}>
-          <div className={styles.pdfTitle}>xxx企业能源排放分析报告</div>
-          <div className={styles.baseInfo}>
-            <h3>一、企业基本信息</h3>
-            <div className={styles.table}>
-              <p><span>企业名称</span><span>xxx企业</span></p>
-              <p><span>企业人数</span><span></span></p>
-              <p><span></span><span></span></p>
+        <Modal
+          title="一汽大众负荷趋势"
+          centered
+          width={1000}
+          open={visible}
+          footer={false}
+          onCancel={() => setVisible(false)}
+        >
+          <div className={styles.pdfView}>
+            <div className={styles.pdfTitle}>xxx企业能源排放分析报告</div>
+            <div className={styles.baseInfo}>
+              <h3>一、企业基本信息</h3>
+              <div className={styles.table}>
+                <p>
+                  <span>企业名称</span>
+                  <span>xxx企业</span>
+                </p>
+                <p>
+                  <span>企业人数</span>
+                  <span></span>
+                </p>
+                <p>
+                  <span></span>
+                  <span></span>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
-    </ContentComponent>
-  </ContentPage>
-}
-export default CarbonAnalysis
+        </Modal>
+      </ContentComponent>
+    </ContentPage>
+  );
+};
+export default CarbonAnalysis;

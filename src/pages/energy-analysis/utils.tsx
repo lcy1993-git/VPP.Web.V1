@@ -306,11 +306,15 @@ export const powerTrendOptions = (data: any, unit: string) => {
 // 用电指数
 export const powerIndexOptions = (data: any, unit: string) => {
   if (!data) return false;
-  // 	用电活跃指数
+  // 用电活跃指数
   const activityIndexKeys = Object.keys(data?.activityIndexMap);
+  // 综合用电指数
   const electricityIndexKeys = Object.keys(data?.electricityIndexMap);
+  // 用电预期指数
   const expectationIndexKeys = Object.keys(data?.expectationIndexMap);
+  // 用电增长指数
   const growthIndexKeys = Object.keys(data?.growthIndexMap);
+  // 都无数据
   if (
     activityIndexKeys.length === 0 &&
     electricityIndexKeys.length === 0 &&

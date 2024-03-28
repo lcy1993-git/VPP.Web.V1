@@ -71,13 +71,7 @@ const EnterprisePanel = () => {
           onFinish={handleSearchClick}
         >
           <Form.Item label="统计周期" name="date">
-            <CustomDatePicker
-              datePickerType=""
-              getTypeAndDate={(type, date) => {
-                setUnit(type);
-                setDate(date);
-              }}
-            />
+            <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
           </Form.Item>
           <Form.Item label="企业名称" name="name">
             <Select

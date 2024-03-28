@@ -804,7 +804,7 @@ export const monitorColumns = [
 ];
 
 // 弹性负荷管理--完成状态枚举
-const completionStateEumn = ['待完成', '执行中', '已完成'];
+const completionStateEnum = ['待完成', '执行中', '已完成'];
 // 弹性负荷管理
 export const elasticEnergyColumns = [
   {
@@ -880,8 +880,8 @@ export const elasticEnergyColumns = [
     render: (item: any, col: any) => {
       return (
         <td className={styles.tdContainer} style={{ width: col.width }}>
-          <Tooltip title={completionStateEumn[item[col.dataIndex] - 1] || '未知'}>
-            {completionStateEumn[item[col.dataIndex] - 1] || '未知'}
+          <Tooltip title={completionStateEnum[item[col.dataIndex] - 1] || '未知'}>
+            {completionStateEnum[item[col.dataIndex] - 1] || '未知'}
           </Tooltip>
         </td>
       );

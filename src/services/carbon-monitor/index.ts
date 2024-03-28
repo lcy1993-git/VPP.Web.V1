@@ -1,10 +1,10 @@
 import { request } from '@umijs/max';
 
-
 // 碳排放监测- card
-export const getMonitorCenterData = () => {
+export const getMonitorCenterData = (params: any) => {
   return request(`/api/cleanEnergyConsumeManage/carbonMonitor/centerData`, {
     method: 'GET',
+    params,
   });
 };
 
@@ -12,6 +12,6 @@ export const getMonitorCenterData = () => {
 export const getCarbonTrend = (params: any) => {
   return request(`/api/cleanEnergyConsumeManage/carbonMonitor/carbonTrend`, {
     method: 'GET',
-    params
+    params,
   });
 };

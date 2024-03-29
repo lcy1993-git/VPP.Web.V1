@@ -29,7 +29,9 @@ const EnergyAnalysis = () => {
   const [date, setDate] = useState<string>(currentDay);
   // 能源结构排行
   const [energyRanking, setEnergyRanking] = useState<any>([]);
+  // 用电量趋势分析
   const [trendAnalysis, setTrendAnalysis] = useState<any>();
+  // 企业用电指数分析
   const [trendConsumption, setTrendConsumption] = useState<any>();
 
   // 企业数据
@@ -83,6 +85,7 @@ const EnergyAnalysis = () => {
       setEnergyRanking([]);
       setTrendAnalysis(null);
       setTrendConsumption(null);
+      // 行业和企业未选择返回
       if (type === 1 && !substationCode) return;
       if (type === 2 && !industry) return;
       let params: any = { date, type, unit };
@@ -162,13 +165,7 @@ const EnergyAnalysis = () => {
                 </Col>
                 <Col span={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <Form.Item>
-                    <CustomDatePicker
-                      datePickerType=""
-                      getTypeAndDate={(type, date) => {
-                        setUnit(type);
-                        setDate(date);
-                      }}
-                    />
+                    <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
                   </Form.Item>
                 </Col>
               </Row>

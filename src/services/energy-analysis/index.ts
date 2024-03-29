@@ -18,7 +18,7 @@ export const getIndustryList = () => {
 export const getEnergyRanking = (params: any) => {
   return request(`/api/energy/analysis/ranking`, {
     method: 'GET',
-    params: params,
+    params,
   });
 };
 

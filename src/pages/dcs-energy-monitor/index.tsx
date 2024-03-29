@@ -153,7 +153,7 @@ const DcsEnergyMonitor = () => {
     return (
       <CustomDatePicker
         datePickerType="day"
-        getDate={(value) => setEnergyOverviewDate(value)}
+        setDate={setEnergyOverviewDate}
         setIsToday={setEnergyOverviewIsToday}
       />
     );
@@ -356,7 +356,7 @@ const DcsEnergyMonitor = () => {
                 />
                 <CustomDatePicker
                   datePickerType="day"
-                  getDate={(value) => setEnterpriseOverviewDate(value)}
+                  setDate={setEnterpriseOverviewDate}
                   setIsToday={setEnterpriseOverviewIsToday}
                 />
               </div>

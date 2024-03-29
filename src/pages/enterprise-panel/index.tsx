@@ -3,14 +3,10 @@ import ContentComponent from '@/components/content-component';
 import CustomCharts from '@/components/custom-charts';
 import CustomDatePicker from '@/components/custom-datePicker';
 import GeneralTable from '@/components/general-table';
-import {
-  getSubstationElectricity,
-  getSubstationName,
-  getSubstationPower,
-} from '@/services/enterprise-panel';
+import { getSubstationElectricity, getSubstationPower } from '@/services/enterprise-panel';
 import { SearchOutlined } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
-import { Button, Form, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 import styles from './index.less';
@@ -31,11 +27,6 @@ const EnterprisePanel = () => {
   const [date, setDate] = useState<string>(dayjs(new Date()).format('YYYY-MM-DD'));
   // 图表查询电站code
   const [substationCode, setSubstationCode] = useState<string>('');
-
-  // 企业名称
-  const { data: substationName } = useRequest(getSubstationName, {
-    manual: false,
-  });
 
   // 实时负荷趋势
   const { run: fetchSubstationPower, data: substationPower } = useRequest(getSubstationPower, {
@@ -71,25 +62,10 @@ const EnterprisePanel = () => {
           onFinish={handleSearchClick}
         >
           <Form.Item label="统计周期" name="date">
-            <CustomDatePicker
-              datePickerType=""
-              getTypeAndDate={(type, date) => {
-                setUnit(type);
-                setDate(date);
-              }}
-            />
+            <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
           </Form.Item>
           <Form.Item label="企业名称" name="name">
-            <Select
-              options={substationName}
-              placeholder="请选择企业名称"
-              allowClear
-              fieldNames={{
-                label: 'name',
-                value: 'name',
-              }}
-              style={{ width: 250 }}
-            />
+            <Input placeholder="请选择企业名称" allowClear style={{ width: 250 }} />
           </Form.Item>
           <Form.Item>
             <Button icon={<SearchOutlined />} htmlType="submit">

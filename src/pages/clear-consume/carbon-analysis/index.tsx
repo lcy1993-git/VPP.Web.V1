@@ -1,25 +1,33 @@
-import ContentComponent from "@/components/content-component"
-import ContentPage from "@/components/content-page"
-import GeneralTable from "@/components/general-table"
-import SegmentDatepicker from "@/components/segment-datepicker"
-import { SearchOutlined } from "@ant-design/icons"
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Segmented, Select, Space } from "antd"
-import { useEffect, useRef, useState } from "react"
-import styles from './index.less'
+import ContentComponent from '@/components/content-component';
+import ContentPage from '@/components/content-page';
+import CustomDatePicker from '@/components/custom-datePicker';
+import GeneralTable from '@/components/general-table';
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Modal, Row, Space } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
-import React from "react";
+import { useRef, useState } from 'react';
+import SelectForm from '../select-form';
+import styles from './index.less';
 dayjs.locale('zh-cn');
 
 const CarbonAnalysis = () => {
   // form
   const [searchForm] = Form.useForm();
+  // 分类类型
+  const [type, setType] = useState<number>(0);
+  // 企业code
+  const [substationCode, setSubstationCode] = useState<string>('');
+  // 行业code
+  const [industry, setIndustry] = useState<string>('');
   // table 示例
-  const tableRef = useRef(null)
+  const tableRef = useRef(null);
   // 表格 checkbox 被选中
   const [tableSelectRows, setTableSelectRows] = useState<any[]>([]);
   // 碳排放监测 日期组件
-  const [selectDate, setSelectDate] = useState<string>('')
+  const [date, setDate] = useState<string>('');
+  // 日期类型
+  const [unit, setUnit] = useState<string>('');
   // modal状态
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -105,75 +113,61 @@ const CarbonAnalysis = () => {
       key: 'x',
       width: 200,
       render: () => {
-        return <Space>
-          <Button size="small" type="default">报告查询</Button>
-          <Button size="small">报告下载</Button>
-        </Space>
-      }
+        return (
+          <Space>
+            <Button size="small" type="default">
+              报告查询
+            </Button>
+            <Button size="small">报告下载</Button>
+          </Space>
+        );
+      },
     },
   ];
 
   // 点击查询
   const queryTableData = () => {
     const formParams = searchForm.getFieldsValue();
-    const params = {
+    let params = {
       ...formParams,
-      unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
-      type: formParams.type === '全部' ? 'null' : formParams.type
+      unit,
+      date,
+      type,
+    };
+    switch (type) {
+      case 0:
+        break;
+      case 1:
+        params.substationCode = substationCode;
+        break;
+      case 2:
+        params.industry = industry;
+        break;
     }
 
     if (tableRef && tableRef.current) {
       //@ts-ignore
       tableRef.current?.searchByParams(params);
     }
-  }
-
-  useEffect(() => {
-    if (selectDate) {
-      searchForm.setFieldValue('date', selectDate)
-    }
-  }, [selectDate])
-
+  };
 
   /** 搜索区域 */
   const renderSearch = () => {
     return (
       <>
-        <Form
-          name="basic"
-          autoComplete="off"
-          form={searchForm}
-          initialValues={{type: '全部'}}
-        >
+        <Form name="basic" autoComplete="off" form={searchForm}>
           <Row>
-            <Col span={6}>
-              <Form.Item label="分类" name="type">
-                <Select
-                  options={[
-                    { label: '全部', value: '全部' },
-                    { label: '区域', value: 'area' },
-                    { label: '行业', value: 'industry' },
-                    { label: '企业', value: 'enterprise' },
-                  ]}
-                  style={{ width: 200 }}
-                  placeholder="请选择事项类型"
-                  allowClear
-                />
-              </Form.Item>
+            <Col span={12}>
+              <SelectForm
+                setType={setType}
+                setIndustryCode={setIndustry}
+                setSubstationCode={setSubstationCode}
+              />
             </Col>
-            <Col span={6}>
-              <Form.Item label="时间" name="date">
-                <SegmentDatepicker
-                  setSelectDate={setSelectDate}
-                />
+            <Col span={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Form.Item label="时间" style={{ marginRight: '20px' }}>
+                <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
               </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item label="关键字" name="search">
-                <Input placeholder="请输入关键字" style={{ width: 200 }} />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
               <Form.Item>
                 <Button icon={<SearchOutlined />} onClick={queryTableData}>
                   查询
@@ -184,51 +178,65 @@ const CarbonAnalysis = () => {
         </Form>
       </>
     );
-  }
+  };
 
   const renderTitleRight = () => {
-    return <Button>批量下载</Button>
-  }
+    return <Button>批量下载</Button>;
+  };
 
-  return <ContentPage>
-    <ContentComponent title="碳排放分析"
-      renderSearch={renderSearch}
-      renderTitleRight={renderTitleRight}
-    >
-      <GeneralTable
-        url="/api/cleanEnergyConsumeManage/analyse"
-        ref={tableRef}
-        columns={initTableColumns}
-        rowKey="uuid"
-        bordered={false}
-        requestType="get"
-        type="checkbox"
-        filterParams={{
-          date: dayjs(new Date()).format("YYYY-MM-DD"),
-          type: 'null',
-          unit: 'day'
-        }}
-      />
+  return (
+    <ContentPage>
+      <ContentComponent
+        title="碳排放分析"
+        renderSearch={renderSearch}
+        renderTitleRight={renderTitleRight}
+      >
+        <GeneralTable
+          url="/api/cleanEnergyConsumeManage/analyse"
+          ref={tableRef}
+          columns={initTableColumns}
+          rowKey="uuid"
+          bordered={false}
+          requestType="get"
+          type="checkbox"
+          filterParams={{
+            date: dayjs(new Date()).format('YYYY-MM-DD'),
+            type: 0,
+            unit: 'day',
+          }}
+        />
 
-      <Modal title="一汽大众负荷趋势"
-        centered
-        width={1000}
-        open={visible}
-        footer={false}
-        onCancel={() => setVisible(false)}>
-        <div className={styles.pdfView}>
-          <div className={styles.pdfTitle}>xxx企业能源排放分析报告</div>
-          <div className={styles.baseInfo}>
-            <h3>一、企业基本信息</h3>
-            <div className={styles.table}>
-              <p><span>企业名称</span><span>xxx企业</span></p>
-              <p><span>企业人数</span><span></span></p>
-              <p><span></span><span></span></p>
+        <Modal
+          title="一汽大众负荷趋势"
+          centered
+          width={1000}
+          open={visible}
+          footer={false}
+          onCancel={() => setVisible(false)}
+        >
+          <div className={styles.pdfView}>
+            <div className={styles.pdfTitle}>xxx企业能源排放分析报告</div>
+            <div className={styles.baseInfo}>
+              <h3>一、企业基本信息</h3>
+              <div className={styles.table}>
+                <p>
+                  <span>企业名称</span>
+                  <span>xxx企业</span>
+                </p>
+                <p>
+                  <span>企业人数</span>
+                  <span></span>
+                </p>
+                <p>
+                  <span></span>
+                  <span></span>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
-    </ContentComponent>
-  </ContentPage>
-}
-export default CarbonAnalysis
+        </Modal>
+      </ContentComponent>
+    </ContentPage>
+  );
+};
+export default CarbonAnalysis;

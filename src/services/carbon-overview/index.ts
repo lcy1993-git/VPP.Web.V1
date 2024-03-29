@@ -1,31 +1,33 @@
 import { request } from '@umijs/max';
 
 // 碳排放总览head部分数据
-export const getCarbonOverviewHead = () => {
+export const getCarbonOverviewHead = (params: any) => {
   return request(`/sysApi/cleanEnergyConsumeManage/carbonOverview/centerData`, {
     method: 'get',
+    params,
   });
 };
 
-
 // 碳排放总览趋势数据
-export const getCarbonTrend = (params: {date: string; unit: string}) => {
+export const getCarbonTrend = (params: any) => {
   return request(`/sysApi/cleanEnergyConsumeManage/carbonOverview/carbonTrend`, {
     method: 'get',
-    params
+    params,
   });
 };
 
 // 碳排放总览进度指标
-export const getCarbonTargetProgress = () => {
+export const getCarbonTargetProgress = (params: any) => {
   return request(`/sysApi/cleanEnergyConsumeManage/carbonOverview/carbonTargetProgress`, {
     method: 'get',
+    params,
   });
 };
 
 // 碳排放总览热力图
-export const getCarbonHeatMap = () => {
+export const getCarbonHeatMap = (params: any) => {
   return request(`/sysApi/cleanEnergyConsumeManage/carbonOverview/carbonHeatMap`, {
     method: 'get',
+    params,
   });
 };

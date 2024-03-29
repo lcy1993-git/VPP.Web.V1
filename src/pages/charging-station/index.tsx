@@ -89,7 +89,7 @@ const ChargingStation = () => {
     return (
       <CustomDatePicker
         datePickerType="day"
-        getDate={(value) => setChargeDate(value)}
+        setDate={setChargeDate}
         setIsToday={setChargePowerIsToday}
       />
     );

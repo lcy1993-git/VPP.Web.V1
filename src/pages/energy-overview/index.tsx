@@ -22,9 +22,9 @@ const EnergyOverview = () => {
   // 用电概览按钮组（默认电费）
   const [chargeOrQuantity, setChargeOrQuantity] = useState<boolean>(true);
   // 用电概览日期
-  const [dateValue, setDateValue] = useState<string>(date);
+  const [dateValue, setDateValue] = useState<string>('');
   // 用电概览日期类型
-  const [type, setType] = useState<string>('day');
+  const [type, setType] = useState<string>('');
   // 负荷概览是否当天
   const [powerOverviewIsToday, setPowerOverviewIsToday] = useState<boolean>(true);
 
@@ -96,7 +96,7 @@ const EnergyOverview = () => {
 
   // 电费/电量切换
   useEffect(() => {
-    fetchElectricOverview(dateValue, chargeOrQuantity, type);
+    if (date && type) fetchElectricOverview(dateValue, chargeOrQuantity, type);
   }, [chargeOrQuantity, dateValue, type]);
 
   return (
@@ -143,13 +143,7 @@ const EnergyOverview = () => {
               {/* 右侧柱状 */}
               <div className={styles.rightContainer}>
                 <div className={styles.datePicker}>
-                  <CustomDatePicker
-                    datePickerType={''}
-                    getTypeAndDate={(type, date) => {
-                      setDateValue(date);
-                      setType(type);
-                    }}
-                  />
+                  <CustomDatePicker datePickerType={''} setUnit={setType} setDate={setDateValue} />
                 </div>
                 <CustomCharts
                   options={stackedBarChart(

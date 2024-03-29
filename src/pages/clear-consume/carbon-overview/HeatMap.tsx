@@ -16,17 +16,25 @@ import styles from './index.less'
 import { useRequest } from "ahooks";
 import { getCarbonHeatMap } from "@/services/carbon-overview";
 
+interface HeatMapInfo {
+  type: number; // 分类类型
+  substationCode?: string; // 企业code
+  industryCode?: string; // 行业code
+ 
+}
 // 热力图
-const HeatMap = () => {
+const HeatMap = (props:HeatMapInfo ) => {
+  const {type = 0, substationCode, industryCode} = props;
   const mapDivRef = useRef(null); // 地图容器
   const map = useRef<any>(null); // 地图实例
-  const overlayRef = useRef<any>(null);
-  const popupRef = useRef<any>(null);
-  const popupCloserRef = useRef<any>(null);
-  const popupContentRef = useRef<any>(null);
+  const overlayRef = useRef<any>(null); // 弹出框
+  const popupRef = useRef<any>(null); // 弹出框容器
+  const popupCloserRef = useRef<any>(null); // 弹出框关闭容器
+  const popupContentRef = useRef<any>(null); // 弹出框内容容器
+  const heatMapLayer = useRef<any>(null); // 热力图层
 
-  const [maxValue, setMaxValue] = useState(0);
-  const [minValue, setMinValue] = useState(0);
+  const [maxValue, setMaxValue] = useState(0); // 热力图数据最大值
+  const [minValue, setMinValue] = useState(0); // 热力图数据最小值
 
   // 碳排放热力图
   const { run: fecthCarbonHeatMap } = useRequest(getCarbonHeatMap, {
@@ -49,19 +57,41 @@ const HeatMap = () => {
           });
           return feature;
         });
-
+        
         // 热力图层
-        const heatMapLayer = new HeatmapLayer({
-          source: new VectorSource({
-            features: features, // 将要素添加到矢量源中
-          }),
-          blur: 15, // 模糊程度，可调整
-          radius: 8, // 半径，可调整
-        });
-        if (map.current) map.current.addLayer(heatMapLayer);
+        if(heatMapLayer.current){
+          heatMapLayer.current.getSource().clear();
+          heatMapLayer.current.getSource().addFeatures(features);
+        } else {
+          heatMapLayer.current = new HeatmapLayer({
+            source: new VectorSource({
+              features: features, // 将要素添加到矢量源中
+            }),
+            blur: 15, // 模糊程度，可调整
+            radius: 8, // 半径，可调整
+          });
+          if (map.current) map.current.addLayer(heatMapLayer.current);
+        }
       }
     },
   });
+
+  // 请求字段
+  const handleParams = () => {
+    let params: any = { type };
+    // 不同区域类型请求参数不同
+    switch (type) {
+      case 0:
+        break;
+      case 1:
+        params.substationCode = substationCode;
+        break;
+      case 2:
+        params.industryCode = industryCode;
+        break;
+    }
+    return params;
+  };
 
   // 初始化弹出框
   const initPopup = (map: any) => {
@@ -87,6 +117,7 @@ const HeatMap = () => {
     }
   };
 
+  // 初始化地图
   const initMap = () => {
     // 创建地图中心点坐标
     const centerCoordinate = fromLonLat([104.300989, 30.607689]);
@@ -102,11 +133,12 @@ const HeatMap = () => {
     const view = new View({
       center: centerCoordinate,
       zoom: 10.5,
-      minZoom: 9,
+      // minZoom: 9,
+      minZoom: 5,
       maxZoom: 18,
       // 指定投影
       projection: 'EPSG:3857',
-      extent: extent,
+      // extent: extent,
     });
 
     // 创建高德图层
@@ -172,7 +204,7 @@ const HeatMap = () => {
           popupContentRef.current.innerHTML += `<p class=${styles.olPopupContentLable}>碳排放量：</p>`;
           popupContentRef.current.innerHTML += `<p class=${styles.olPopupContentValue}>${
             feature.getProperties()?.carbonTotal
-              ? feature.getProperties()?.carbonTotal.toFixed(2)
+              ? parseFloat(feature.getProperties()?.carbonTotal).toFixed(2)
               : 0
           }t</p>`;
           // 弹出popup
@@ -182,10 +214,21 @@ const HeatMap = () => {
     });
   };
 
+  
   useEffect(() => {
-    fecthCarbonHeatMap();
     initMap();
   }, []);
+
+  useEffect(() => {
+    if(heatMapLayer.current){
+      heatMapLayer.current.getSource().clear();
+    }
+    if(type === 1 && !substationCode)
+    return;
+    if(type === 2 && !industryCode)
+    return;
+    fecthCarbonHeatMap(handleParams());
+  }, [type, substationCode, industryCode]);
 
   return (
     <>

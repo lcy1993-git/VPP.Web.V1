@@ -216,7 +216,11 @@ const CarbonOverview = () => {
         </div>
         <div className={styles.contentRight}>
           <CustomCard>
-            <HeatMap />
+            <HeatMap 
+            type={type}
+            substationCode={substationCode}
+            industryCode={industryCode}
+            />
           </CustomCard>
         </div>
       </div>

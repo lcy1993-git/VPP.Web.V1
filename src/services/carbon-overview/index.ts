@@ -25,8 +25,9 @@ export const getCarbonTargetProgress = (params: any) => {
 };
 
 // 碳排放总览热力图
-export const getCarbonHeatMap = () => {
+export const getCarbonHeatMap = (params: any) => {
   return request(`/sysApi/cleanEnergyConsumeManage/carbonOverview/carbonHeatMap`, {
     method: 'get',
+    params,
   });
 };

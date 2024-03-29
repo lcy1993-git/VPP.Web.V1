@@ -15,7 +15,13 @@ import Mark1 from './image/mark1.png';
 // import h337 from './js/heatmap.js';
 // import mapBg from './bg01.png';
 
-const ThreeMap = () => {
+interface ThreeMapInfo {
+  isHeatmap?: boolean; // 是否加载热力图
+ 
+}
+
+const ThreeMap = (props: ThreeMapInfo) => {
+  const { isHeatmap = false } = props;
   const chart_dom: any = useRef(null);
   const heat_dom: any = useRef(null);
   // 场景对象
@@ -37,10 +43,11 @@ const ThreeMap = () => {
   // 光源
   const amlight: any = useRef(null);
 
+  // 热力图相关
   let geometry: any, material: any, mesh: any, texture: any;
 
-
-
+  // 顶点着色器渲染
+  // 根据高度图调整顶点的位置，从而实现对热力图的高度显示效果
   const vertexShader = `
   uniform sampler2D heightMap;
   uniform float heightRatio;
@@ -59,6 +66,7 @@ const ThreeMap = () => {
 
   const vertexShaderRef: any = useRef(null);
 
+  // 根据顶点高度值和颜色信息，计算出片段的颜色，从而实现对热力图的渲染效果
   const fragmentShader = `
   varying float hValue;
 			varying vec3 cl;
@@ -72,17 +80,17 @@ const ThreeMap = () => {
 
   // 初始化场景对象
   const initScene = () => {
-    // !场景
+    // 场景
     const scene = new THREE.Scene();
-    // !添加点光源
+    // 添加点光源
     const pointLight = new THREE.PointLight(0xffffff);
     // pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
-    // // !添加环境光
+    // 添加环境光
     amlight.current = new THREE.AmbientLight(0xffffff);
     // amlight.current.position.set(10, 10, 10);
     scene.add(amlight.current);
-    // // 添加平行光
+    // 添加平行光
     light.current = new THREE.DirectionalLight(0xffffff);
     // light.current.position.set(10, 10, 10);
     scene.add(light.current);
@@ -138,7 +146,6 @@ const ThreeMap = () => {
 
   // 地图样式
   const normalStyle = () => {
-
     const textureLoader1 = new THREE.TextureLoader();
     const texture1 = textureLoader1.load(mapBg);
     // 替换为实际的图片路径
@@ -283,7 +290,7 @@ const ThreeMap = () => {
 
     });
 
-    initoutlinePass(mapObj.current);
+    // initoutlinePass(mapObj.current);
     viewScene.current.add(mapObj.current)
   }
 
@@ -318,6 +325,7 @@ const ThreeMap = () => {
     animate();
   };
 
+  // 添加标注
   const addMark = (position_) => {
     const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
     const [x, y] = projection(position_);
@@ -343,6 +351,7 @@ const ThreeMap = () => {
   };
 
 
+  // 添加热力图
   const initHeatmap = () => {
     let heatmap = h337.create({
       container: heat_dom.current,
@@ -356,7 +365,6 @@ const ThreeMap = () => {
     while (i < 1000) {
       // 生成指定范围内的随机经度
       const randomLon = 104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
-
       // 生成指定范围内的随机纬度
       const randomLat = 30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
       const lont = [randomLon, randomLat]
@@ -365,8 +373,6 @@ const ThreeMap = () => {
       data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
       i++;
     }
-
-    console.log(data);
 
     heatmap.setData({
       max: max,
@@ -402,21 +408,16 @@ const ThreeMap = () => {
     initRenderer(width, height);
     initControls()
     drawShapeOptionFun()
-
-    initHeatmap();
+    if(isHeatmap)
+      initHeatmap();
 
     function animate() {
       requestAnimationFrame(animate);
-
-      // if (texture)
-      texture.needsUpdate = true;
-
-
+      if (texture)
+        texture.needsUpdate = true;
       controls.current.update();
       // if (composer.current)
       //   composer.current.render();
-
-
       renderer.current.render(viewScene.current, viewCamera.current);
 
     }

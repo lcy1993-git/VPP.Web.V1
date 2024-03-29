@@ -3,7 +3,6 @@ import * as echarts from 'echarts';
 
 // 水波图配置
 export const waterWaveOption = (data: any) => {
-  console.log(data, '4444');
   return {
     title: {
       show: true,

@@ -281,34 +281,108 @@ const BulletinBoard = () => {
           <div className={styles.contentMiddle}>
             <div className={`${styles.middleTop} ${styles.boardModdle}`}>
               <dl>
-                <dt>接入企业/预计接入企业</dt>
-                <dd>
+                <dt>
                   {pageDataHandle(boardCenterData)?.enterpriseNum}/
-                  {pageDataHandle(boardCenterData)?.predictEnterpriseNum}个
+                  {pageDataHandle(boardCenterData)?.predictEnterpriseNum}
+                </dt>
+                <dd>接入企业/预计接入企业(个)</dd>
+              </dl>
+              <dl>
+                <dt>{pageDataHandle(boardCenterData)?.traditionalTotal}</dt>
+                <dd>传统能源总用电量(万kWh)</dd>
+              </dl>
+              <dl>
+                <dt>{pageDataHandle(boardCenterData)?.cleanTotal}</dt>
+                <dd>清洁能源总用电量(万kWh)</dd>
+              </dl>
+              <dl>
+                <dt>{pageDataHandle(boardCenterData)?.carbonSaveTotal}</dt>
+                <dd>
+                  <p>累计计节碳量</p>
+                  <p>(t)</p>
                 </dd>
-              </dl>
-              <dl>
-                <dt>传统能源总用电量</dt>
-                <dd>{pageDataHandle(boardCenterData)?.traditionalTotal}万kWh</dd>
-              </dl>
-              <dl>
-                <dt>清洁能源总用电量</dt>
-                <dd>{pageDataHandle(boardCenterData)?.cleanTotal}万kWh</dd>
-              </dl>
-              <dl>
-                <dt>累计计节碳量</dt>
-                <dd>{pageDataHandle(boardCenterData)?.carbonSaveTotal}t</dd>
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap isHeatmap={true} />
+              <ThreeMap />
             </div>
           </div>
           {/* right */}
           <div className={styles.contentSide}>
             <div className={`${styles.sideItem} ${styles.marginB10}`}>
-              <BlockWrap title="清洁能源管理">
-                <div>清洁能源管理</div>
+              <BlockWrap title="清洁能源管理" isPaddingTop={false}>
+                <div className={styles.clear}>
+                  <div className={styles.clearItem}>
+                    <div className={styles.clearItemTotal}>1357</div>
+                    <div className={styles.clearItemUl}>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>总容量</span>
+                        <span className={styles.value}>58/68</span>
+                        <span className={styles.unit}>MWh</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>实时充当电功率</span>
+                        <span className={styles.value}>58</span>
+                        <span className={styles.unit}>MW</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>剩余可充放电量</span>
+                        <span className={styles.value}>58/68</span>
+                        <span className={styles.unit}>MWh</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>接入完成率</span>
+                        <span className={styles.value}>58</span>
+                        <span className={styles.unit}>%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`${styles.clearItem} ${styles.clearMiddleItem}`}>
+                    <div className={styles.clearItemTotal}>1357</div>
+                    <div className={styles.clearItemUl}>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>总容量</span>
+                        <span className={styles.value}>58/68</span>
+                        <span className={styles.unit}>MW</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>实时发电功率</span>
+                        <span className={styles.value}>58</span>
+                        <span className={styles.unit}>MW</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>累计发电功率</span>
+                        <span className={styles.value}>58/68</span>
+                        <span className={styles.unit}>MWh</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>接入完成率</span>
+                        <span className={styles.value}>58</span>
+                        <span className={styles.unit}>%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.clearItem}>
+                    <div className={styles.clearItemTotal}>1357</div>
+                    <div className={styles.clearItemUl}>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>总容量</span>
+                        <span className={styles.value}>58/68</span>
+                        <span className={styles.unit}>MWh</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>实时充当电功率</span>
+                        <span className={styles.value}>58</span>
+                        <span className={styles.unit}>MW</span>
+                      </div>
+                      <div className={styles.clearItemLi}>
+                        <span className={styles.name}>接入完成率</span>
+                        <span className={styles.value}>60</span>
+                        <span className={styles.unit}>%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </BlockWrap>
             </div>
             <div className={styles.sideItem}>
@@ -322,10 +396,33 @@ const BulletinBoard = () => {
                   />
                 </div>
               </BlockWrap>
+              {/* right */}
+              <div className={styles.contentSide}>
+                <div className={`${styles.sideItem} ${styles.marginB10}`}>
+                  <BlockWrap title="清洁能源管理">
+                    <div>清洁能源管理</div>
+                  </BlockWrap>
+                </div>
+                <div className={styles.sideItem}>
+                  <BlockWrap title="弹性负荷管理">
+                    <div style={{ width: '100%', height: '100%' }}>
+                      <ScrollBoardItem
+                        dataList={pageDataHandle(elasticEnergyData)}
+                        height={tableHeight}
+                        visibleRows={5}
+                        columns={elasticEnergyColumns}
+                      />
+                    </div>
+                  </BlockWrap>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div className={styles.footer}></div>
+        <div className={styles.footer}>
+          <div className={`${styles.button} ${styles.buttonLeft}`}>负荷热力</div>
+          <div className={`${styles.button} ${styles.buttonRight}`}>负荷热力</div>
+      </div>
       </div>
     </ConfigProvider>
   );

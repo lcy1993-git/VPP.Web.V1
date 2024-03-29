@@ -135,7 +135,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 是否可以缩放
     control.enableZoom = true;
     // 是否可以旋转
-    control.enableRotate = true;
+    control.enableRotate = false;
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点
@@ -293,8 +293,8 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
     });
 
-    if (!isHeatmap)
-      initoutlinePass(mapObj.current);
+    // if (!isHeatmap)
+    //   initoutlinePass(mapObj.current);
     viewScene.current.add(mapObj.current)
   }
 
@@ -330,7 +330,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
   };
 
   // 添加标注
-  const addMark = (position_) => {
+  const addMark = (position_: any) => {
     const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
     const [x, y] = projection(position_);
     const position = new THREE.Vector3(x, -y, 0);
@@ -454,9 +454,9 @@ const ThreeMap = (props: ThreeMapInfo) => {
       controls.current.update();
       // console.log(viewCamera.current.position);
 
-      if (!isHeatmap && composer.current)
-        composer.current.render();
-      if (isHeatmap)
+      // if (!isHeatmap && composer.current)
+      //   composer.current.render();
+      // if (isHeatmap)
         renderer.current.render(viewScene.current, viewCamera.current);
 
     }
@@ -479,7 +479,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       // viewScene.current.remove(mapObj.current);
 
        // 从DOM中移除渲染器的canvas元素
-       chart_dom.current.removeChild(renderer.current.domElement);
+       chart_dom.current?.removeChild(renderer.current.domElement);
 
        // 从DOM中移除渲染器
       // if (renderer.current) {

@@ -15,7 +15,7 @@ const CarbonMonitor = () => {
   // 企业code
   const [substationCode, setSubstationCode] = useState<string>('');
   // 行业code
-  const [industryCode, setIndustryCode] = useState<string>('');
+  const [industry, setIndustry] = useState<string>('');
   // 碳排放监测 日期组件
   const [date, setDate] = useState<string>('');
   // 日期类型
@@ -57,7 +57,7 @@ const CarbonMonitor = () => {
         params.substationCode = substationCode;
         break;
       case 2:
-        params.industryCode = industryCode;
+        params.industry = industry;
         break;
     }
     return params;
@@ -74,11 +74,11 @@ const CarbonMonitor = () => {
   useEffect(() => {
     // 行业和企业未选择返回
     if (type === 1 && !substationCode) return;
-    if (type === 2 && !industryCode) return;
+    if (type === 2 && !industry) return;
     // 请求
     fetchMonitorCenterData(handleParams());
     if (date && unit) fetchTrend({ ...handleParams(), date, unit });
-  }, [type, industryCode, substationCode]);
+  }, [type, industry, substationCode]);
 
   return (
     <ContainerPage paddingTop={0}>
@@ -86,7 +86,7 @@ const CarbonMonitor = () => {
         <div className={styles.formWrap}>
           <SelectForm
             setType={setType}
-            setIndustryCode={setIndustryCode}
+            setIndustryCode={setIndustry}
             setSubstationCode={setSubstationCode}
           />
         </div>
@@ -133,7 +133,7 @@ const CarbonMonitor = () => {
           <CustomCard title="碳排放监测">
             <div className={styles.content}>
               <div className={styles.search}>
-                <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
+                <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} disabled />
               </div>
               <div className={styles.chartDom}>
                 <CustomCharts

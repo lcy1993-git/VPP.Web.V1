@@ -26,10 +26,10 @@ export const waterWaveOption = (data: any) => {
         center: ['50%', '45%'],
         data: [
           {
-            value: [Number((data?.unused / data?.total).toFixed(2))],
+            value: [(data?.unused / data?.total).toFixed(2)],
             label: {
               normal: {
-                formatter: `${Number((data?.unused / data?.total).toFixed(2)) * 100}%`,
+                formatter: `${((data?.unused * 100) / data?.total).toFixed(2)}%`,
                 show: true,
               },
             },

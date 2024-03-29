@@ -1,6 +1,5 @@
 import ContainerPage from '@/components/container-page';
 import ContentComponent from '@/components/content-component';
-import ContentPage from '@/components/content-page';
 import GeneralTable from '@/components/general-table';
 import { getCurveHistoryList, getTableData } from '@/services/runtime-monitor/history';
 import { handleDiffMins, judgmentIsToday } from '@/utils/common';

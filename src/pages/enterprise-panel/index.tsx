@@ -1,78 +1,63 @@
-import ContainerPage from "@/components/container-page"
-import ContentComponent from "@/components/content-component"
-import CustomCharts from "@/components/custom-charts";
-import GeneralTable from "@/components/general-table";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Segmented, Select, Space } from "antd";
-import { useRef, useState } from "react";
-import styles from './index.less'
-import { chartOptions } from "./utils";
+import ContainerPage from '@/components/container-page';
+import ContentComponent from '@/components/content-component';
+import CustomCharts from '@/components/custom-charts';
+import CustomDatePicker from '@/components/custom-datePicker';
+import GeneralTable from '@/components/general-table';
+import {
+  getSubstationElectricity,
+  getSubstationName,
+  getSubstationPower,
+} from '@/services/enterprise-panel';
+import { SearchOutlined } from '@ant-design/icons';
+import { useRequest } from '@umijs/max';
+import { Button, Form, Modal, Select } from 'antd';
+import dayjs from 'dayjs';
+import { useEffect, useRef, useState } from 'react';
+import styles from './index.less';
+import { chartOptions, electricityOption, tableColumns } from './utils';
 
 const EnterprisePanel = () => {
   // 搜索form
   const [searchForm] = Form.useForm();
   // table
   const tableRef = useRef(null);
-  // modal状态
-  const [visible, setVisible] = useState<boolean>(true);
+  // 实时负荷modal状态
+  const [powerVisible, setPowerVisible] = useState<boolean>(false);
+  // 用量趋势modal状态
+  const [electricityVisible, setElectricityVisible] = useState<boolean>(false);
+  // 日期类型
+  const [unit, setUnit] = useState<string>('day');
+  // 日期
+  const [date, setDate] = useState<string>(dayjs(new Date()).format('YYYY-MM-DD'));
+  // 图表查询电站code
+  const [substationCode, setSubstationCode] = useState<string>('');
 
-  // columns
-  const tableColumns = [
+  // 企业名称
+  const { data: substationName } = useRequest(getSubstationName, {
+    manual: false,
+  });
+
+  // 实时负荷趋势
+  const { run: fetchSubstationPower, data: substationPower } = useRequest(getSubstationPower, {
+    manual: true,
+  });
+
+  // 用量趋势
+  const { run: fetchSubstationElectricity, data: substationElectricity } = useRequest(
+    getSubstationElectricity,
     {
-      title: '序号',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
+      manual: true,
     },
-    {
-      title: '企业名称',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-    {
-      title: '统计周期',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-    {
-      title: '总用量(MWh)',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-    {
-      title: '光伏总发电量(MWh)',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-    {
-      title: '区域排名',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-    {
-      title: '行业排名',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-    {
-      title: '实时负荷趋势',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-    {
-      title: '用量趋势',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center' as any,
-    },
-  ]
+  );
+
+  // 查询按钮
+  const handleSearchClick = (values: any) => {
+    if (tableRef && tableRef.current) {
+      //@ts-ignore
+      tableRef.current?.searchByParams({ ...values, unit, date });
+    }
+  };
+
   /** 搜索区域 */
   const renderSearch = () => {
     return (
@@ -83,68 +68,97 @@ const EnterprisePanel = () => {
           layout="inline"
           autoComplete="off"
           form={searchForm}
+          onFinish={handleSearchClick}
         >
-          <Form.Item label="统计周期" name="">
-            <Space>
-              <Segmented
-                options={['年', '月', '日']}
-              />
-              <DatePicker />
-            </Space>
+          <Form.Item label="统计周期" name="date">
+            <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
           </Form.Item>
-          <Form.Item label="企业名称" name="">
+          <Form.Item label="企业名称" name="name">
             <Select
-              options={[]}
-              placeholder="请选择事项类型"
+              options={substationName}
+              placeholder="请选择企业名称"
               allowClear
               fieldNames={{
-                label: 'eventTypeName',
-                value: 'eventType',
+                label: 'name',
+                value: 'name',
               }}
+              style={{ width: 250 }}
             />
           </Form.Item>
-          <Form.Item label="关键字" name="">
-            <Input placeholder="请输入关键字" />
-          </Form.Item>
           <Form.Item>
-            <Button icon={<SearchOutlined />}>
+            <Button icon={<SearchOutlined />} htmlType="submit">
               查询
             </Button>
           </Form.Item>
         </Form>
       </>
     );
-  }
+  };
 
-  return <ContainerPage>
-    <ContentComponent title="企业看板" renderSearch={renderSearch}>
-      <GeneralTable
-        ref={tableRef}
-        initTableAjax={false}
-        columns={tableColumns}
-        dataSource={[]}
-        rowKey="time"
-        hideSelect={false}
-        bordered={false}
-        hasPage={false}
-      />
+  // 实时负荷趋势
+  useEffect(() => {
+    if (powerVisible) {
+      fetchSubstationPower(date, substationCode);
+    }
+  }, [powerVisible]);
 
-      <Modal title="一汽大众负荷趋势"
-        centered
-        width={1000}
-        open={visible}
-        footer={false}
-        onCancel={() => setVisible(false)}>
-        <div className={styles.modalBody}>
-          <CustomCharts
-            options={chartOptions()}
-            loading={false}
-            width="952px"
-            height="380px"
-          />
-        </div>
-      </Modal>
-    </ContentComponent>
-  </ContainerPage>
-}
-export default EnterprisePanel
+  // 用量趋势趋势
+  useEffect(() => {
+    if (electricityVisible) {
+      fetchSubstationElectricity(date, substationCode, unit);
+    }
+  }, [electricityVisible]);
+
+  return (
+    <ContainerPage>
+      <ContentComponent title="企业看板" renderSearch={renderSearch}>
+        <GeneralTable
+          url="/api/enterprise/panel/overview/list"
+          ref={tableRef}
+          columns={tableColumns(unit, setPowerVisible, setElectricityVisible, setSubstationCode)}
+          rowKey="substationCode"
+          hideSelect={true}
+          bordered={false}
+          hasPage={true}
+          requestType="get"
+          filterParams={{ unit, date }}
+        />
+        <Modal
+          title="负荷趋势"
+          centered
+          width={1000}
+          open={powerVisible}
+          footer={false}
+          onCancel={() => setPowerVisible(false)}
+        >
+          <div className={styles.modalBody}>
+            <CustomCharts
+              options={chartOptions(substationPower?.powerOrElectricityMap)}
+              loading={false}
+              width="952px"
+              height="380px"
+            />
+          </div>
+        </Modal>
+        <Modal
+          title="用量趋势"
+          centered
+          width={1000}
+          open={electricityVisible}
+          footer={false}
+          onCancel={() => setElectricityVisible(false)}
+        >
+          <div className={styles.modalBody}>
+            <CustomCharts
+              options={electricityOption(substationElectricity?.powerOrElectricityMap, unit)}
+              loading={false}
+              width="952px"
+              height="380px"
+            />
+          </div>
+        </Modal>
+      </ContentComponent>
+    </ContainerPage>
+  );
+};
+export default EnterprisePanel;

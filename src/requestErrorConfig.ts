@@ -92,7 +92,6 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       const url = config?.url;
-     
       const token = localStorage.getItem('token');
       if (token) {
         return {

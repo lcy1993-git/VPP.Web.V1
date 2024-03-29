@@ -1,0 +1,254 @@
+.modalBody {
+  width: 100%;
+  height: 700px;
+  padding: 10px;
+  overflow-y: auto;
+
+  .container {
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid #004ac0;
+
+
+
+    .basisInfo {
+      flex: 1;
+      width: 100%;
+      overflow: hidden;
+      border-bottom: 1px solid #004ac0;
+    }
+
+
+    .electriPrice {
+      border-top: 1px solid #004ac0;
+    }
+
+    .bodyBottom {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      overflow: hidden;
+
+      .runInfo {
+        flex: 1.5;
+        height: auto;
+      }
+
+      .formItemW {
+        flex: 1.3;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .price {
+        width: 100%;
+        height: 100%;
+      }
+
+      .runInfo {
+        border-right: 1px solid #004ac0;
+      }
+    }
+  }
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+}
+
+.title {
+  position: relative;
+  height: 60px;
+  padding-left: 60px;
+  color: #1292ff;
+  font-size: 16px;
+  line-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.title::before {
+  position: absolute;
+  top: 22px;
+  left: 50px;
+  width: 2px;
+  height: 16px;
+  background: #1292ff;
+  content: '';
+}
+
+.image {
+  object-fit: contain;
+  background: rgb(21, 43, 94);
+}
+
+// 电价时段设置 old
+// .priceContainer {
+//   width: 100%;
+//   height: auto;
+//   padding: 0 30px 10px 50px;
+
+//   .priceHead {
+//     width: 100%;
+//     height: 60px;
+//     display: flex;
+//     align-items: center;
+//     .selectMonth {
+//       height: 32px;
+
+//       .selectMonthWrap {
+//         width: auto;
+//         display: inline-block;
+//         height: 32px;
+//         border-top: 1px solid #1292ff;
+//         border-left: 1px solid #1292ff;
+//         .eqTableItem {
+//           width: 60px;
+//           height: 32px;
+//           line-height: 32px;
+//           border: none;
+//           background: transparent;
+//           text-align: center;
+//           border-bottom: 1px solid #1292ff;
+//           border-right: 1px solid #1292ff;
+//           cursor: pointer;
+//         }
+//         .eqTableItem:hover {
+//           background:#1292ff;
+//         }
+//       }
+
+//     }
+//   }
+
+//   .priceContent {
+//     width: 100%;
+//     height: auto;
+//     margin-bottom: 10px;
+//   }
+// }
+// 电价时段设置 new
+.priceContainer {
+  width: 100%;
+  height: auto;
+  padding: 0 30px 10px 50px;
+  .priceHead {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .priceContent {
+    width: 100%;
+    height: auto;
+
+    .selectItem {
+      width: 100%;
+      height: auto;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      .month {
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        margin-bottom: 22px;
+        .monthTitle {
+          font-size: 14px;
+          width: 100px;
+          .symbol {
+            color: red;
+            font-weight: 700;
+            margin-right: 4px;
+          }
+        }
+        .monthContent {
+          width: 100%;
+          height: 32px;
+          display: flex;
+          justify-content: space-between;
+            .monthList {
+              display: flex;
+              margin-right: 20px;
+              border-top:1px solid #1a5d99;
+                border-right:1px solid #1a5d99;
+                .monthItem {
+                  width: 60px;
+                  height: 32px;
+                  border:none;
+                  background: transparent;
+                  border-left:1px solid #1a5d99;
+                  border-bottom:1px solid #1a5d99;
+                  text-align: center;
+                  line-height: 32px;
+                  padding: 0;
+                  cursor: pointer;
+                }
+                .timeItem {
+                  width: 56px;
+                  height: 32px;
+                  border:none;
+                  background: transparent;
+                  border-left:1px solid #1a5d99;
+                  border-bottom:1px solid #1a5d99;
+                  text-align: center;
+                  line-height: 32px;
+                  padding: 0;
+                  cursor: pointer;
+                }
+                .monthItem:hover, .timeItem:hover {
+                  background:#1292ff;
+                }
+
+
+              button[disabled] {
+                color: #4a5b82;
+                background: #152b5e;
+                cursor: not-allowed;
+              }
+            }
+
+        }
+      }
+    }
+  }
+}
+
+
+// 预计收益录入模态框
+.modalContainer {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+
+  .modalContainerBody {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+  }
+
+}
+
+.priceHead {
+  :global {
+    .table1 .ant-table td.ant-table-cell {
+      padding: 0;
+    }
+    .ant-form-item .ant-form-item-explain-error {
+      padding-left: 18px;
+    }
+  }
+}
+

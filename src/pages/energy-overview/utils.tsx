@@ -1,4 +1,4 @@
-import { formatXAxis } from '@/utils/common';
+import { formatXAxis, handleDiffMins } from '@/utils/common';
 import styles from './index.less';
 import Unit from './unit';
 /** header区域 数据总览 */
@@ -80,23 +80,25 @@ export const renderOverviewData = (info: any) => {
 
 /* 用电概览-平均电价、电费 */
 export const renderAverageData = (
+  type: string,
   chargeOrQuantity: boolean,
   averageElectricityPrice: string,
   averageElectricityCost: string,
   averageElectricityConsumption: string,
 ) => {
   const { electricCharge, averageElectricPrice, electricQuantity } = Unit;
+  const dateType = type === 'day' ? '日' : type === 'month' ? '月' : '年';
   const averageData = chargeOrQuantity
     ? [
         {
-          label: '日平均电价',
+          label: '平均电价',
           unit: averageElectricPrice,
           id: 1,
           value: averageElectricityPrice,
           icon: 'icon-ripingjundianjia',
         },
         {
-          label: '日平均电费',
+          label: '平均电费',
           unit: electricCharge,
           id: 2,
           value: averageElectricityCost,
@@ -105,14 +107,14 @@ export const renderAverageData = (
       ]
     : [
         {
-          label: '日平均电价',
+          label: '平均电价',
           unit: averageElectricPrice,
           id: 1,
           value: averageElectricityPrice,
           icon: 'icon-ripingjundianjia',
         },
         {
-          label: '日平均电量',
+          label: '平均电量',
           unit: electricQuantity,
           id: 2,
           value: averageElectricityConsumption,
@@ -130,6 +132,7 @@ export const renderAverageData = (
             </div>
             <dl className={styles.listItemLabel}>
               <dt>
+                {dateType}
                 {item.label} ({item.unit})
               </dt>
               <dd>{item.value}</dd>
@@ -142,8 +145,23 @@ export const renderAverageData = (
 };
 
 // 负荷概览
-export const powerOverviewOptions = (data: any) => {
+export const powerOverviewOptions = (data: any, isToday: boolean) => {
   if (!data) return false;
+  // 截取y轴
+  const handleYAxis = (data: any) => {
+    if (isToday) {
+      return data.slice(
+        0,
+        handleDiffMins(
+          new Date(),
+          new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+          60,
+        ) + 1,
+      );
+    } else {
+      return data;
+    }
+  };
 
   return {
     grid: {
@@ -202,19 +220,19 @@ export const powerOverviewOptions = (data: any) => {
     },
     series: [
       {
-        data: Object.values(data?.realTimePowerMap),
+        data: handleYAxis(Object.values(data?.realTimePowerMap)),
         type: 'line',
         name: '实时负荷',
         showSymbol: false, // 隐藏数据点
       },
       {
-        data: Object.values(data?.upwardPowerMap),
+        data: handleYAxis(Object.values(data?.upwardPowerMap)),
         type: 'line',
         name: '可上调负荷',
         showSymbol: false, // 隐藏数据点
       },
       {
-        data: Object.values(data?.downwardPowerMap),
+        data: handleYAxis(Object.values(data?.downwardPowerMap)),
         type: 'line',
         name: '可下调负荷',
         showSymbol: false, // 隐藏数据点

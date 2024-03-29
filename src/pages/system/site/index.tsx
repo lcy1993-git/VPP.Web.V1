@@ -92,7 +92,7 @@ const Site: React.FC = () => {
       align: 'center' as any,
       render: (_text: any, record: any) => {
         return record.substationInformationList?.map((item: any) => {
-          return <Tag key={item.substationCode}>{item.name}</Tag>;
+          return <Tag color="#108ee9" key={item.substationCode} style={{margin: '2px'}}>{item.name}</Tag>;
         });
       },
     },

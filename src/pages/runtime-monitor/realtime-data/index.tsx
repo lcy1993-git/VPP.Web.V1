@@ -1,4 +1,4 @@
-import ContentPage from '@/components/content-page';
+import ContainerPage from '@/components/container-page';
 import CustomCard from '@/components/custom-card';
 import Empty from '@/components/empty';
 import SegmentedTheme from '@/components/segmented-theme';
@@ -21,7 +21,7 @@ const RealtimeData = () => {
   // 获取设备名称
   const { run: fetchDevice } = useRequest(getDevicesName, {
     manual: true,
-    onSuccess: async (res) => {
+    onSuccess: async (res: any) => {
       const stationData = res?.map((item: any) => {
         return {
           deviceCode: item.deviceCode,
@@ -165,7 +165,7 @@ const RealtimeData = () => {
   ];
 
   return (
-    <ContentPage>
+    <ContainerPage>
       <CustomCard>
         <div className={styles.container}>
           <div className={styles.formCondition}>
@@ -214,7 +214,7 @@ const RealtimeData = () => {
           />
         )}
       </CustomCard>
-    </ContentPage>
+    </ContainerPage>
   );
 };
 export default RealtimeData;

@@ -1,20 +1,23 @@
+import { judgmentIsToday } from '@/utils/common';
 import { DatePicker, Space } from 'antd';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import SegmentedTheme from '../segmented-theme';
+
 /**
  * 通用日期segmented+日历datePicker组件
- * @params datePickerType 日历类型（day、month、year）,为空''代表可切换日期类型segmented
- * @params defaultDate 选择器默认日期，不传值默认当天/月/年
- * @params disabledDate 禁用日期选择，默认禁用当天/月/年
- * @params isChangeType 是否有segmented来切换日历类型，默认true
+ * @datePickerType 日历类型（day、month、year）,为空''代表可切换日期类型segmented
+ * @setIsToday 修改父组件勾选日期是否当天
+ * @onChange change回调函数
+ * @setDate 修改父组件日期
+ * @setUnit 修改父组件勾选日期类型
  * */
 interface propsType {
   datePickerType: string;
-  defaultDate?: string;
-  disabledDate?: any;
   onChange?: any;
-  getTypeAndDate?: (type: string, date: string) => void | undefined;
+  setIsToday?: Dispatch<SetStateAction<any>>;
+  setDate?: Dispatch<SetStateAction<any>>;
+  setUnit?: Dispatch<SetStateAction<any>>;
 }
 
 // 日历枚举值
@@ -37,15 +40,11 @@ const datePickerEnum: any = {
 };
 
 const CustomDatePicker = (props: propsType) => {
-  const {
-    datePickerType,
-    defaultDate = dayjs(`${new Date()}`),
-    onChange,
-    disabledDate,
-    getTypeAndDate,
-  } = props;
-  // 日期类型 默认日
-  const [type, setType] = useState<string>('day');
+  const { datePickerType, onChange, setIsToday, setDate, setUnit } = props;
+  // 默认当天
+  const defaultDate = dayjs(`${new Date()}`);
+  // 日期类型
+  const [type, setType] = useState<string>(datePickerType || 'day');
   // 日历选中值
   const [datePickerValue, setDatePickerValue] = useState<any>(defaultDate);
 
@@ -62,39 +61,38 @@ const CustomDatePicker = (props: propsType) => {
   // SegmentedTheme改变回调
   const handleSegmentChange = (value: string) => {
     // 改变日期类型
-    const typeRes = value === '日' ? 'day' : value === '月' ? 'month' : 'year';
-    setType(typeRes);
+    setType(value === '日' ? 'day' : value === '月' ? 'month' : 'year');
     // 设置日期为默认日期
     setDatePickerValue(defaultDate);
   };
 
+  // 改变父组件日期和日期类型
   useEffect(() => {
-    if (getTypeAndDate)
-      getTypeAndDate(type, dayjs(datePickerValue).format(datePickerEnum[type].dayType));
+    if (setUnit) setUnit(type);
+    if (setDate) setDate(dayjs(datePickerValue).format(datePickerEnum[type].dayType));
   }, [datePickerValue, type]);
+
+  // 日期改变回调
+  const handleDateChange = (value: any) => {
+    if (onChange) onChange(value);
+    if (setIsToday) setIsToday(judgmentIsToday(value));
+    setDatePickerValue(value);
+  };
 
   return (
     <>
-      {!datePickerType ? (
-        <Space size={15}>
+      <Space size={15}>
+        {!datePickerType && (
           <SegmentedTheme options={['日', '月', '年']} getSelectedValue={handleSegmentChange} />
-          <DatePicker
-            picker={datePickerEnum[type].type}
-            value={dayjs(datePickerValue, datePickerEnum[type].dayType)}
-            onChange={(value) => setDatePickerValue(value)}
-            allowClear={false}
-            disabledDate={disabledDate ? disabledDate : disableDate}
-          />
-        </Space>
-      ) : (
+        )}
         <DatePicker
-          picker={datePickerEnum[datePickerType].type}
-          defaultValue={dayjs(defaultDate, datePickerEnum[datePickerType])}
-          onChange={onChange}
+          picker={datePickerEnum[type].type}
+          value={dayjs(datePickerValue, datePickerEnum[type].dayType)}
+          onChange={handleDateChange}
           allowClear={false}
-          disabledDate={disabledDate ? disabledDate : disableDate}
+          disabledDate={disableDate}
         />
-      )}
+      </Space>
     </>
   );
 };

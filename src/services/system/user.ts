@@ -2,7 +2,7 @@ import { request } from '@umijs/max';
 
 // 获取系统配置
 export const getSystemConfig = () => {
-  return request(`/devAndFlawApi/sys/config/get`, {
+  return request(`/sysApi/sys/config/get`, {
     method: 'GET',
   });
 };

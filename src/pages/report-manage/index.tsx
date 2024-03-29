@@ -34,7 +34,7 @@ const ReportManage = () => {
   // 批量导出报表
   const { run: fetchReportDataList } = useRequest(getReportDataList, {
     manual: true,
-    onSuccess: (res) => {
+    onSuccess: (res: any) => {
       res.forEach((item: any, index: number) => {
         // 处理数据
         const transformedData = handleTable(item).dataSource.map(({ date, ...rest }) => {
@@ -179,8 +179,8 @@ const ReportManage = () => {
             type="checkbox"
             bordered={false}
             requestType="get"
-            hasPage={false}
             getCheckData={(data) => setTableSelectRows(data)}
+            hasPage={true}
           />
         </div>
         {/* 查看报表弹框 */}

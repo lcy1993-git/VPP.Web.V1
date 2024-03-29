@@ -57,3 +57,10 @@ export const previewReportData = (data: { reportTemplate: any }, date: string) =
     params: { date },
   });
 };
+
+// 获取电站设备树
+export const getDeviceTree = () => {
+  return request(`/api/substationInformation/device/tree`, {
+    method: 'GET',
+  });
+};

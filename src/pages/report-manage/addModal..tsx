@@ -1,19 +1,50 @@
 import ContentComponent from '@/components/content-component';
 import Empty from '@/components/empty';
-import { addTemplate, getReportListField, previewReportData } from '@/services/report-manage';
-import { getSubstations } from '@/services/system/user';
+import {
+  addTemplate,
+  getDeviceTree,
+  getReportListField,
+  previewReportData,
+} from '@/services/report-manage';
 import { FileTextOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
-import { Button, Checkbox, Form, Input, Modal, Select, Space, Table, message } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Table,
+  TreeSelect,
+  message,
+} from 'antd';
 import moment from 'moment';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styles from './index.less';
-import { handleTable } from './utils';
+import { handleTable, transformData } from './utils';
+
 interface propsType {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>; // 修改模态框状态
   isModalOpen: boolean; // 模态框状态
   refresh?: any; // 新增成功后操作
 }
+
+const reportType = [
+  {
+    label: '日表',
+    value: 'day',
+  },
+  {
+    label: '月表',
+    value: 'month',
+  },
+  {
+    label: '年表',
+    value: 'year',
+  },
+];
 
 // 新增报表
 const AddModal = (props: propsType) => {
@@ -34,10 +65,16 @@ const AddModal = (props: propsType) => {
   const [loading, setLoading] = useState<boolean>(false);
   // 保存loading
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
+  // 设备树
+  const [deviceTree, setDeviceTree] = useState<any>([]);
+  // 表格高度
+  const tableHeightRef = useRef<number>(0);
+  const searchItemRef = useRef<HTMLDivElement>(null);
 
-  // 获取电站名称数据
-  const { run: fetchUserStation, data: userStation } = useRequest(getSubstations, {
+  // 获取设备树数据
+  const { run: fetchUserStation, data: tree } = useRequest(getDeviceTree, {
     manual: true,
+    onSuccess: (value) => setDeviceTree(transformData(value)),
   });
 
   // 获取报表字段
@@ -67,21 +104,6 @@ const AddModal = (props: propsType) => {
     }
   }, [substationCode]);
 
-  const reportType = [
-    {
-      label: '日表',
-      value: 'day',
-    },
-    {
-      label: '月表',
-      value: 'month',
-    },
-    {
-      label: '年表',
-      value: 'year',
-    },
-  ];
-
   // 新增
   const addReport = () => {
     addForm
@@ -92,7 +114,7 @@ const AddModal = (props: propsType) => {
           {},
           {
             dataNameList: value.reportListField,
-            substationCodeList: value.stationName,
+            deviceCodeList: value.stationName,
             templateName: value.reportName,
             timeType: value.reportType,
           },
@@ -119,7 +141,7 @@ const AddModal = (props: propsType) => {
         {},
         {
           dataNameList: value.reportListField,
-          substationCodeList: value.stationName,
+          deviceCodeList: value.stationName,
           templateName: value.reportName,
           timeType: value.reportType,
         },
@@ -138,6 +160,13 @@ const AddModal = (props: propsType) => {
     setIsVisible(false);
     setColumns([]);
     setDataSource([]);
+    // 高度获取会延迟一步，使用setTimeout来确保获取到正确的高度
+    setTimeout(() => {
+      if (searchItemRef.current?.offsetHeight) {
+        const height = 420 - searchItemRef.current?.offsetHeight;
+        tableHeightRef.current = height;
+      }
+    }, 0);
   };
 
   // 取消按钮
@@ -161,6 +190,40 @@ const AddModal = (props: propsType) => {
     setReportListField([]);
   };
 
+  // 只能选择企业或者一个企业下的设备，根据情况禁用选择
+  const onChange = (newValue: string) => {
+    if (newValue.length === 1) {
+      // 找到用户选择的 level: 1 对象
+      const selectedParent = deviceTree.find(
+        (parent: any) => parent.value === newValue[0] && parent.level === 1,
+      );
+      // 如果找到选中的 level: 1 对象，则遍历所有同级的 level: 1 对象并将它们的下属 level: 2 对象都添加 disabled: true 属性
+      if (selectedParent) {
+        deviceTree
+          .filter((parent: any) => parent.level === 1)
+          .forEach((parent: any) => {
+            parent.children.forEach((child: any) => {
+              child.disabled = true;
+            });
+          });
+        setDeviceTree(deviceTree);
+      } else {
+        deviceTree.forEach((parent: any) => {
+          parent.disabled = true;
+          if (!parent.children.some((child: any) => child.value === newValue[0])) {
+            parent.children.forEach((child: any) => {
+              child.disabled = true; // 其他 level: 2 对象设置 disabled: true
+            });
+          }
+        });
+        setDeviceTree(deviceTree);
+      }
+    } else if (newValue.length === 0) {
+      setDeviceTree(transformData(tree));
+    }
+    setSubstationCode(newValue);
+  };
+
   return (
     <>
       <Modal
@@ -177,9 +240,9 @@ const AddModal = (props: propsType) => {
             <div className={styles.modal}>
               <div className={styles.modalBody}>
                 <div className={styles.modalTitle}>报表信息选择</div>
-                <div className={styles.modalContent}>
+                <div className={styles.modalContent} ref={searchItemRef}>
                   <Form form={addForm} onValuesChange={onValuesChange}>
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Form.Item
                         label="模版名称"
                         name="reportName"
@@ -197,34 +260,30 @@ const AddModal = (props: propsType) => {
                         name="reportType"
                         required
                         rules={[{ required: true, message: '请选择模版类型' }]}
-                        style={{ marginLeft: '30px' }}
                       >
                         <Select
                           placeholder="请选择报表类型"
                           options={reportType}
                           allowClear
-                          style={{ width: 400 }}
+                          style={{ width: 300 }}
                         />
                       </Form.Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
                       <Form.Item
-                        label="站点选择"
+                        label="电站/设备选择"
                         name="stationName"
                         required
-                        rules={[{ required: true, message: '请选择所属站点' }]}
+                        rules={[{ required: true, message: '请选择查询测点' }]}
                       >
-                        <Select
-                          placeholder="请选择所属站点"
-                          options={userStation || []}
+                        <TreeSelect
+                          showSearch
+                          style={{ width: 400 }}
+                          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                          placeholder="请选择电站或设备"
                           allowClear
-                          fieldNames={{
-                            label: 'name',
-                            value: 'substationCode',
-                          }}
-                          mode="multiple"
-                          style={{ width: 300 }}
-                          onChange={(value) => setSubstationCode(value)}
+                          multiple
+                          treeDefaultExpandAll
+                          onChange={onChange}
+                          treeData={deviceTree}
                         />
                       </Form.Item>
                     </div>
@@ -244,7 +303,7 @@ const AddModal = (props: propsType) => {
                 </div>
                 <Button
                   onClick={previewReport}
-                  style={{ marginLeft: '100px', marginBottom: '15px' }}
+                  style={{ marginLeft: '100px', marginBottom: '10px' }}
                 >
                   <FileTextOutlined />
                   报表预览
@@ -262,11 +321,11 @@ const AddModal = (props: propsType) => {
                         locale={{
                           emptyText: (
                             <div style={{ marginTop: 25 }}>
-                              <Empty />{' '}
+                              <Empty />
                             </div>
                           ),
                         }}
-                        scroll={{ y: 245 }}
+                        scroll={{ x: 300, y: tableHeightRef.current }}
                       />
                     </div>
                   </div>

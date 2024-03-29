@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from 'three';
+// import * as THREE from './js/three.js';
 import * as d3 from 'd3';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Outline from './image/outline.png';
@@ -9,10 +10,14 @@ import { OutlinePass } from 'three/examples/jsm/postprocessing/outlinePass';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/Effectcomposer';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
+import h337 from 'heatmap.js';
+import Mark1 from './image/mark1.png';
+// import h337 from './js/heatmap.js';
 // import mapBg from './bg01.png';
 
 const ThreeMap = () => {
   const chart_dom: any = useRef(null);
+  const heat_dom: any = useRef(null);
   // 场景对象
   const viewScene: any = useRef(null);
   // 相机对象
@@ -29,8 +34,40 @@ const ThreeMap = () => {
 
   // 光源
   const light: any = useRef(null);
- // 光源
+  // 光源
   const amlight: any = useRef(null);
+
+  let geometry: any, material: any, mesh: any, texture: any;
+
+
+
+  const vertexShader = `
+  uniform sampler2D heightMap;
+  uniform float heightRatio;
+  varying vec2 vUv;
+  varying float hValue;
+  varying vec3 cl;
+  void main() {
+      vUv = uv;
+      vec3 pos = position;
+        cl = texture2D(heightMap, vUv).rgb;
+        hValue = texture2D(heightMap, vUv).r;
+        pos.y = hValue * heightRatio;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
+    }
+  `;
+
+  const vertexShaderRef: any = useRef(null);
+
+  const fragmentShader = `
+  varying float hValue;
+			varying vec3 cl;
+			void main() {
+		 		float v = abs(hValue - 1.);
+		 		gl_FragColor = vec4(cl, .8 - v * v) ; 
+		    }
+`;
+  const fragmentShaderRef: any = useRef(null);
 
 
   // 初始化场景对象
@@ -39,28 +76,30 @@ const ThreeMap = () => {
     const scene = new THREE.Scene();
     // !添加点光源
     const pointLight = new THREE.PointLight(0xffffff);
-    pointLight.position.set(10, 10, 10);
+    // pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
     // // !添加环境光
     amlight.current = new THREE.AmbientLight(0xffffff);
-    amlight.current.position.set(10, 10, 10);
+    // amlight.current.position.set(10, 10, 10);
     scene.add(amlight.current);
     // // 添加平行光
     light.current = new THREE.DirectionalLight(0xffffff);
-    light.current.position.set(10, 10, 10);
+    // light.current.position.set(10, 10, 10);
     scene.add(light.current);
 
 
     // 辅助箭头    红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-    // const axes = new THREE.AxesHelper(100);
-    // scene.add(axes);
+    const axes = new THREE.AxesHelper(100);
+    scene.add(axes);
     viewScene.current = scene;
   };
 
   // 初始化相机
   const initCamera = (divWidth: number, divHeight: number) => {
-    const camera = new THREE.PerspectiveCamera(2, divWidth / divHeight, 0.1, 1000);
-    camera.position.set(0.09495576553561131, -1.0789913218408212, 9.961011790443024);
+    const camera = new THREE.PerspectiveCamera(2, divWidth / divHeight, 1, 10000);
+    // camera.position.set(0.09495576553561131, -1.0789913218408212, 9.961011790443024);
+    camera.position.set(-3.916950465440511, 831.9964081535137, 379.54952429087234);
+
     viewCamera.current = camera;
   };
 
@@ -90,8 +129,8 @@ const ThreeMap = () => {
     control.enablePan = false;
     // 设置控制器中心点
     control.target.set(0, 0, 0);
-    control.minDistance = 8;
-    control.maxDistance = 20;
+    // control.minDistance = 8;
+    // control.maxDistance = 20;
 
     controls.current = control;
   };
@@ -125,7 +164,7 @@ const ThreeMap = () => {
   };
 
 
-// 使mesh轮廓发光
+  // 使mesh轮廓发光
   const initoutlinePass = (mesh: any) => {
     const containrtWidth = chart_dom.current?.offsetWidth;
     const containrtHeight = chart_dom.current?.offsetHeight;
@@ -150,7 +189,7 @@ const ThreeMap = () => {
     outlinePass.edgeStrength = Number(10.0); //边框的亮度
     outlinePass.edgeGlow = Number(1); //光晕[0,1]
     outlinePass.edgeThickness = Number(1.0); //边缘浓度
-    outlinePass.pulsePeriod = Number(1.8); //呼吸闪烁的速度 闪烁频率 ，默认0 ，值越大频率越低
+    // outlinePass.pulsePeriod = Number(1.8); //呼吸闪烁的速度 闪烁频率 ，默认0 ，值越大频率越低
     outlinePass.usePatternTexture = false; //是否使用父级的材质
     outlinePass.downSampleRatio = 2; // 边框弯曲度
     outlinePass.clear = true;
@@ -220,7 +259,13 @@ const ThreeMap = () => {
             bevelEnabled: false, // 对挤出的形状应用是否斜角
           };
           const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+          geometry.scale(100, 100, 100);
+          geometry.rotateX(Math.PI * 1.5);
+          geometry.translate(0, -3, 0);
           const mesh = new THREE.Mesh(geometry, normalStyle());
+          lineGeometry.scale(100, 100, 100);
+          lineGeometry.rotateX(Math.PI * 1.5);
+          lineGeometry.translate(0, -3, 0);
           const line = new THREE.Line(lineGeometry, lineMaterial);
           // 将省份的属性 加进来
           province.properties = elem.properties;
@@ -231,7 +276,7 @@ const ThreeMap = () => {
             province.properties._centroid = [x, y];
           }
           province.add(mesh);
-          province.add(line);  
+          province.add(line);
         });
       });
       mapObj.current.add(province);
@@ -251,6 +296,104 @@ const ThreeMap = () => {
   };
 
 
+  const getRandom = (max: any, min: any) => {
+    return Math.round((Math.random() * (max - min + 1) + min) * 10) / 10;
+  }
+
+  const animateHeatmap = () => {
+    let time = 0;
+    const maxHeight = 6; // 最大高度
+    const minHeight = 4; // 最小高度
+    const animationSpeed = 0.04; // 动画速度调整
+
+    const animate = () => {
+      time += animationSpeed;
+      const height = minHeight + Math.sin(time) * (maxHeight - minHeight); // 根据正弦函数计算高度
+
+      material.uniforms.heightRatio.value = height; // 设置高度
+
+      requestAnimationFrame(animate); // 递归调用requestAnimationFrame，实现动画效果
+    };
+
+    animate();
+  };
+
+  const addMark = (position_) => {
+    const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
+    const [x, y] = projection(position_);
+    const position = new THREE.Vector3(x, -y, 0);
+
+    // 创建一个点位图片
+    const textureLoader = new THREE.TextureLoader();
+    const spriteTexture = textureLoader.load(Mark1); // 替换为实际的图片路径
+    const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
+    const sprite = new THREE.Sprite(spriteMaterial);
+    sprite.position.copy(position); // 设置图片位置
+
+    sprite.scale.set(5, 5, 5); // 设置图片大小
+
+    sprite.rotation.x = Math.PI * 1.5;
+    // 设置平移
+    console.log(sprite.position);
+
+    const translation = new THREE.Vector3(0, 0, 0); // 平移向量
+    sprite.position.add(translation); // 平移点位
+    viewScene.current.add(sprite);
+    // viewCamera.current.look
+  };
+
+
+  const initHeatmap = () => {
+    let heatmap = h337.create({
+      container: heat_dom.current,
+      width: 256,
+      height: 256,
+      blur: '.8',
+      radius: 4
+    });
+    const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
+    let i = 0, max = 6, data = [];
+    while (i < 1000) {
+      // 生成指定范围内的随机经度
+      const randomLon = 104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
+
+      // 生成指定范围内的随机纬度
+      const randomLat = 30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
+      const lont = [randomLon, randomLat]
+      const [x, y] = projection(lont)
+      // data.push({ x: getRandom( 128 + x * (256 / 50), 128 + x * (256 / 50)), y: getRandom(28 + y * (256 / 50), 128 + y * (256 / 50)), value: getRandom(1, 6) });
+      data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
+      i++;
+    }
+
+    console.log(data);
+
+    heatmap.setData({
+      max: max,
+      data: data
+    });
+
+    texture = new THREE.Texture(heatmap._renderer.canvas);
+    geometry = new THREE.PlaneGeometry(50, 50, 1000, 1000);
+    geometry.rotateX(-Math.PI * 0.5);
+    material = new THREE.ShaderMaterial({
+      uniforms: {
+        heightMap: { value: texture },
+        heightRatio: { value: 5 }
+      },
+      vertexShader: vertexShaderRef.current.textContent,
+      fragmentShader: fragmentShaderRef.current.textContent,
+      transparent: true,
+    });
+
+    // console.log(vertexShaderRef.current.textContent);
+    // console.log(fragmentShaderRef.current.textContent);
+    mesh = new THREE.Mesh(geometry, material);
+    viewScene.current.add(mesh);
+    // initGui();
+    // animateHeatmap();
+  }
+
   // 初始化三维场景
   const initMap = (width: number, height: number) => {
     mapObj.current = new THREE.Object3D();
@@ -259,15 +402,22 @@ const ThreeMap = () => {
     initRenderer(width, height);
     initControls()
     drawShapeOptionFun()
- 
+
+    initHeatmap();
+
     function animate() {
       requestAnimationFrame(animate);
 
+      // if (texture)
+      texture.needsUpdate = true;
+
+
       controls.current.update();
-      if (composer.current) {
-        composer.current.render();
-      }
-      // renderer.current.render(viewScene.current, viewCamera.current);
+      // if (composer.current)
+      //   composer.current.render();
+
+
+      renderer.current.render(viewScene.current, viewCamera.current);
 
     }
     animate();
@@ -281,6 +431,18 @@ const ThreeMap = () => {
     }
   }, []);
 
-  return <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}></div>
+  return <>
+    <script type="x-shader/x-vertex" ref={vertexShaderRef}>
+      {vertexShader}
+    </script>
+    <script type="x-shader/x-vertex" ref={fragmentShaderRef}>
+      {fragmentShader}
+    </script>
+
+    <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>
+    <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}></div>
+
+  </>
+
 }
 export default ThreeMap

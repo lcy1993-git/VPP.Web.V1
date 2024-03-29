@@ -9,10 +9,9 @@ import XYZ from 'ol/source/XYZ'
 import GeoJSON from 'ol/format/GeoJSON'
 import { useEffect, useRef, useState } from "react";
 import Map from 'ol/Map'
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat, transformExtent } from 'ol/proj';
 import { Point } from 'ol/geom';
 import HeatmapLayer from 'ol/layer/Heatmap';
-import { transformExtent } from 'ol/proj';
 import styles from './index.less'
 import { useRequest } from "ahooks";
 import { getCarbonHeatMap } from "@/services/carbon-overview";
@@ -65,44 +64,6 @@ const HeatMap = () => {
     }
   });
 
-  // 生成指定数量的随机点
-  const generateRandomPoints = (count: any) => {
-    const points = [];
-    for (let i = 0; i < count; i++) {
-      const latitude = 30.5073 + Math.random() * (30.6789 - 30.5073); // 随机生成纬度
-      const longitude = 104.1807 + Math.random() * (104.4911 - 104.2707); // 随机生成经度
-      points.push([longitude, latitude]);
-    }
-    return points;
-  }
-
-  // 生成随机权重
-  const generateRandomWeight = () => {
-    return Math.random() * 1; // 随机生成 0 到 1 之间的浮点数
-  }
-
-  // 生成热力图数据
-  const generateHeatMapData = (count: any) => {
-    const features: any = [];
-    const points = generateRandomPoints(count);
-    points.forEach(point => {
-      features.push({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: point
-        },
-        properties: {
-          weight: generateRandomWeight()
-        }
-      });
-    });
-    return {
-      type: 'FeatureCollection',
-      features: features
-    };
-  }
-
   // 初始化弹出框
   const initPopup = (map: any) => {
     // 创建popup
@@ -129,8 +90,8 @@ const HeatMap = () => {
 
   const initMap = () => {
     // 创建地图中心点坐标
-    // const centerCoordinate = fromLonLat([104.300989, 30.607689]);
-    const centerCoordinate = fromLonLat([106.114616, 29.849167]);
+    const centerCoordinate = fromLonLat([104.300989, 30.607689]);
+    // const centerCoordinate = fromLonLat([106.114616, 29.849167]);
     // 定义范围，例如：成都龙泉驿区的范围
     const extent = transformExtent([103.189623, 30.15979, 104.96262, 31.037765], 'EPSG:4326', 'EPSG:3857');
 
@@ -142,7 +103,7 @@ const HeatMap = () => {
       maxZoom: 18,
       // 指定投影
       projection: 'EPSG:3857',
-      // extent: extent,
+      extent: extent,
     });
 
     // 创建高德图层
@@ -197,8 +158,9 @@ const HeatMap = () => {
     map.current.on('pointermove', function (evt: any) {
       const coordinate = evt.coordinate;
       overlayRef.current.setPosition(undefined);
+      
       map.current.forEachFeatureAtPixel(evt.pixel, (feature: any, layer: any) => {
-        if (layer !== geoJSONLayer) {
+        if (layer !== geoJSONLayer) {          
           popupContentRef.current.innerHTML = '';
           popupContentRef.current.innerHTML += `<p class=${styles.olPopupContentLable}>企业名称：</p>`
           popupContentRef.current.innerHTML += `<p class=${styles.olPopupContentValue}>${feature.getProperties()?.name}</p>`

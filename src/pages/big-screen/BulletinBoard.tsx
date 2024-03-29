@@ -414,8 +414,8 @@ const BulletinBoard = () => {
           </div>
         </div>
         <div className={styles.footer}>
-          <div>负荷热力</div>
-          <div>电量热力</div>
+          <div className={`${styles.button} ${styles.buttonLeft}`}>负荷热力</div>
+          <div className={`${styles.button} ${styles.buttonRight}`}>负荷热力</div>
       </div>
       </div>
     </ConfigProvider>

@@ -445,10 +445,27 @@
     background-position: center center;
     display: flex;
     justify-content: center;
-    div {
-      width: 7.4%;
+    .button {
+      width: 8%;
       height: 20px;
-      background: red;
+      background-size: contain;
+      background-repeat: no-repeat;
+      font-size: 14px;
+      line-height: 20px;
+      color: #fff;
+      cursor: pointer;
+    }
+    .buttonLeft {
+      background-position: center right;
+      text-align: right;
+      padding-right: 20px;
+      background-image: url('@/assets/image/big-screen/button01.png');
+    }
+
+    .buttonRight {
+      background-position: center left;
+      text-indent: 20px;
+      background-image: url('@/assets/image/big-screen/button03.png');
     }
   }
 }

@@ -304,7 +304,7 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap />
+              <ThreeMap isHeatmap={true}/>
             </div>
           </div>
           {/* right */}

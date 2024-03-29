@@ -17,8 +17,8 @@ import Mark1 from './image/mark1.png';
 
 interface ThreeMapInfo {
   isHeatmap?: boolean; // 是否加载热力图
- 
 }
+
 
 const ThreeMap = (props: ThreeMapInfo) => {
   const { isHeatmap = false } = props;

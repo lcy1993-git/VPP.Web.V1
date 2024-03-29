@@ -82,3 +82,10 @@ export const getBoardCenterData = () => {
     method: 'GET',
   });
 };
+
+// 综能看板--- 电站数据
+export const getBoardSubstationData = () => {
+  return request(`/api/bigScreen/energyBoard/substationData`, {
+    method: 'GET',
+  });
+};

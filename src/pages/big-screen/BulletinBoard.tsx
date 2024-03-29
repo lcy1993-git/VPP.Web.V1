@@ -3,6 +3,7 @@ import CustomCharts from '@/components/custom-charts';
 import SegmentedTheme from '@/components/segmented-theme';
 import {
   getBoardCenterData,
+  getBoardSubstationData,
   getElasticEnergyManage,
   getEnergyManageFeature,
   getEnergyTrend,
@@ -101,6 +102,11 @@ const BulletinBoard = () => {
     pollingErrorRetryCount: 3,
   });
 
+  // 大屏中间数据
+  // const { data: substationData } = useRequest(getBoardSubstationData, {
+  //   pollingInterval: INTERVALTIME,
+  //   pollingErrorRetryCount: 3,
+  // });
   /** 区域用能概览 日期改变  */
   const datePickerChange = (date: any) => {
     if (!date) {
@@ -295,7 +301,7 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap isHeatmap={true}/>
+              <ThreeMap isHeatmap={true} />
             </div>
           </div>
           {/* right */}

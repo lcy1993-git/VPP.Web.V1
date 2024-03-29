@@ -139,7 +139,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点
-    control.target.set(0, 0, 0);
+    control.target.set(0, 0, 2);
     // control.minDistance = 8;
     // control.maxDistance = 20;
 

@@ -1,26 +1,11 @@
+import { formatXAxis } from '@/utils/common';
 import * as echarts from 'echarts';
 
-export const monitorOptions = (data?: any, selectDate?: string) => {
+export const monitorOptions = (data?: any, unit: string) => {
   if (!data) {
     return false;
   }
-  let type = 'day';
-  if (selectDate) {
-    type = ['year', 'month', 'day'][selectDate?.split('-').length - 1];
-  }
-  // X轴
-  let XData;
-  if (type === 'day') {
-    XData = Object.keys(data.carbonTimeValueMap).map((item) => item.split(' ')[1].slice(0, 5));
-  } else if (type === 'month') {
-    XData = Object.keys(data.carbonTimeValueMap).map(
-      (item) => item.split(' ')[0].slice(8, 10) + '日',
-    );
-  } else {
-    XData = Object.keys(data.carbonTimeValueMap).map(
-      (item) => item.split(' ')[0].slice(5, 7) + '月',
-    );
-  }
+
   const emun: any = {
     hbTimeValueMap: '环比',
     tbTimeValueMap: '同比',
@@ -89,7 +74,7 @@ export const monitorOptions = (data?: any, selectDate?: string) => {
     xAxis: [
       {
         type: 'category',
-        data: XData,
+        data: formatXAxis(Object.keys(data.carbonTimeValueMap), unit),
         axisPointer: {
           type: 'shadow',
         },

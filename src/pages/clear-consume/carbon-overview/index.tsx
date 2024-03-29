@@ -169,10 +169,10 @@ const CarbonOverview = () => {
                   <dt>{dataFilter(carbonOverviewHead)?.yearTB}</dt>
                   <dd>年同比(%)</dd>
                 </dl>
-                <dl>
+                {/* <dl>
                   <dt>{dataFilter(carbonOverviewHead)?.yearHB}</dt>
                   <dd>年环比(%)</dd>
-                </dl>
+                </dl> */}
               </div>
             </div>
           </div>

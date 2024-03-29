@@ -137,10 +137,7 @@ const CarbonMonitor = () => {
               </div>
               <div className={styles.chartDom}>
                 <CustomCharts
-                  options={monitorOptions(
-                    dataFilter(trendData),
-                    ['year', 'month', 'day'][date?.split('-').length - 1],
-                  )}
+                  options={monitorOptions(dataFilter(trendData), unit)}
                   loading={trendDataLoading}
                 />
               </div>

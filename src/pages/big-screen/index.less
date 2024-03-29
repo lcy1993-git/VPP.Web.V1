@@ -10,7 +10,7 @@
   background-image: url('@/assets/image/big-screen/bg01.png');
   background-size: 100% 100%;
   background-position: center center;
-  background-color:black;
+  background-color: black;
 
   .header {
     width: 100%;
@@ -23,7 +23,9 @@
     justify-content: space-between;
     align-items: center;
 
-    .headerLeft, .headerRight, .middle {
+    .headerLeft,
+    .headerRight,
+    .middle {
       flex: 1;
       display: flex;
       justify-content: center;
@@ -92,14 +94,16 @@
           height: 100%;
           display: flex;
 
-          .responseLeft, .responseRight {
+          .responseLeft,
+          .responseRight {
             flex: 1;
             height: 100%;
             overflow: hidden;
             display: flex;
             flex-direction: column;
 
-            .chartsWrap, .chartsDesc {
+            .chartsWrap,
+            .chartsDesc {
               flex: 3;
               width: 100%;
               overflow: hidden;
@@ -113,7 +117,7 @@
 
             .chartsDesc {
               flex: 2;
-              padding-top:10px;
+              padding-top: 10px;
 
               .desc {
                 font-weight: 400;
@@ -124,9 +128,9 @@
                 position: relative;
 
                 span {
-                    font-size: 20px;
-                    font-weight: 500;
-                    vertical-align:bottom;
+                  font-size: 20px;
+                  font-weight: 500;
+                  vertical-align: bottom;
                 }
               }
 
@@ -143,25 +147,29 @@
               .desc:nth-of-type(1)::after {
                 background: #33ec9b;
               }
+
               .desc:nth-of-type(1) span {
-                color:  #33ec9b;
+                color: #33ec9b;
               }
 
               .desc:nth-of-type(2)::after {
                 background: #1A96FF;
               }
+
               .desc:nth-of-type(2) span {
-                color:  #1A96FF;
+                color: #1A96FF;
               }
 
               .desc:nth-of-type(3)::after {
                 background: #FFFFFF;
               }
+
               .desc:nth-of-type(3) span {
-                color:  #FFFFFF;
+                color: #FFFFFF;
               }
             }
           }
+
           .responseLeft {
             margin-right: 10px;
           }
@@ -174,6 +182,7 @@
           display: flex;
           flex-direction: column;
           align-items: center;
+
           .elasticityTitle {
             width: 80%;
             height: 65px;
@@ -197,19 +206,21 @@
               display: flex;
               justify-content: space-around;
               align-items: center;
-               dt {
-                  font-weight: 500;
-                  font-size: 22px;
-                  color: #fdfeff;
-                  text-align: center;
-               }
-               dd {
+
+              dt {
+                font-weight: 500;
+                font-size: 22px;
+                color: #fdfeff;
+                text-align: center;
+              }
+
+              dd {
                 font-weight: 400;
                 font-size: 14px;
                 color: #E7FAFF;
                 opacity: 0.6;
                 text-align: center;
-               }
+              }
             }
           }
 
@@ -220,6 +231,107 @@
           }
         }
 
+        // 清洁能源管理
+        .clear {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          padding: 10px 16px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          .clearItem {
+            width: 100%;
+            height: 104px;
+            display: flex;
+            align-items: center;
+
+            .clearItemTotal {
+              width: 174px;
+              height: 70px;
+              margin-right: 20px;
+              background-image: url('@/assets/image/big-screen/icon2.png');
+              background-position: center center;
+              background-size: contain;
+              background-repeat: no-repeat;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding-left: 24px;
+              padding-top: 10px;
+              font-weight: normal;
+              font-size: 28px;
+              color: #FFFFFF;
+            }
+
+            .clearItemUl {
+              flex: 1;
+              height: 100%;
+              padding-left: 10px;
+              display: flex;
+              flex-direction: column;
+
+              .clearItemLi {
+                width: 100%;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                position: relative;
+
+                .name {
+                  flex: 1;
+                  font-weight: 400;
+                  font-size: 14px;
+                  color: #FFFFFF;
+                }
+
+                .value {
+                  width: 60px;
+                  font-weight: 400;
+                  font-size: 18px;
+                  color: #35C8FC;
+                }
+
+                .unit {
+                  width: 40px;
+                  font-weight: 400;
+                  font-size: 14px;
+                  color: #FFFFFF;
+                }
+              }
+
+              .clearItemLi::after {
+                content: '';
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                left: -24px;
+                top: 5px;
+                background-image: url('@/assets/image/big-screen/icon4.png');
+                background-position: center center;
+                background-size: contain;
+              }
+
+            }
+          }
+
+          .clearItem:nth-of-type(2) .clearItemTotal {
+            background-image: url('@/assets/image/big-screen/icon3.png');
+          }
+
+          .clearItem:nth-of-type(3) .clearItemTotal {
+            background-image: url('@/assets/image/big-screen/icon1.png');
+          }
+
+          .clearItem:nth-of-type(3) .clearItemUl .clearItemLi::after {
+            top: 9px;
+          }
+
+          .clearMiddleItem {
+            margin: 10px 0;
+          }
+        }
       }
     }
 
@@ -248,6 +360,7 @@
           justify-content: center;
           align-items: center;
           overflow: hidden;
+
           .title {
             font-weight: 500;
             font-size: 20px;
@@ -263,14 +376,14 @@
               height: 48px;
               text-align: center;
               line-height: 48px;
-              margin:0 2px;
+              margin: 0 2px;
               background-image: url('@/assets/image/big-screen/number.png');
               background-size: cover;
               background-position: center center;
               font-weight: bold;
               font-size: 32px;
               color: #FFFFFF;
-              text-shadow: 0px 3px 5px rgba(0,0,0,0.35);
+              text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.35);
             }
 
             i {
@@ -286,18 +399,30 @@
       .boardModdle {
         justify-content: space-around;
 
-        dt {
-          font-weight: 500;
-          font-size: 20px;
-          color: #0084FF;
-          text-align: center;
-          margin-bottom: 10px;
+        dl {
+          width: 170px;
+          height: 100px;
+          background-image: url('@/assets/image/big-screen/card.png');
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          padding: 16px;
         }
-        dd {
-          font-weight: 600;
+
+        dt {
+          font-weight: normal;
           font-size: 32px;
-          color: #d3ebff;
+          color: #FFFFFF;
+          text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.35);
           text-align: center;
+          margin-bottom: 4px;
+        }
+
+        dd {
+          font-weight: 500;
+          font-size: 16px;
+          text-align: center;
+          color: #0084FF;
         }
       }
 
@@ -315,11 +440,17 @@
   .footer {
     width: 100%;
     height: 40px;
-    background-image: url('@/assets/image/big-screen/bg_footer.png');
+    background-image: url('@/assets/image/big-screen/footer_board.png');
     background-size: 100% 100%;
     background-position: center center;
+    display: flex;
+    justify-content: center;
+    div {
+      width: 7.4%;
+      height: 20px;
+      background: red;
+    }
   }
-
 }
 
 

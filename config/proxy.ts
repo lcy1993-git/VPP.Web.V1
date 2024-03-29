@@ -8,6 +8,7 @@
  * https://pro.ant.design/docs/deploy
  *
  * @doc https://umijs.org/docs/guides/proxy
+ * 10.6.1.167
  */
 export default {
   // 登录、系统管理

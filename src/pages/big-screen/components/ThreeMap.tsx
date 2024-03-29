@@ -133,9 +133,9 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 设置控制器阻尼效果，旋转物体时更加真实
     control.enableDamping = false;
     // 是否可以缩放
-    control.enableZoom = false;
+    control.enableZoom = true;
     // 是否可以旋转
-    control.enableRotate = false;
+    control.enableRotate = true;
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点

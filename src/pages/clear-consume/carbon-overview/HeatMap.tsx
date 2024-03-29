@@ -1,30 +1,29 @@
-import { View, Overlay, Feature } from "ol";
-import TileLayer from "ol/layer/Tile";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import Fill from "ol/style/Fill";
-import Stroke from "ol/style/Stroke";
-import Style from "ol/style/Style";
-import XYZ from 'ol/source/XYZ'
-import GeoJSON from 'ol/format/GeoJSON'
-import { useEffect, useRef, useState } from "react";
-import Map from 'ol/Map'
-import { fromLonLat, toLonLat, transformExtent } from 'ol/proj';
+import { getCarbonHeatMap } from '@/services/carbon-overview';
+import { useRequest } from 'ahooks';
+import { Feature, Overlay, View } from 'ol';
+import Map from 'ol/Map';
+import GeoJSON from 'ol/format/GeoJSON';
 import { Point } from 'ol/geom';
 import HeatmapLayer from 'ol/layer/Heatmap';
-import styles from './index.less'
-import { useRequest } from "ahooks";
-import { getCarbonHeatMap } from "@/services/carbon-overview";
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import { fromLonLat, transformExtent } from 'ol/proj';
+import VectorSource from 'ol/source/Vector';
+import XYZ from 'ol/source/XYZ';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
+import { useEffect, useRef, useState } from 'react';
+import styles from './index.less';
 
 interface HeatMapInfo {
   type: number; // 分类类型
   substationCode?: string; // 企业code
-  industryCode?: string; // 行业code
- 
+  industry?: string; // 行业code
 }
 // 热力图
-const HeatMap = (props:HeatMapInfo ) => {
-  const {type = 0, substationCode, industryCode} = props;
+const HeatMap = (props: HeatMapInfo) => {
+  const { type = 0, substationCode, industry } = props;
   const mapDivRef = useRef(null); // 地图容器
   const map = useRef<any>(null); // 地图实例
   const overlayRef = useRef<any>(null); // 弹出框
@@ -57,9 +56,9 @@ const HeatMap = (props:HeatMapInfo ) => {
           });
           return feature;
         });
-        
+
         // 热力图层
-        if(heatMapLayer.current){
+        if (heatMapLayer.current) {
           heatMapLayer.current.getSource().clear();
           heatMapLayer.current.getSource().addFeatures(features);
         } else {
@@ -192,9 +191,9 @@ const HeatMap = (props:HeatMapInfo ) => {
     map.current.on('pointermove', function (evt: any) {
       const coordinate = evt.coordinate;
       overlayRef.current.setPosition(undefined);
-      
+
       map.current.forEachFeatureAtPixel(evt.pixel, (feature: any, layer: any) => {
-        if (layer !== geoJSONLayer) {          
+        if (layer !== geoJSONLayer) {
           popupContentRef.current.innerHTML = '';
           popupContentRef.current.innerHTML += `<p class=${styles.olPopupContentLable}>企业名称：</p>`;
           popupContentRef.current.innerHTML += `<p class=${styles.olPopupContentValue}>${
@@ -214,21 +213,18 @@ const HeatMap = (props:HeatMapInfo ) => {
     });
   };
 
-  
   useEffect(() => {
     initMap();
   }, []);
 
   useEffect(() => {
-    if(heatMapLayer.current){
+    if (heatMapLayer.current) {
       heatMapLayer.current.getSource().clear();
     }
-    if(type === 1 && !substationCode)
-    return;
-    if(type === 2 && !industryCode)
-    return;
+    if (type === 1 && !substationCode) return;
+    if (type === 2 && !industry) return;
     fecthCarbonHeatMap(handleParams());
-  }, [type, substationCode, industryCode]);
+  }, [type, substationCode, industry]);
 
   return (
     <>

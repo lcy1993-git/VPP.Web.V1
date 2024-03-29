@@ -13,14 +13,14 @@
 export default {
   // 登录、系统管理
   '/sysApi': {
-    target: 'http://10.6.10.28:18181',
+    target: 'http://10.6.1.167:18181',
     changeOrigin: true,
     // logLevel: 'debug',
     pathRewrite: { '^/sysApi': '/' },
   },
   '/api': {
     // target: 'http://10.6.10.28:18181',
-    target: 'http://10.6.10.28:18181',
+    target: 'http://10.6.1.167:18181',
     changeOrigin: true,
     // logLevel: 'debug',
     pathRewrite: { '^/api': '/' },

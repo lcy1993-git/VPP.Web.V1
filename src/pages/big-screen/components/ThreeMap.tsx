@@ -72,7 +72,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
 			varying vec3 cl;
 			void main() {
 		 		float v = abs(hValue - 1.);
-		 		gl_FragColor = vec4(cl, .8 - v * v) ; 
+		 		gl_FragColor = vec4(cl, .8 - v * v) ;
 		    }
 `;
   const fragmentShaderRef: any = useRef(null);
@@ -133,7 +133,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 设置控制器阻尼效果，旋转物体时更加真实
     control.enableDamping = false;
     // 是否可以缩放
-    control.enableZoom = false;
+    control.enableZoom = true;
     // 是否可以旋转
     control.enableRotate = false;
     // 禁止平移
@@ -221,7 +221,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     renderTarget.texture.name = "EffectComposer.rt1";
     composer.current = new EffectComposer(renderer.current, renderTarget);
 
-    // composer.current = new EffectComposer(renderer.current); 
+    // composer.current = new EffectComposer(renderer.current);
 
     const effectFXAA = new ShaderPass(FXAAShader);
     effectFXAA.uniforms['resolution'].value.set(1 / containrtWidth, 1 / containrtHeight);
@@ -363,10 +363,10 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // renderer.current.setSize( width, height);
 
     console.log(chart_dom.current);
-    
+
     viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
     console.log(chart_dom.current.clientWidth,  chart_dom.current.clientHeight);
-    
+
     viewCamera.current.updateProjectionMatrix();
     renderer.current.setSize(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
 
@@ -380,7 +380,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
         const containrtWidth = chart_dom.current?.offsetWidth;
         const containrtHeight = chart_dom.current?.offsetHeight;
         initMap(containrtWidth, containrtHeight)
-        
+
       }
     }
   }
@@ -407,7 +407,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
       i++;
     }
-    
+
     heatmap.setData({
       max: max,
       data: data
@@ -443,7 +443,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     initControls()
     drawShapeOptionFun()
     window.addEventListener( 'resize', onWindowResize );
-    
+
     if (isHeatmap)
       initHeatmap();
 
@@ -468,9 +468,9 @@ const ThreeMap = (props: ThreeMapInfo) => {
       const containrtWidth = chart_dom.current?.offsetWidth;
       const containrtHeight = chart_dom.current?.offsetHeight;
       initMap(containrtWidth, containrtHeight)
-      
+
     }
-    return () =>{ 
+    return () =>{
       if (chart_dom?.current) {
         window.removeEventListener('resize', onWindowResize);
       }

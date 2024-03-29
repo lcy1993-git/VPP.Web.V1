@@ -20,5 +20,6 @@ declare module 'three/examples/jsm/controls/OrbitControls';
 declare module 'turf';
 declare module 'd3';
 declare module 'three';
+declare module 'heatmap.js';
 
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;

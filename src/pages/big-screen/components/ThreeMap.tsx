@@ -97,8 +97,8 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
 
     // 辅助箭头    红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-    const axes = new THREE.AxesHelper(100);
-    scene.add(axes);
+    // const axes = new THREE.AxesHelper(100);
+    // scene.add(axes);
     viewScene.current = scene;
   };
 
@@ -106,7 +106,10 @@ const ThreeMap = (props: ThreeMapInfo) => {
   const initCamera = (divWidth: number, divHeight: number) => {
     const camera = new THREE.PerspectiveCamera(2, divWidth / divHeight, 1, 10000);
     // camera.position.set(0.09495576553561131, -1.0789913218408212, 9.961011790443024);
-    camera.position.set(-3.916950465440511, 831.9964081535137, 379.54952429087234);
+    if (isHeatmap)
+      camera.position.set(-13.179706235621579, 895.0838483998507, 83.07607286622547);
+    else
+      camera.position.set(-41.32864202838264, 831.5910748493473, 340.6301189988112);
 
     viewCamera.current = camera;
   };
@@ -117,7 +120,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     const renderObj = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // 渲染器 alpha: 背景图片
     renderObj.setSize(divWidth, divHeight); // 渲染器大小
     renderObj.setPixelRatio(window.devicePixelRatio);
-    renderObj.outputEncoding = THREE.sRGBEncoding;
+    renderObj.outputEncoding = 3001;
     renderObj.shadowMap.enabled = true;
     document.getElementById('three-map')?.appendChild(renderObj.domElement); // 渲染器添加到元素中
     renderer.current = renderObj;
@@ -130,9 +133,9 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 设置控制器阻尼效果，旋转物体时更加真实
     control.enableDamping = false;
     // 是否可以缩放
-    control.enableZoom = true;
+    control.enableZoom = false;
     // 是否可以旋转
-    control.enableRotate = true;
+    control.enableRotate = false;
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点
@@ -212,7 +215,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
         format: THREE.RGBAFormat,
-        encoding: THREE.sRGBEncoding
+        encoding: 3001
       }
     );
     renderTarget.texture.name = "EffectComposer.rt1";
@@ -290,7 +293,8 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
     });
 
-    // initoutlinePass(mapObj.current);
+    if (!isHeatmap)
+      initoutlinePass(mapObj.current);
     viewScene.current.add(mapObj.current)
   }
 
@@ -351,6 +355,36 @@ const ThreeMap = (props: ThreeMapInfo) => {
   };
 
 
+  const onWindowResize = () => {
+    // const width = chart_dom.current?.offsetWidth;
+    // const height = chart_dom.current?.offsetHeight;
+    // viewCamera.current.aspect = width / height;
+    // viewCamera.current.updateProjectionMatrix();
+    // renderer.current.setSize( width, height);
+
+    console.log(chart_dom.current);
+    
+    viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
+    console.log(chart_dom.current.clientWidth,  chart_dom.current.clientHeight);
+    
+    viewCamera.current.updateProjectionMatrix();
+    renderer.current.setSize(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
+
+    if (renderer.current) {
+      const rendererDomElement = renderer.current.domElement;
+      if (rendererDomElement.parentNode === chart_dom.current) {
+        chart_dom.current.removeChild(rendererDomElement);
+      }
+
+      if (chart_dom?.current) {
+        const containrtWidth = chart_dom.current?.offsetWidth;
+        const containrtHeight = chart_dom.current?.offsetHeight;
+        initMap(containrtWidth, containrtHeight)
+        
+      }
+    }
+  }
+
   // 添加热力图
   const initHeatmap = () => {
     let heatmap = h337.create({
@@ -358,11 +392,11 @@ const ThreeMap = (props: ThreeMapInfo) => {
       width: 256,
       height: 256,
       blur: '.8',
-      radius: 4
+      radius: 6
     });
     const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
     let i = 0, max = 6, data = [];
-    while (i < 1000) {
+    while (i < 200) {
       // 生成指定范围内的随机经度
       const randomLon = 104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
       // 生成指定范围内的随机纬度
@@ -373,7 +407,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
       i++;
     }
-
+    
     heatmap.setData({
       max: max,
       data: data
@@ -402,13 +436,15 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
   // 初始化三维场景
   const initMap = (width: number, height: number) => {
-    mapObj.current = new THREE.Object3D();
+    mapObj.current = new THREE.Object3D()
     initScene();
     initCamera(width, height);
     initRenderer(width, height);
     initControls()
     drawShapeOptionFun()
-    if(isHeatmap)
+    window.addEventListener( 'resize', onWindowResize );
+    
+    if (isHeatmap)
       initHeatmap();
 
     function animate() {
@@ -416,9 +452,12 @@ const ThreeMap = (props: ThreeMapInfo) => {
       if (texture)
         texture.needsUpdate = true;
       controls.current.update();
-      // if (composer.current)
-      //   composer.current.render();
-      renderer.current.render(viewScene.current, viewCamera.current);
+      // console.log(viewCamera.current.position);
+
+      if (!isHeatmap && composer.current)
+        composer.current.render();
+      if (isHeatmap)
+        renderer.current.render(viewScene.current, viewCamera.current);
 
     }
     animate();
@@ -428,7 +467,27 @@ const ThreeMap = (props: ThreeMapInfo) => {
     if (chart_dom?.current) {
       const containrtWidth = chart_dom.current?.offsetWidth;
       const containrtHeight = chart_dom.current?.offsetHeight;
-      initMap(containrtWidth, containrtHeight);
+      initMap(containrtWidth, containrtHeight)
+      
+    }
+    return () =>{ 
+      if (chart_dom?.current) {
+        window.removeEventListener('resize', onWindowResize);
+      }
+
+      // 清空场景中的对象
+      // viewScene.current.remove(mapObj.current);
+
+       // 从DOM中移除渲染器的canvas元素
+       chart_dom.current.removeChild(renderer.current.domElement);
+
+       // 从DOM中移除渲染器
+      // if (renderer.current) {
+      //   const rendererDomElement = renderer.current.domElement;
+      //   if (rendererDomElement.parentNode === chart_dom.current) {
+      //     chart_dom.current.removeChild(rendererDomElement);
+      //   }
+      // }
     }
   }, []);
 
@@ -440,7 +499,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       {fragmentShader}
     </script>
 
-    <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>
+    { isHeatmap && <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>}
     <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}></div>
 
   </>

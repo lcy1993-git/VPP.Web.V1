@@ -18,6 +18,7 @@ interface propsType {
   setIsToday?: Dispatch<SetStateAction<any>>;
   setDate?: Dispatch<SetStateAction<any>>;
   setUnit?: Dispatch<SetStateAction<any>>;
+  disabled?: boolean;
 }
 
 // 日历枚举值
@@ -40,7 +41,7 @@ const datePickerEnum: any = {
 };
 
 const CustomDatePicker = (props: propsType) => {
-  const { datePickerType, onChange, setIsToday, setDate, setUnit } = props;
+  const { datePickerType, onChange, setIsToday, setDate, setUnit, disabled = false } = props;
   // 默认当天
   const defaultDate = dayjs(`${new Date()}`);
   // 日期类型
@@ -91,6 +92,7 @@ const CustomDatePicker = (props: propsType) => {
           onChange={handleDateChange}
           allowClear={false}
           disabledDate={disableDate}
+          disabled={disabled}
         />
       </Space>
     </>

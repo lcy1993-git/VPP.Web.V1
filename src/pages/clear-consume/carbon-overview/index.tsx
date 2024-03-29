@@ -26,7 +26,7 @@ const CarbonOverview = () => {
   // 企业code
   const [substationCode, setSubstationCode] = useState<string>('');
   // 行业code
-  const [industryCode, setIndustryCode] = useState<string>('');
+  const [industry, setIndustry] = useState<string>('');
   // 能源碳排放趋势 选中的当前日期
   const [date, setDate] = useState<string>('');
   // 日期类型
@@ -76,7 +76,7 @@ const CarbonOverview = () => {
         params.substationCode = substationCode;
         break;
       case 2:
-        params.industryCode = industryCode;
+        params.industry = industry;
         break;
     }
     return params;
@@ -93,12 +93,12 @@ const CarbonOverview = () => {
   useEffect(() => {
     // 行业和企业未选择返回
     if (type === 1 && !substationCode) return;
-    if (type === 2 && !industryCode) return;
+    if (type === 2 && !industry) return;
     // 请求
     fetchCarbonOverviewHead(handleParams());
     fetchCarbonTargetProgress(handleParams());
     if (date && unit) fetchCarbonTrend({ ...handleParams(), date, unit });
-  }, [type, industryCode, substationCode]);
+  }, [type, industry, substationCode]);
 
   // 能源碳排放趋势 右侧组件
   const carbonFooterRender = () => {
@@ -110,7 +110,7 @@ const CarbonOverview = () => {
       <div className={styles.carbonSearch}>
         <SelectForm
           setType={setType}
-          setIndustryCode={setIndustryCode}
+          setIndustryCode={setIndustry}
           setSubstationCode={setSubstationCode}
         />
       </div>
@@ -224,10 +224,7 @@ const CarbonOverview = () => {
       <div className={styles.carbonFooter}>
         <CustomCard title="能源碳排放趋势" renderRight={carbonFooterRender}>
           <CustomCharts
-            options={carbonTrendsOption(
-              dataFilter(carbonTrend),
-              ['year', 'month', 'day'][date?.split('-').length - 1],
-            )}
+            options={carbonTrendsOption(dataFilter(carbonTrend), unit)}
             loading={carbonTrendLoading}
           />
         </CustomCard>

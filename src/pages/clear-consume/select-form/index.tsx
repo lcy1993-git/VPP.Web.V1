@@ -38,8 +38,8 @@ const SelectForm = (props: propsType) => {
       searchForm.setFieldValue('substationCode', code);
       setSubstationCode(code);
     } else if (type === 2) {
-      const code = industryList[0].code;
-      searchForm.setFieldValue('industryCode', code);
+      const code = industryList[0].id;
+      searchForm.setFieldValue('industry', code);
       setIndustryCode(code);
     }
   }, [type]);
@@ -83,7 +83,7 @@ const SelectForm = (props: propsType) => {
       {type === 2 && (
         <Form.Item
           label="行业名称"
-          name="industryCode"
+          name="industry"
           rules={[{ required: true, message: '请选择行业' }]}
         >
           <Select
@@ -92,7 +92,7 @@ const SelectForm = (props: propsType) => {
             options={industryList}
             onChange={(value) => setIndustryCode(value)}
             style={{ width: 260 }}
-            fieldNames={{ label: 'name', value: 'code' }}
+            fieldNames={{ label: 'name', value: 'id' }}
           />
         </Form.Item>
       )}

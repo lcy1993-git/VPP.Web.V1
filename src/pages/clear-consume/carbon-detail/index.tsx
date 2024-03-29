@@ -19,7 +19,7 @@ const CarbonDetail = () => {
   // 企业code
   const [substationCode, setSubstationCode] = useState<string>('');
   // 行业code
-  const [industryCode, setIndustryCode] = useState<string>('');
+  const [industry, setIndustry] = useState<string>('');
   // table 示例
   const tableRef = useRef(null);
   // 表格 checkbox 被选中
@@ -116,7 +116,7 @@ const CarbonDetail = () => {
         params.substationCode = substationCode;
         break;
       case 2:
-        params.industryCode = industryCode;
+        params.industry = industry;
         break;
     }
     if (tableRef && tableRef.current) {
@@ -155,7 +155,7 @@ const CarbonDetail = () => {
             <Col span={12}>
               <SelectForm
                 setType={setType}
-                setIndustryCode={setIndustryCode}
+                setIndustryCode={setIndustry}
                 setSubstationCode={setSubstationCode}
               />
             </Col>

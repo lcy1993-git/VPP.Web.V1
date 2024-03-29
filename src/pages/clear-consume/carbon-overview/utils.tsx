@@ -3,7 +3,6 @@ import * as echarts from 'echarts';
 
 // 水波图配置
 export const waterWaveOption = (data: any) => {
-  console.log(data, '4444');
   return {
     title: {
       show: true,
@@ -27,10 +26,10 @@ export const waterWaveOption = (data: any) => {
         center: ['50%', '45%'],
         data: [
           {
-            value: [Number((data?.unused / data?.total).toFixed(2))],
+            value: [(data?.unused / data?.total).toFixed(2)],
             label: {
               normal: {
-                formatter: `${Number((data?.unused / data?.total).toFixed(2)) * 100}%`,
+                formatter: `${((data?.unused * 100) / data?.total).toFixed(2)}%`,
                 show: true,
               },
             },

@@ -127,7 +127,7 @@ const Login = () => {
                       width={110}
                       height={46}
                       onChange={handleChange}
-                      bgColor="#072c70"
+                      bgColor="#11325e"
                       onClick={() => (captchaRef as any).current.refresh()}
                     />
                   </Col>

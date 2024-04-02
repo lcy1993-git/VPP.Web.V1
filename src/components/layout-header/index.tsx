@@ -19,9 +19,8 @@ const LayoutHeader = () => {
     manual: true,
     onSuccess: (result: any) => {
       if (result && parseInt(result.totalCount)) {
-        setAlarmNum(parseInt(result.totalCount));
-        // 播放音频
         localStorage.setItem('whetherPlay', '1');
+        setAlarmNum(parseInt(result.totalCount));
       } else {
         setAlarmNum(0);
       }

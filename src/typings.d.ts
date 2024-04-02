@@ -21,5 +21,6 @@ declare module 'turf';
 declare module 'd3';
 declare module 'three';
 declare module 'heatmap.js';
+declare module '*.wav';
 
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;

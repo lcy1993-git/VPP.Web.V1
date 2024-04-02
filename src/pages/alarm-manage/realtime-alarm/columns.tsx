@@ -79,7 +79,7 @@ export const columns = [
     render: (text: any) => {
       const advice = text
         .map((item: any, index: number) => {
-          return `${index + 1}.${item?.dealAdvice}`;
+          return item?.dealAdvice ? `${index + 1}.${item?.dealAdvice}` : '';
         })
         .join('、');
       return (

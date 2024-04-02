@@ -1,5 +1,5 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
-import type { RequestConfig } from '@umijs/max';
+import { history, RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
 
 // 错误处理方案： 错误类型
@@ -120,7 +120,7 @@ export const errorConfig: RequestConfig = {
       const { data } = response as unknown as ResponseStructure;
 
       if (data.code === 403) {
-        // history.push('/login');
+        history.push('/login');
         return Promise.reject('登录超时，请重新登录！！！');
       }
       if (data.code && data.code !== 200) {

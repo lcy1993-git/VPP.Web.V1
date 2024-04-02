@@ -13,7 +13,6 @@ import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Space, messag
 import type { FormInstance } from 'antd/es/form';
 import { useRef, useState } from 'react';
 import AddMenuForm from './components/add-menu';
-// import IconSymbol from './components/IconSymbol';
 
 const SystemMenu: React.FC = () => {
   // 控制添加菜单modal是否展示
@@ -24,7 +23,6 @@ const SystemMenu: React.FC = () => {
   const [currentEditId, setCurrentEditId] = useState<any[]>([]);
   // 是否展开
   const [isExpand, setIsExpand] = useState<boolean>(false);
-
   // 表格Ref
   const tableRef = useRef(null);
   // 搜索form

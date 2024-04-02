@@ -24,15 +24,13 @@ export const getEnergyStructure = (params: any) => {
   });
 };
 
-
 // 负荷详情
-export const getLoadetails = (params: any) => {
+export const getLoadDetails = (params: any) => {
   return request(`/sysApi/energy/monitor/power/details`, {
     method: 'get',
     params,
   });
 };
-
 
 // 企业排名
 export const getRanking = (params: any) => {
@@ -41,7 +39,6 @@ export const getRanking = (params: any) => {
     params,
   });
 };
-
 
 // select 获取企业名称
 export const getEnterpriseName = () => {

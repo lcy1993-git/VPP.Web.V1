@@ -6,13 +6,13 @@ import {
   getEnergyStructure,
   getEnterpriseName,
   getIndustry,
-  getLoadetails,
+  getLoadDetails,
   getMonitorDetails,
   getMonitorOverview,
   getRanking,
 } from '@/services/energy-monitor';
 import { useRequest } from 'ahooks';
-import { Button, DatePicker, Form, Select, Table, Tooltip, message } from 'antd';
+import { Button, DatePicker, Form, Select, Table, message } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
@@ -20,7 +20,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEffect, useRef, useState } from 'react';
 import CustomProgress from './custom-progress';
 import styles from './index.less';
-import { energyDetail, energyStructureOptions, loadDetail } from './utils';
+import { columns, energyDetail, energyStructureOptions, loadDetail } from './utils';
 dayjs.locale('zh-cn');
 
 const EnergyMonitor = () => {
@@ -41,48 +41,6 @@ const EnergyMonitor = () => {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-  const columns = [
-    {
-      title: '排名',
-      dataIndex: 'name',
-      key: 'name',
-      align: 'center' as any,
-      width: 60,
-      render: (_text: any, record: any, index: number) => {
-        return <span>{index + 1}</span>;
-      },
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'companyName',
-      align: 'center' as any,
-      ellipsis: true,
-      key: 'companyName',
-      render: (text: any) => {
-        return (
-          <Tooltip placement="top" title={text}>
-            {text}
-          </Tooltip>
-        );
-      },
-    },
-    {
-      title: '用电量(kWh)',
-      align: 'center' as any,
-      dataIndex: 'electricityConsumption',
-      key: 'electricityConsumption',
-      ellipsis: true,
-    },
-  ];
-
-  // 数据过滤
-  const dataFilter = (data: any) => {
-    if (data?.code === 200) {
-      return data.data;
-    }
-    return null;
-  };
-
   // 用能详情
   const { data: detailsData, run: fetchMonitorDetails } = useRequest(getMonitorDetails, {
     manual: true,
@@ -99,7 +57,7 @@ const EnergyMonitor = () => {
   });
 
   // 负荷详情
-  const { data: loadDetailData, run: fetchLoadetails } = useRequest(getLoadetails, {
+  const { data: loadDetailData, run: fetchLoadDetails } = useRequest(getLoadDetails, {
     manual: true,
   });
 
@@ -112,6 +70,14 @@ const EnergyMonitor = () => {
   const { data: enterpriseNameData } = useRequest(getEnterpriseName);
   // 行业
   const { data: industryData } = useRequest(getIndustry);
+
+  // 数据过滤
+  const dataFilter = (data: any) => {
+    if (data?.code === 200) {
+      return data.data;
+    }
+    return null;
+  };
 
   // 获取企业、行业名称
   const selectOptions = () => {
@@ -139,7 +105,7 @@ const EnergyMonitor = () => {
   // 负荷详情 时间组件变化
   const loadDetailDateChange = (date: any) => {
     const formatDate = dayjs(date).format('YYYY-MM-DD');
-    fetchLoadetails({
+    fetchLoadDetails({
       date: formatDate,
       industry: '',
       substationCode: '',
@@ -163,7 +129,7 @@ const EnergyMonitor = () => {
       type: 0,
     });
     // 负荷详情
-    fetchLoadetails({
+    fetchLoadDetails({
       date: dayjs(new Date()).format('YYYY-MM-DD'),
       type: 0,
     });
@@ -236,7 +202,7 @@ const EnergyMonitor = () => {
     // 用能总览
     fetchMonitorOverview({ ...params });
     // 负荷详情
-    fetchLoadetails({
+    fetchLoadDetails({
       ...params,
       date: dayjs(new Date()).format('YYYY-MM-DD'),
     });

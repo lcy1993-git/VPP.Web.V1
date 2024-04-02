@@ -1,8 +1,8 @@
 import logo from '@/assets/image/base/logo1.png';
 import title from '@/assets/image/base/title.png';
-import { loginRequest } from '@/services/login';
+import { getUserAuth, loginRequest } from '@/services/login';
 import { history } from '@umijs/max';
-import { Button, Col, ConfigProvider, Form, Input, message, Row } from 'antd';
+import { Button, Col, ConfigProvider, Form, Input, Row, message } from 'antd';
 import { md5 } from 'js-md5';
 import { useCallback, useRef, useState } from 'react';
 import Captcha from 'react-captcha-code';
@@ -47,7 +47,10 @@ const Login = () => {
       localStorage.setItem('userId', data?.id);
       // 播放音频
       localStorage.setItem('closeAudio', 'true');
-      history.push('/big-screen/feature');
+      // 根据用户权限跳转界面
+      await getUserAuth(data?.id).then((res) => {
+        history.push(res[0].path);
+      });
     }
   };
 

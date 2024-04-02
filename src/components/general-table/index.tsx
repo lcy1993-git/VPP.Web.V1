@@ -324,11 +324,11 @@ const withGeneralTable =
                 onExpand: (_expanded: any, record: { id: any }) => {
                   const isExist = expandedRowKeys.find((item) => item === record.id);
                   if (isExist) {
-                    const expandeds = expandedRowKeys.filter((item) => item !== record.id);
-                    setExpandedRowKeys(expandeds);
+                    const expandedKeys = expandedRowKeys.filter((item) => item !== record.id);
+                    setExpandedRowKeys(expandedKeys);
                   } else {
-                    const expandeds = [...expandedRowKeys, record.id];
-                    setExpandedRowKeys(expandeds);
+                    const expandedKeys = [...expandedRowKeys, record.id];
+                    setExpandedRowKeys(expandedKeys);
                   }
                 },
               }}

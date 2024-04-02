@@ -108,7 +108,7 @@ export const judgmentIsToday = (date: any) => {
 };
 
 // 根据日期类型格式化x轴数据
-export const formatXAxis = (data: any, type: 'day' | 'month' | 'year') => {
+export const formatXAxis = (data: any, type: string) => {
   const formatType: any = { day: 'HH:mm', month: 'DD', year: 'MM' };
   return data.map((item: any) => {
     return dayjs(item).format(formatType[type]);

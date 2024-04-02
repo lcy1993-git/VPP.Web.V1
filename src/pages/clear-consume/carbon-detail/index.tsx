@@ -56,8 +56,8 @@ const CarbonDetail = () => {
       align: 'center' as any,
       ellipsis: true,
       render: (text: string) => {
-        const eunm: any = { area: '区域', industry: '行业', enterprise: '企业' };
-        return eunm[text] || '未知';
+        const enumText: any = { area: '区域', industry: '行业', enterprise: '企业' };
+        return enumText[text] || '未知';
       },
     },
     {

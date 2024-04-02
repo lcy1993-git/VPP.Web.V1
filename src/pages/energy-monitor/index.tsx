@@ -1,7 +1,7 @@
 import ContainerPage from '@/components/container-page';
 import CustomCard from '@/components/custom-card';
 import CustomCharts from '@/components/custom-charts';
-import SegmentDatepicker from '@/components/segment-datepicker';
+import SegmentDatePicker from '@/components/segment-datepicker';
 import {
   getEnergyStructure,
   getEnterpriseName,
@@ -251,7 +251,7 @@ const EnergyMonitor = () => {
               <div className={styles.title}>企业排名</div>
               <div className={styles.content}>
                 <div className={styles.search}>
-                  <SegmentDatepicker setSelectDate={setEnterRank} />
+                  <SegmentDatePicker setSelectDate={setEnterRank} />
                 </div>
                 <div className={styles.table} ref={tableWrapRef}>
                   <Table
@@ -353,7 +353,7 @@ const EnergyMonitor = () => {
                   <div className={styles.mainBodyRight}>
                     <div className={styles.areaHead}>
                       <div className={styles.areaHeadTitle}>用能详情</div>
-                      <SegmentDatepicker setSelectDate={setSelectDate} />
+                      <SegmentDatePicker setSelectDate={setSelectDate} />
                     </div>
                     <div className={styles.areaBody}>
                       <CustomCharts
@@ -367,7 +367,7 @@ const EnergyMonitor = () => {
                   <div className={styles.mainBodyLeft}>
                     <div className={styles.areaHead}>
                       <div className={styles.areaHeadTitle}>能源结构</div>
-                      <SegmentDatepicker setSelectDate={setStructureDate} />
+                      <SegmentDatePicker setSelectDate={setStructureDate} />
                     </div>
                     <div className={styles.areaBody}>
                       <div className={styles.structure}>

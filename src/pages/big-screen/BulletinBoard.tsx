@@ -3,7 +3,6 @@ import CustomCharts from '@/components/custom-charts';
 import SegmentedTheme from '@/components/segmented-theme';
 import {
   getBoardCenterData,
-  getBoardSubstationData,
   getElasticEnergyManage,
   getEnergyManageFeature,
   getEnergyTrend,
@@ -304,7 +303,7 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap isHeatmap={true}/>
+              <ThreeMap isHeatmap={true} />
             </div>
           </div>
           {/* right */}
@@ -422,7 +421,7 @@ const BulletinBoard = () => {
         <div className={styles.footer}>
           <div className={`${styles.button} ${styles.buttonLeft}`}>负荷热力</div>
           <div className={`${styles.button} ${styles.buttonRight}`}>负荷热力</div>
-      </div>
+        </div>
       </div>
     </ConfigProvider>
   );

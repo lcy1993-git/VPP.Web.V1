@@ -88,12 +88,11 @@ const Login = () => {
                 >
                   <Input
                     placeholder="请输入用户名"
-                    bordered={false}
+                    variant="borderless"
                     className={styles.formItemInput}
                     autoComplete="off"
                   />
                 </Form.Item>
-
                 <Form.Item
                   className={`${styles.formItem} ${styles.password}`}
                   name="password"
@@ -101,7 +100,7 @@ const Login = () => {
                 >
                   <Input.Password
                     placeholder="请输入密码"
-                    bordered={false}
+                    variant="borderless"
                     className={styles.formItemInput}
                     autoComplete="off"
                   />
@@ -115,7 +114,7 @@ const Login = () => {
                     >
                       <Input
                         placeholder="请输入验证码"
-                        bordered={false}
+                        variant="borderless"
                         className={styles.formItemInput}
                         autoComplete="off"
                       />

@@ -1,7 +1,7 @@
 .monitorPage {
+  display: flex;
   width: 100%;
   height: 100%;
-  display: flex;
 
   .pageLeft {
     width: 320px;
@@ -9,46 +9,45 @@
     margin-right: 20px;
 
     .pageLeftSide {
-      width: 100%;
-      height: 100%;
       display: flex;
       flex-direction: column;
+      width: 100%;
+      height: 100%;
 
       .title {
         height: 60px;
+        padding-left: 12px;
+        color: #0190ff;
         font-weight: bold;
         font-size: 20px;
-        color: #0190FF;
         line-height: 60px;
-        padding-left: 12px;
         border-bottom: 1px solid #003199;
       }
 
       .content {
+        display: flex;
         flex: 1;
+        flex-direction: column;
         width: 100%;
         padding: 0 12px;
-        display: flex;
-        flex-direction: column;
 
         .search {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           width: 100%;
           height: 68px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
         }
 
         .table {
-          width: 100%;
           flex: 1;
+          width: 100%;
           overflow: hidden;
           border: 1px solid #003199;
           border-bottom: none;
         }
       }
     }
-
   }
 
   .pageRight {
@@ -56,59 +55,58 @@
     height: 100%;
 
     .content {
-      width: 100%;
-      height: 100%;
       display: flex;
       flex-direction: column;
+      width: 100%;
+      height: 100%;
 
       .contentTitle {
+        display: flex;
         width: 100%;
         height: 60px;
+        padding-top: 15px;
         border-bottom: 1px solid #003199;
-        display: flex;
-        align-items: center;
 
         .name {
+          padding-bottom: 4px;
+          color: #0190ff;
           font-weight: bold;
           font-size: 20px;
-          color: #0190FF;
           line-height: 60px;
           text-indent: 20px;
-          padding-bottom: 4px;
         }
       }
 
       .contentMain {
+        display: flex;
         flex: 1;
+        flex-direction: column;
         width: 100%;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
 
         .mainBody {
-          width: 100%;
-          flex: 1;
-          border-bottom: 1px solid #003199;
           display: flex;
+          flex: 1;
+          width: 100%;
+          border-bottom: 1px solid #003199;
 
           .mainBodyLeft {
-            width: 470px;
-            height: 100%;
-            border-right: 1px solid #003199;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            width: 470px;
+            height: 100%;
+            overflow: hidden;
+            border-right: 1px solid #003199;
           }
 
           .mainBodyRight {
+            display: flex;
             flex: 1;
+            flex-direction: column;
             height: 100%;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
           }
         }
-
 
         .mainBody:nth-of-type(2) {
           border-bottom: none;
@@ -117,46 +115,46 @@
     }
 
     :global {
-      .ant-form-item .ant-form-item-label >label {
-        font-size: 20px;
+      .ant-form-item .ant-form-item-label > label {
         padding-left: 20px;
         font-weight: 500;
+        font-size: 20px;
       }
     }
   }
 
   // 模块布局样式
   .areaHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     height: 54px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 0 12px 0 30px;
 
     .areaHeadTitle {
+      position: relative;
+      color: #ffffff;
       font-weight: bold;
       font-size: 16px;
-      color: #FFFFFF;
-      position: relative
     }
 
     .areaHeadTitle::after {
       position: absolute;
-      content: '';
+      top: 2px;
+      left: -10px;
       width: 2px;
       height: 16px;
       background: #fff;
-      left: -10px;
-      top: 2px;
+      content: '';
     }
   }
 
   .areaBody {
     flex: 1;
     width: 100%;
-    overflow: hidden;
     padding: 0 30px;
+    overflow: hidden;
   }
 
   // 能耗总览
@@ -169,23 +167,23 @@
 
   // 能源结构
   .structure {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
 
     .structureHead {
-      width: 100%;
-      height: 150px;
       display: flex;
       justify-content: space-between;
+      width: 100%;
+      height: 150px;
 
       .listTtem {
         width: 116px;
         height: 120px;
         background-image: url('@/assets/image/energy-monitor/01.png');
-        background-position: bottom center;
         background-repeat: no-repeat;
+        background-position: bottom center;
       }
 
       .listTtem:nth-of-type(2) {
@@ -197,48 +195,46 @@
       }
 
       .itemHead {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         width: 100%;
         height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
 
         p:nth-of-type(1) {
+          color: #ffffff;
           font-weight: bold;
           font-size: 20px;
-          color: #FFFFFF;
           line-height: 30px;
         }
 
         p:nth-of-type(2) {
+          color: #ffffff;
           font-weight: 400;
           font-size: 16px;
-          color: #FFFFFF;
           opacity: 0.8;
         }
       }
 
       .itemTitle {
+        color: #39adff;
         font-weight: 400;
         font-size: 16px;
-        color: #39ADFF;
         text-align: center;
       }
     }
 
     .structureChart {
-      width: 100%;
-      flex: 1;
-      overflow: hidden;
       display: flex;
+      flex: 1;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      overflow: hidden;
     }
   }
 }
-
-
 
 // 进度条样式
 .progress {
@@ -246,22 +242,22 @@
   height: 50px;
 
   .title {
+    display: flex;
     width: 100%;
     height: 30px;
     line-height: 30px;
-    display: flex;
 
     span:nth-of-type(1) {
+      margin-right: 10px;
+      color: #ffffff;
       font-weight: 400;
       font-size: 16px;
-      color: #FFFFFF;
-      margin-right: 10px;
     }
 
     span:nth-of-type(2) {
+      color: #0084ff;
       font-weight: bold;
       font-size: 16px;
-      color: #0084FF;
     }
   }
 

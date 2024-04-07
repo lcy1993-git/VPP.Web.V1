@@ -51,7 +51,7 @@ const EnergyAnalysis = () => {
     cancel: cancelEnergyRanking,
   } = useRequest(getEnergyRanking, {
     manual: true,
-    onSuccess: (res) => setEnergyRanking(res),
+    onSuccess: (res: any) => setEnergyRanking(res),
   });
 
   // 用电量趋势分析
@@ -61,7 +61,7 @@ const EnergyAnalysis = () => {
     cancel: cancelTrendAnalysis,
   } = useRequest(getTrendAnalysis, {
     manual: true,
-    onSuccess: (res) => setTrendAnalysis(res),
+    onSuccess: (res: any) => setTrendAnalysis(res),
   });
 
   // 企业用电指数分析
@@ -71,7 +71,7 @@ const EnergyAnalysis = () => {
     cancel: cancelTrendConsumption,
   } = useRequest(getTrendConsumption, {
     manual: true,
-    onSuccess: (res) => setTrendConsumption(res),
+    onSuccess: (res: any) => setTrendConsumption(res),
   });
 
   // 请求数据

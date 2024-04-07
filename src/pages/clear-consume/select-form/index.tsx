@@ -75,7 +75,7 @@ const SelectForm = (props: propsType) => {
             allowClear={false}
             onChange={(value) => setSubstationCode(value)}
             options={substationList}
-            style={{ width: 260 }}
+            style={{ width: 260, marginRight: '15px' }}
             fieldNames={{ label: 'name', value: 'substationCode' }}
           />
         </Form.Item>
@@ -91,7 +91,7 @@ const SelectForm = (props: propsType) => {
             allowClear={false}
             options={industryList}
             onChange={(value) => setIndustryCode(value)}
-            style={{ width: 260 }}
+            style={{ width: 260, marginRight: '15px' }}
             fieldNames={{ label: 'name', value: 'id' }}
           />
         </Form.Item>

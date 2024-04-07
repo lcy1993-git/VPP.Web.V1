@@ -8,7 +8,7 @@ export const getMonitorDetails = (params: any) => {
   });
 };
 
-// 用能总览
+// 能耗总览
 export const getMonitorOverview = (params: any) => {
   return request(`/sysApi/energy/monitor/overview`, {
     method: 'get',

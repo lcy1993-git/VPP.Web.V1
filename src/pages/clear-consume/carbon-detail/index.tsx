@@ -8,18 +8,20 @@ import { Button, Col, Form, Input, message, Row, Tag } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import { useRef, useState } from 'react';
-import SelectForm from '../select-form';
+import SelectForm from '../select-form/detail-select';
 dayjs.locale('zh-cn');
 
 const CarbonDetail = () => {
   // form
   const [searchForm] = Form.useForm();
   // 分类类型
-  const [type, setType] = useState<number>(0);
+  const [type, setType] = useState<number>(-1);
   // 企业code
   const [substationCode, setSubstationCode] = useState<string>('');
   // 行业code
   const [industry, setIndustry] = useState<string>('');
+  // 区域id
+  const [area, setArea] = useState<string>('');
   // table 示例
   const tableRef = useRef(null);
   // 表格 checkbox 被选中
@@ -110,7 +112,10 @@ const CarbonDetail = () => {
       type,
     };
     switch (type) {
+      case -1:
+        break;
       case 0:
+        params.area = area;
         break;
       case 1:
         params.substationCode = substationCode;
@@ -155,6 +160,7 @@ const CarbonDetail = () => {
             <Col span={12}>
               <SelectForm
                 setType={setType}
+                setArea={setArea}
                 setIndustryCode={setIndustry}
                 setSubstationCode={setSubstationCode}
               />
@@ -200,7 +206,7 @@ const CarbonDetail = () => {
           type="checkbox"
           filterParams={{
             date: dayjs(new Date()).format('YYYY-MM-DD'),
-            type: 0,
+            type: -1,
             unit: 'day',
           }}
         />

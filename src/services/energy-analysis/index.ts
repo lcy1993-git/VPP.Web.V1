@@ -14,6 +14,13 @@ export const getIndustryList = () => {
   });
 };
 
+// 区域数据
+export const getAreaList = () => {
+  return request(`/api/cleanEnergyConsumeManage/area`, {
+    method: 'GET',
+  });
+};
+
 // 能源结构排行
 export const getEnergyRanking = (params: any) => {
   return request(`/api/energy/analysis/ranking`, {

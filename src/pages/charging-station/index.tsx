@@ -34,7 +34,7 @@ const ChargingStation = () => {
   // 获取站点数据
   const {} = useRequest(getChargeStation, {
     manual: false,
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       if (result && result.length) {
         const substation = result.map((item: any) => {
           return {

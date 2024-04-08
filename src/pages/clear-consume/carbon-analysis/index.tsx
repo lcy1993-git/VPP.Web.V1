@@ -6,8 +6,8 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row, Space } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
-import { useRef, useState } from 'react';
-import SelectForm from '../select-form';
+import { useEffect, useRef, useState } from 'react';
+import SelectForm from '../select-form/analysis-select';
 import styles from './index.less';
 dayjs.locale('zh-cn');
 
@@ -16,10 +16,12 @@ const CarbonAnalysis = () => {
   const [searchForm] = Form.useForm();
   // 分类类型
   const [type, setType] = useState<number>(0);
-  // 企业code
-  const [substationCode, setSubstationCode] = useState<string>('');
   // 行业code
-  const [industry, setIndustry] = useState<string>('');
+  const [industry, setIndustry] = useState<any>('');
+  // 区域id
+  const [area, setArea] = useState<any>('');
+  // 企业类别
+  const [enterpriseCategory, setEnterpriseCategory] = useState<number>(0);
   // table 示例
   const tableRef = useRef(null);
   // 表格 checkbox 被选中
@@ -30,9 +32,11 @@ const CarbonAnalysis = () => {
   const [unit, setUnit] = useState<string>('');
   // modal状态
   const [visible, setVisible] = useState<boolean>(false);
+  // column
+  const [column, setColumn] = useState<any>();
 
-  // 初始化 table columns
-  const initTableColumns = [
+  // 企业
+  const enterpriseColumns = [
     {
       title: '序号',
       dataIndex: '',
@@ -125,6 +129,72 @@ const CarbonAnalysis = () => {
     },
   ];
 
+  // 区域或者行业
+  const industryColumns = [
+    {
+      title: '序号',
+      dataIndex: '',
+      key: 'index',
+      width: 60,
+      align: 'center' as any,
+      render: (_text: any, _record: any, index: number) => {
+        return index + 1;
+      },
+    },
+    {
+      title: type === 0 ? '区域名称' : '行业名称',
+      dataIndex: 'name',
+      key: 'name',
+      align: 'center' as any,
+      ellipsis: true,
+    },
+    {
+      title: '时间',
+      dataIndex: 'time',
+      key: 'time',
+      align: 'center' as any,
+      ellipsis: true,
+    },
+    {
+      title: '排放量(t)',
+      dataIndex: 'carbon',
+      key: 'carbon',
+      align: 'center' as any,
+      ellipsis: true,
+    },
+    {
+      title: '环比(%)',
+      dataIndex: 'hb',
+      key: 'hb',
+      align: 'center' as any,
+      ellipsis: true,
+    },
+    {
+      title: '同比(%)',
+      dataIndex: 'tb',
+      key: 'tb',
+      align: 'center' as any,
+      ellipsis: true,
+    },
+    {
+      title: '操作',
+      align: 'center' as any,
+      dataIndex: '',
+      key: 'x',
+      width: 200,
+      render: () => {
+        return (
+          <Space>
+            <Button size="small" type="default">
+              报告查询
+            </Button>
+            <Button size="small">报告下载</Button>
+          </Space>
+        );
+      },
+    },
+  ];
+
   // 点击查询
   const queryTableData = () => {
     const formParams = searchForm.getFieldsValue();
@@ -134,17 +204,15 @@ const CarbonAnalysis = () => {
       date,
       type,
     };
-    switch (type) {
-      case 0:
-        break;
-      case 1:
-        params.substationCode = substationCode;
-        break;
-      case 2:
-        params.industry = industry;
-        break;
+    // 企业类别
+    if (type === 1) {
+      params.enterpriseCategory = enterpriseCategory;
+      setColumn(enterpriseColumns);
+    } else {
+      setColumn(industryColumns);
     }
-
+    if (enterpriseCategory === 1) params.ids = area;
+    else if (enterpriseCategory === 2) params.ids = industry;
     if (tableRef && tableRef.current) {
       //@ts-ignore
       tableRef.current?.searchByParams(params);
@@ -161,7 +229,8 @@ const CarbonAnalysis = () => {
               <SelectForm
                 setType={setType}
                 setIndustryCode={setIndustry}
-                setSubstationCode={setSubstationCode}
+                setArea={setArea}
+                setEnterpriseCategory={setEnterpriseCategory}
               />
             </Col>
             <Col span={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -187,6 +256,10 @@ const CarbonAnalysis = () => {
     return <Button>批量下载</Button>;
   };
 
+  useEffect(() => {
+    setColumn(industryColumns);
+  }, []);
+
   return (
     <ContentPage>
       <ContentComponent
@@ -197,10 +270,10 @@ const CarbonAnalysis = () => {
         <GeneralTable
           url="/api/cleanEnergyConsumeManage/analyse"
           ref={tableRef}
-          columns={initTableColumns}
+          columns={column}
           rowKey="uuid"
           bordered={false}
-          requestType="get"
+          requestType="post"
           type="checkbox"
           filterParams={{
             date: dayjs(new Date()).format('YYYY-MM-DD'),

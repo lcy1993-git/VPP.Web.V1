@@ -5,7 +5,7 @@ import CustomDatePicker from '@/components/custom-datePicker';
 import { getCarbonTrend, getMonitorCenterData } from '@/services/carbon-monitor';
 import { useRequest } from 'ahooks';
 import { useEffect, useState } from 'react';
-import SelectForm from '../select-form';
+import SelectForm from '../select-form/all-region-select';
 import styles from './index.less';
 import { monitorOptions } from './utils';
 

@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import ReactECharts from 'echarts-for-react';
 import { useEffect, useRef, useState } from 'react';
-import SelectForm from '../clear-consume/select-form';
+import SelectForm from '../clear-consume/select-form/all-region-select';
 import CustomProgress from './custom-progress';
 import styles from './index.less';
 import { columns, energyDetail, energyStructureOptions, loadDetail } from './utils';

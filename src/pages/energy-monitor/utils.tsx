@@ -48,11 +48,11 @@ export const energyDetail = (data: any, selectDate: any) => {
   // X轴
   let XData;
   if (type === 'day') {
-    XData = Object.keys(data.eneryMap).map((item) => item.split(' ')[1].slice(0, 5));
+    XData = Object.keys(data.energyMap).map((item) => item.split(' ')[1].slice(0, 5));
   } else if (type === 'month') {
-    XData = Object.keys(data.eneryMap).map((item) => item.split(' ')[0].slice(8, 10) + '日');
+    XData = Object.keys(data.energyMap).map((item) => item.split(' ')[0].slice(8, 10) + '日');
   } else {
-    XData = Object.keys(data.eneryMap).map((item) => item.split(' ')[0].slice(5, 7) + '月');
+    XData = Object.keys(data.energyMap).map((item) => item.split(' ')[0].slice(5, 7) + '月');
   }
 
   if (!XData.length) {
@@ -107,7 +107,7 @@ export const energyDetail = (data: any, selectDate: any) => {
     },
     series: [
       {
-        data: Object.values(data.eneryMap),
+        data: Object.values(data.energyMap),
         type: 'bar',
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -173,7 +173,7 @@ export const loadDetail = (data: any) => {
     return false;
   }
 
-  if (!Object.keys(data.eneryMap).length) {
+  if (!Object.keys(data.energyMap).length) {
     return false;
   }
 
@@ -195,7 +195,7 @@ export const loadDetail = (data: any) => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: Object.keys(data.eneryMap).map((item) => item.split(' ')[1].slice(0, 5)),
+      data: Object.keys(data.energyMap).map((item) => item.split(' ')[1].slice(0, 5)),
       axisLine: {
         show: true,
         lineStyle: {
@@ -205,7 +205,7 @@ export const loadDetail = (data: any) => {
     },
     yAxis: {
       type: 'value',
-      name: 'KW',
+      name: 'kW',
       nameTextStyle: {
         align: 'right',
       },
@@ -225,7 +225,7 @@ export const loadDetail = (data: any) => {
     },
     series: [
       {
-        data: Object.values(data.eneryMap),
+        data: Object.values(data.energyMap),
         type: 'line',
         smooth: true,
         areaStyle: {

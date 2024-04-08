@@ -1,9 +1,6 @@
-import { useEffect, useRef } from 'react';
-import styles from './index.less'
 import PropTypes from 'prop-types';
-let progress = 0;  // 当前进度，范围为 0-100
-
-
+import { useEffect, useRef } from 'react';
+import styles from './index.less';
 
 /**
  * 自定义进度条
@@ -11,7 +8,7 @@ let progress = 0;  // 当前进度，范围为 0-100
  *   该组件的宽高取决于css中的宽高，传递的width、height是画布中的宽高，和布局没有关系
  * */
 const CustomProgress = (props: any) => {
-  const { width, height, progress, color, title, value } = props;
+  const { width, height, progress, color, title, value, hintText } = props;
 
   // 画布
   const canvasRef = useRef(null);
@@ -37,30 +34,34 @@ const CustomProgress = (props: any) => {
     ctx.fillStyle = gradient;
     ctx.roundRect(0, 0, width * progress, height, [0, 10, 10, 0]);
     ctx.fill();
-  }
+  };
 
   // 绘制
   useEffect(() => {
     if (canvasRef?.current) {
       const ctx = (canvasRef.current! as any).getContext('2d');
-      initCanvas(ctx)
+      initCanvas(ctx);
     }
-
   }, [width, height, progress, color]);
 
-  return <div className={styles.progress}>
-    <div className={styles.title}>
-      <span>{title}</span>
-      <span>{value}</span>
+  return (
+    <div className={styles.progress}>
+      <div className={styles.title}>
+        <span>{title}</span>
+        <span>{value}</span>
+      </div>
+      <canvas
+        className={styles.canvas}
+        width="300px"
+        height="20px"
+        ref={canvasRef}
+        title={hintText} // 添加 title 属性
+      >
+        您的浏览器不支持 HTML5 canvas 标签。
+      </canvas>
     </div>
-    <canvas
-      className={styles.canvas}
-      width="300px"
-      height="20px"
-      ref={canvasRef}
-    >您的浏览器不支持 HTML5 canvas 标签。</canvas>
-  </div>
-}
+  );
+};
 
 CustomProgress.propTypes = {
   width: PropTypes.number.isRequired, // 宽度
@@ -68,8 +69,8 @@ CustomProgress.propTypes = {
   progress: PropTypes.number.isRequired, // 当前进度
   color: PropTypes.arrayOf(PropTypes.string).isRequired, // 渐变颜色
   title: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  hintText: PropTypes.string.isRequired,
 };
 
-
-export default CustomProgress
+export default CustomProgress;

@@ -109,6 +109,18 @@ const EnergyMonitor = () => {
     return params;
   };
 
+  // 处理progress数据和提示
+  const handleProgress = (progressType: string, unit: string, data: any, totalData: any) => {
+    const proportion = (data / totalData).toFixed(2);
+    const hint =
+      type === 0
+        ? `区域总${progressType}为${data + unit}`
+        : `区域总${progressType}为${totalData + unit}，街道/行业${progressType}为${
+            data + unit
+          }，占比为${proportion}%`;
+    return hint;
+  };
+
   // 企业排名
   useEffect(() => {
     if (rankingDate && rankingDateType) {
@@ -195,38 +207,73 @@ const EnergyMonitor = () => {
                     <div className={styles.areaHead}>
                       <div className={styles.areaHeadTitle}>能耗总览</div>
                     </div>
-                    <div className={`${styles.areaBody} ${styles.overview}`} style={{}}>
+                    <div className={`${styles.areaBody} ${styles.overview}`}>
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.3}
+                        progress={
+                          dataFilter(overviewData)?.realPower / dataFilter(overviewData)?.totalPower
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="实时负荷"
                         value={`${dataFilter(overviewData)?.realPower || 0}kW`}
+                        hintText={handleProgress(
+                          '实时负荷',
+                          'kW',
+                          dataFilter(overviewData)?.realPower,
+                          dataFilter(overviewData)?.totalPower,
+                        )}
                       />
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.1}
+                        progress={
+                          dataFilter(overviewData)?.dayElectricity /
+                          dataFilter(overviewData)?.totalDayElectricity
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="日用电量"
                         value={`${dataFilter(overviewData)?.dayElectricity || 0}kWh`}
+                        hintText={handleProgress(
+                          '日用电量',
+                          'kWh',
+                          dataFilter(overviewData)?.dayElectricity,
+                          dataFilter(overviewData)?.totalDayElectricity,
+                        )}
                       />
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.5}
+                        progress={
+                          dataFilter(overviewData)?.monthElectricity /
+                          dataFilter(overviewData)?.totalMonthElectricity
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="月用电量"
                         value={`${dataFilter(overviewData)?.monthElectricity || 0}kWh`}
+                        hintText={handleProgress(
+                          '月用电量',
+                          'kWh',
+                          dataFilter(overviewData)?.monthElectricity,
+                          dataFilter(overviewData)?.totalMonthElectricity,
+                        )}
                       />
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.8}
+                        progress={
+                          dataFilter(overviewData)?.yearElectricity /
+                          dataFilter(overviewData)?.totalYearElectricity
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="年用电量"
                         value={`${dataFilter(overviewData)?.yearElectricity || 0}kWh`}
+                        hintText={handleProgress(
+                          '年用电量',
+                          'kWh',
+                          dataFilter(overviewData)?.yearElectricity,
+                          dataFilter(overviewData)?.totalYearElectricity,
+                        )}
                       />
                     </div>
                   </div>

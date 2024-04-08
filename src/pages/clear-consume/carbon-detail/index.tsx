@@ -4,7 +4,7 @@ import CustomDatePicker from '@/components/custom-datePicker';
 import GeneralTable from '@/components/general-table';
 import { exportExcel } from '@/utils/xlsx';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, message, Row, Tag } from 'antd';
+import { Button, Col, Form, Input, message, Row, Tag } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import { useRef, useState } from 'react';
@@ -162,6 +162,9 @@ const CarbonDetail = () => {
             <Col span={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Form.Item label="时间" style={{ marginRight: '20px' }}>
                 <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
+              </Form.Item>
+              <Form.Item label="关键词" style={{ marginRight: '20px' }} name="keyword">
+                <Input placeholder="请输入关键词" />
               </Form.Item>
               <Form.Item>
                 <Button icon={<SearchOutlined />} onClick={queryTableData}>

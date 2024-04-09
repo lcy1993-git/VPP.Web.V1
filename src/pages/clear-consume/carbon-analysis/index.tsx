@@ -222,33 +222,31 @@ const CarbonAnalysis = () => {
   /** 搜索区域 */
   const renderSearch = () => {
     return (
-      <>
-        <Form name="basic" autoComplete="off" form={searchForm}>
-          <Row>
-            <Col span={12}>
-              <SelectForm
-                setType={setType}
-                setIndustryCode={setIndustry}
-                setArea={setArea}
-                setEnterpriseCategory={setEnterpriseCategory}
-              />
-            </Col>
-            <Col span={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Form.Item label="时间" style={{ marginRight: '20px' }}>
-                <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
-              </Form.Item>
-              <Form.Item label="关键词" style={{ marginRight: '20px' }} name="keyword">
-                <Input placeholder="请输入关键词" />
-              </Form.Item>
-              <Form.Item>
-                <Button icon={<SearchOutlined />} onClick={queryTableData}>
-                  查询
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </>
+      <Row>
+        <Col span={12}>
+          <SelectForm
+            setType={setType}
+            setIndustryCode={setIndustry}
+            setArea={setArea}
+            setEnterpriseCategory={setEnterpriseCategory}
+          />
+        </Col>
+        <Col span={12}>
+          <Form name="basic" autoComplete="off" form={searchForm} style={{ display: 'flex' }}>
+            <Form.Item label="时间" style={{ marginRight: '20px' }}>
+              <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
+            </Form.Item>
+            <Form.Item label="关键词" style={{ marginRight: '20px' }} name="keyword">
+              <Input placeholder="请输入关键词" style={{ width: 260 }} />
+            </Form.Item>
+            <Form.Item>
+              <Button icon={<SearchOutlined />} onClick={queryTableData}>
+                查询
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
     );
   };
 

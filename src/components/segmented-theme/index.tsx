@@ -13,7 +13,8 @@ const SegmentedTheme = (props: Props) => {
   // @ts-ignore
   const [value, setValue] = useState();
   // 获取选中值
-  const { getSelectedValue } = props;
+  const { getSelectedValue, ...restProps } = props;
+
   const handleChange = (value: any) => {
     setValue(value);
     if (getSelectedValue) {
@@ -38,7 +39,7 @@ const SegmentedTheme = (props: Props) => {
         },
       }}
     >
-      <Segmented value={value} {...props} onChange={handleChange} />
+      <Segmented value={value} {...restProps} onChange={handleChange} />
     </ConfigProvider>
   );
 };

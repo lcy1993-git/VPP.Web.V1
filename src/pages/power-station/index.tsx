@@ -499,7 +499,6 @@ const PowerStation = () => {
               </div>
             </div>
           </div>
-
           {/* 发电趋势 */}
           <div className={styles.wapper}>
             <CustomCard>

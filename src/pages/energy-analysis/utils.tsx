@@ -134,13 +134,11 @@ export const energyRankOptions = (dataList: any[] = []) => {
         axisTick: 'none',
         axisLine: 'none',
         show: true,
-        axisLabel: {
-          textStyle: {
-            color: '#FFFFFF',
-            fontSize: '16',
-          },
-          formatter: '{value}kW', // 在数值后面加上"h"
+        textStyle: {
+          color: '#FFFFFF',
+          fontSize: '16',
         },
+        formatter: '{value}kW', // 在数值后面加上"h"
         data: dataFormat(values),
       },
     ],

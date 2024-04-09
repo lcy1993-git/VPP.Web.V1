@@ -35,7 +35,7 @@ const RealtimeAlarm = () => {
   // 表格实例
   const tableRef = useRef<HTMLDivElement>(null);
   // 搜素表单实例
-  const [searchForm] = Form.useForm();
+  const [form] = Form.useForm();
   // 事项、告警类型
   const [alarmTypes, setAlarmTypes] = useState<any[]>([]);
   // 表格 checkbox 被选中
@@ -50,14 +50,14 @@ const RealtimeAlarm = () => {
   // 请求告警类型
   const { run: fetchEventTypes } = useRequest(getEventTypeList, {
     manual: true,
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       setAlarmTypes(result || []);
     },
   });
 
   // 查询
   const handleSearchClick = (deviceCode?: string) => {
-    searchForm.validateFields().then(async (values) => {
+    form.validateFields().then(async (values) => {
       let beginTime, endTime;
       if (values.time) {
         beginTime = dayjs(values.time[0]).format('YYYY-MM-DD');
@@ -78,7 +78,7 @@ const RealtimeAlarm = () => {
   useEffect(() => {
     if (state) {
       // 如果state存在，表示从其他路由跳转过来， 反之通过菜单进入
-      searchForm.setFieldValue('deviceName', state.deviceName);
+      form.setFieldValue('deviceName', state.deviceName);
       handleSearchClick(state.deviceCode);
     }
   }, [state]);
@@ -92,8 +92,8 @@ const RealtimeAlarm = () => {
         dayjs(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`),
       ).format('YYYY-MM-DD'),
     });
-    searchForm.resetFields();
-    searchForm.setFieldsValue({
+    form.resetFields();
+    form.setFieldsValue({
       time: [
         dayjs(new Date(new Date().getFullYear(), 0, 1)),
         dayjs(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`),
@@ -110,7 +110,7 @@ const RealtimeAlarm = () => {
   // 告警确认但不处理
   const alarmAcknowledgement = async (record: any) => {
     await addAlarmDealWithOutDeal({ eventId: record.id });
-    const time = searchForm.getFieldValue('time');
+    const time = form.getFieldValue('time');
     let beginTime, endTime;
     if (time) {
       beginTime = dayjs(time[0]).format('YYYY-MM-DD HH:mm:ss');
@@ -188,7 +188,7 @@ const RealtimeAlarm = () => {
           initialValues={{ eventStatus: '' }}
           style={{ marginBottom: 16 }}
           autoComplete="off"
-          form={searchForm}
+          form={form}
         >
           <Row gutter={[16, 16]}>
             <Col span={7}>
@@ -307,7 +307,7 @@ const RealtimeAlarm = () => {
           confirmVisible={confirmVisible}
           setConfirmVisible={setConfirmVisible}
           currentAlarmData={currentAlarmData}
-          searchFormRef={searchForm}
+          searchFormRef={form}
           messageApi={messageApi}
           tableRef={tableRef}
         />

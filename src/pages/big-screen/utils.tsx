@@ -231,7 +231,6 @@ export const energyOverviewOptions = (data: any, type: any) => {
     color: ['#1877c8', '#26ad90', '#d3b53a', '#65bd35'],
     xAxis: {
       type: 'category',
-
       axisTick: {
         show: false, //是否显示刻度线
       },

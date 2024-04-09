@@ -45,42 +45,29 @@ const EnergyAnalysis = () => {
   });
 
   // 能源结构排行
-  const {
-    run: fetchEnergyRanking,
-    loading: energyRankingLoading,
-    cancel: cancelEnergyRanking,
-  } = useRequest(getEnergyRanking, {
+  const { run: fetchEnergyRanking, loading: energyRankingLoading } = useRequest(getEnergyRanking, {
     manual: true,
     onSuccess: (res: any) => setEnergyRanking(res),
   });
 
   // 用电量趋势分析
-  const {
-    run: fetchTrendAnalysis,
-    loading: trendAnalysisLoading,
-    cancel: cancelTrendAnalysis,
-  } = useRequest(getTrendAnalysis, {
+  const { run: fetchTrendAnalysis, loading: trendAnalysisLoading } = useRequest(getTrendAnalysis, {
     manual: true,
     onSuccess: (res: any) => setTrendAnalysis(res),
   });
 
   // 企业用电指数分析
-  const {
-    run: fetchTrendConsumption,
-    loading: trendConsumptionLoading,
-    cancel: cancelTrendConsumption,
-  } = useRequest(getTrendConsumption, {
-    manual: true,
-    onSuccess: (res: any) => setTrendConsumption(res),
-  });
+  const { run: fetchTrendConsumption, loading: trendConsumptionLoading } = useRequest(
+    getTrendConsumption,
+    {
+      manual: true,
+      onSuccess: (res: any) => setTrendConsumption(res),
+    },
+  );
 
   // 请求数据
   useEffect(() => {
     if (type !== undefined && unit !== undefined && date !== undefined) {
-      // 取消未完成的接口请求
-      cancelEnergyRanking();
-      cancelTrendAnalysis();
-      cancelTrendConsumption();
       // 数据置空
       setEnergyRanking([]);
       setTrendAnalysis(null);
@@ -105,6 +92,17 @@ const EnergyAnalysis = () => {
       fetchTrendConsumption(params);
     }
   }, [type, unit, date, substationCode, industry]);
+
+  useEffect(() => {
+    // 默认第一个行业/企业
+    if (type === 1) {
+      const code = substationList[0].substationCode;
+      searchForm.setFieldValue('substationCode', code);
+    } else if (type === 2) {
+      const code = industryList[0].id;
+      searchForm.setFieldValue('industry', code);
+    }
+  }, [type]);
 
   return (
     <ContainerPage>

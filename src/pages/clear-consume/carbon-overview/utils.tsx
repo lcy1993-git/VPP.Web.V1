@@ -28,21 +28,15 @@ export const waterWaveOption = (data: any) => {
           {
             value: [(data?.unused / data?.total).toFixed(2)],
             label: {
-              normal: {
-                formatter: `${((data?.unused * 100) / data?.total).toFixed(2)}%`,
-                show: true,
-              },
+              formatter: `${((data?.unused * 100) / data?.total).toFixed(2)}%`,
+              show: true,
             },
           },
         ],
         label: {
-          normal: {
-            textStyle: {
-              // 数值样式设置
-              color: '#ffffff',
-              fontSize: 26,
-            },
-          },
+          // 数值样式设置
+          color: '#ffffff',
+          fontSize: 26,
         },
         color: [
           {

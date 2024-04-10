@@ -76,6 +76,7 @@
     "svg-pan-zoom": "^3.6.1",
     "three": "^0.162.0",
     "turf": "^3.0.14",
+    "react-audio-player": "^0.17.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

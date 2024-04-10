@@ -128,11 +128,9 @@ export const solarOverviewChart = (powerMap: any, irradianceMap: any, isToday: b
         },
       },
       axisLabel: {
-        textStyle: {
-          fontSize: '10px',
-          fontWeight: 400,
-          color: 'rgba(231, 250, 255, 0.6)', // 设置 x 轴刻度文字颜色
-        },
+        fontSize: '10px',
+        fontWeight: 400,
+        color: 'rgba(231, 250, 255, 0.6)', // 设置 x 轴刻度文字颜色
       },
     },
     yAxis: [
@@ -357,11 +355,9 @@ export const chargeOverviewChart = (powerMap: any, isToday: boolean) => {
         },
       },
       axisLabel: {
-        textStyle: {
-          fontSize: '10px',
-          fontWeight: 400,
-          color: 'rgba(231, 250, 255, 0.6)', // 设置 x 轴刻度文字颜色
-        },
+        fontSize: '10px',
+        fontWeight: 400,
+        color: 'rgba(231, 250, 255, 0.6)', // 设置 x 轴刻度文字颜色
       },
     },
     yAxis: {

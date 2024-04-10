@@ -32,13 +32,13 @@ const withCustomFormItemProps =
     } = props;
 
     const isRequiredClassName = required ? styles.required : '';
-    const lableAlign = align === 'right' ? styles.right : '';
+    const labelAlign = align === 'right' ? styles.right : '';
     const alignStart = flexStart ? styles.alignStart : '';
 
     return (
       <div className={`${styles.customItem} ${className} ${alignStart}`}>
         <div
-          className={`${styles.customItemLabel} ${lableAlign}`}
+          className={`${styles.customItemLabel} ${labelAlign}`}
           style={{ width: `${labelWidth}px` }}
         >
           <span className={`${styles.customItemLabelWord} ${isRequiredClassName}`}>

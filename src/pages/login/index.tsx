@@ -1,28 +1,28 @@
-import styles from './index.less'
 import logo from '@/assets/image/base/logo1.png';
-import title from '@/assets/image/base/title.png'
-import { Button, Col, ConfigProvider, Form, Input, message, Row } from 'antd';
-import Captcha from 'react-captcha-code';
-import { useCallback, useRef, useState } from 'react';
-import { md5 } from 'js-md5';
-import { loginRequest } from '@/services/login';
+import title from '@/assets/image/base/title.png';
+import { getUserAuth, loginRequest } from '@/services/login';
 import { history } from '@umijs/max';
+import { Button, Col, ConfigProvider, Form, Input, Row, message } from 'antd';
+import { md5 } from 'js-md5';
+import { useCallback, useRef, useState } from 'react';
+import Captcha from 'react-captcha-code';
+import styles from './index.less';
 
 const Login = () => {
   // 页面forn
   const [form] = Form.useForm();
-    // 消息提示框
-    const [messageApi, contextHolder] = message.useMessage();
-    // 验证码实例
-    const captchaRef = useRef(null);
+  // 消息提示框
+  const [messageApi, contextHolder] = message.useMessage();
+  // 验证码实例
+  const captchaRef = useRef(null);
   // 验证码
   const [verificationCode, setVerificationCode] = useState<any>('');
 
-    const handleChange = useCallback((captcha: any) => {
-      setVerificationCode(captcha);
-    }, []);
+  const handleChange = useCallback((captcha: any) => {
+    setVerificationCode(captcha);
+  }, []);
 
-      /**
+  /**
    * 点击登录
    * */
   const onFinish = async (values: any) => {
@@ -47,25 +47,26 @@ const Login = () => {
       localStorage.setItem('userId', data?.id);
       // 播放音频
       localStorage.setItem('closeAudio', 'true');
-
-      history.push('/big-screen/feature');
-
+      // 根据用户权限跳转界面
+      await getUserAuth(data?.id).then((res) => {
+        history.push(res[0].path);
+      });
     }
   };
 
-
-  return <div className={styles.loginPage}>
-    <div className={styles.loginLogo}>
-      <img src={logo} alt="同华" />
-    </div>
-    <div className={styles.loginPageContent}>
-      <div className={styles.formWrap}>
+  return (
+    <div className={styles.loginPage}>
+      <div className={styles.loginLogo}>
+        <img src={logo} alt="同华" />
+      </div>
+      <div className={styles.loginPageContent}>
+        <div className={styles.formWrap}>
           <div className={styles.title}>
             <img src={title} alt="" />
             <p>欢迎登录</p>
           </div>
           <div className={styles.form}>
-          <ConfigProvider
+            <ConfigProvider
               theme={{
                 token: {
                   borderRadius: 2,
@@ -87,12 +88,11 @@ const Login = () => {
                 >
                   <Input
                     placeholder="请输入用户名"
-                    bordered={false}
+                    variant="borderless"
                     className={styles.formItemInput}
                     autoComplete="off"
                   />
                 </Form.Item>
-
                 <Form.Item
                   className={`${styles.formItem} ${styles.password}`}
                   name="password"
@@ -100,7 +100,7 @@ const Login = () => {
                 >
                   <Input.Password
                     placeholder="请输入密码"
-                    bordered={false}
+                    variant="borderless"
                     className={styles.formItemInput}
                     autoComplete="off"
                   />
@@ -114,7 +114,7 @@ const Login = () => {
                     >
                       <Input
                         placeholder="请输入验证码"
-                        bordered={false}
+                        variant="borderless"
                         className={styles.formItemInput}
                         autoComplete="off"
                       />
@@ -127,7 +127,7 @@ const Login = () => {
                       width={110}
                       height={46}
                       onChange={handleChange}
-                      bgColor="#072c70"
+                      bgColor="#11325e"
                       onClick={() => (captchaRef as any).current.refresh()}
                     />
                   </Col>
@@ -141,9 +141,12 @@ const Login = () => {
               {contextHolder}
             </ConfigProvider>
           </div>
+        </div>
+      </div>
+      <div className={styles.loginPageFooter}>
+        <p>Powered by ©cdsrth</p>
       </div>
     </div>
-    <div className={styles.loginPageFooter}><p>Powered by ©cdsrth</p></div>
-  </div>
-}
-export default Login
+  );
+};
+export default Login;

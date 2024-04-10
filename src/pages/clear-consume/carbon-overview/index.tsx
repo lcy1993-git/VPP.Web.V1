@@ -14,7 +14,7 @@ import * as echarts from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import 'echarts-liquidfill';
 import { useEffect, useState } from 'react';
-import SelectForm from '../select-form';
+import SelectForm from '../select-form/all-region-select';
 import HeatMap from './HeatMap';
 import styles from './index.less';
 import { carbonTrendsOption, waterWaveOption } from './utils';

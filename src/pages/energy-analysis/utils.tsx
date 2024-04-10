@@ -134,13 +134,11 @@ export const energyRankOptions = (dataList: any[] = []) => {
         axisTick: 'none',
         axisLine: 'none',
         show: true,
-        axisLabel: {
-          textStyle: {
-            color: '#FFFFFF',
-            fontSize: '16',
-          },
-          formatter: '{value}kW', // 在数值后面加上"h"
+        textStyle: {
+          color: '#FFFFFF',
+          fontSize: '16',
         },
+        formatter: '{value}kW', // 在数值后面加上"h"
         data: dataFormat(values),
       },
     ],
@@ -211,7 +209,7 @@ export const energyRankOptions = (dataList: any[] = []) => {
         data: dataFormat(conventionalEnergyElectricity), // 第二类数据
         barCategoryGap: '10%',
         itemStyle: {
-          barBorderRadius: [0, 10, 10, 0],
+          borderRadius: [0, 10, 10, 0],
           color: 'rgba(0, 226, 144, 0.3)', // 设置另一类数据的颜色
         },
         label: {

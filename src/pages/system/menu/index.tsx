@@ -9,11 +9,10 @@ import {
   ReloadOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Form, Input, message, Modal, Popconfirm, Row, Select, Space } from 'antd';
+import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Space, message } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { useRef, useState } from 'react';
 import AddMenuForm from './components/add-menu';
-// import IconSymbol from './components/IconSymbol';
 
 const SystemMenu: React.FC = () => {
   // 控制添加菜单modal是否展示
@@ -24,7 +23,6 @@ const SystemMenu: React.FC = () => {
   const [currentEditId, setCurrentEditId] = useState<any[]>([]);
   // 是否展开
   const [isExpand, setIsExpand] = useState<boolean>(false);
-
   // 表格Ref
   const tableRef = useRef(null);
   // 搜索form
@@ -61,7 +59,7 @@ const SystemMenu: React.FC = () => {
         message.success('删除成功');
         refresh();
       })
-      .catch(() => { });
+      .catch(() => {});
   };
   const columns = [
     {
@@ -69,14 +67,14 @@ const SystemMenu: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
       align: 'center' as any,
-      width: 320
+      width: 320,
     },
     {
       title: '菜单路由',
       dataIndex: 'path',
       key: 'path',
       align: 'center' as any,
-      width: 320
+      width: 320,
     },
     {
       title: '权限代码',
@@ -145,7 +143,10 @@ const SystemMenu: React.FC = () => {
     searchForm.validateFields().then(async (values) => {
       if (tableRef && tableRef.current) {
         //@ts-ignore
-        tableRef.current.searchByParams({ name: values.menuName, status: values.menuStatus, userId }, false);
+        tableRef.current.searchByParams(
+          { name: values.menuName, status: values.menuStatus, userId },
+          false,
+        );
       }
     });
   };
@@ -278,7 +279,7 @@ const SystemMenu: React.FC = () => {
     <ContentPage>
       <ContentComponent title="菜单管理" renderSearch={searchArea}>
         <GeneralTable
-          url="/sysApi/sysmenu/getAllMenus"
+          url="/api/sysmenu/getAllMenus"
           ref={tableRef}
           columns={columns}
           rowKey="id"

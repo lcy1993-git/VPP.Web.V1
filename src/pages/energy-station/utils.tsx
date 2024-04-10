@@ -395,7 +395,7 @@ const renderOnGridOverview = (gridOverview: any, subStationId: string) => {
     <div className={styles.inverterWrap}>
       {gridOverview.map((item: any) => {
         return (
-          <div className={styles.clusterModule} key={item.id}>
+          <div className={styles.clusterModule} key={item.deviceCode} style={{ height: '140px' }}>
             <div className={styles.clusterModuleHead}>
               <div className={styles.moduleIcon}>
                 {handleInverterStatus(item.status) === '运行' ? (
@@ -438,7 +438,7 @@ const renderOnGridOverview = (gridOverview: any, subStationId: string) => {
                 </dd>
               </dl>
             </div>
-            <div className={styles.clusterModuleBody}>
+            <div className={styles.clusterModuleBody} style={{ height: '74px' }}>
               <div className={styles.bodyTop}>
                 <dl>
                   <dt>正向有功总电能</dt>
@@ -520,7 +520,7 @@ const renderAirCondition = (airCondition: any) => {
     <div className={styles.inverterWrap}>
       {airCondition.map((item: any) => {
         return (
-          <div className={styles.clusterModule} key={item.id}>
+          <div className={styles.clusterModule} key={item.deviceCode}>
             <div className={styles.clusterModuleHead}>
               <div className={styles.moduleIcon}>
                 {handleInverterStatus_air(item.status) === '运行' ? (
@@ -661,7 +661,7 @@ const renderClusterOverview = (clusterOverview: any, subStationId: string) => {
     <div className={styles.inverterWrap}>
       {clusterOverview.map((item: any) => {
         return (
-          <div className={styles.clusterModule} key={item.id}>
+          <div className={styles.clusterModule} key={item.deviceCode}>
             <div className={styles.clusterModuleHead}>
               <div className={styles.moduleIcon}>
                 {handleInverterStatus_cluster(item.status) === '运行' ? (
@@ -915,9 +915,7 @@ export const batteryPowerOption = (soc: any) => {
       },
       axisLabel: {
         show: false,
-        textStyle: {
-          color: '#e54035',
-        },
+        color: '#e54035',
       },
     },
     yAxis: {
@@ -942,10 +940,8 @@ export const batteryPowerOption = (soc: any) => {
         symbolOffset: [0, -18],
         z: 10,
         itemStyle: {
-          normal: {
-            color: '#00CCFF',
-            opacity: 0.7,
-          },
+          color: '#00CCFF',
+          opacity: 0.7,
         },
         data: [
           {
@@ -961,9 +957,7 @@ export const batteryPowerOption = (soc: any) => {
         symbolOffset: [0, -18],
         z: 12,
         itemStyle: {
-          normal: {
-            color: batteryColor,
-          },
+          color: batteryColor,
         },
         data: [
           {
@@ -979,9 +973,7 @@ export const batteryPowerOption = (soc: any) => {
         symbolOffset: [0, 18],
         z: 10,
         itemStyle: {
-          normal: {
-            color: batteryColor,
-          },
+          color: batteryColor,
         },
         data: [100 - battery], // [100 - data],
       },
@@ -990,10 +982,8 @@ export const batteryPowerOption = (soc: any) => {
         stack: '1',
         type: 'bar',
         itemStyle: {
-          normal: {
-            color: batteryColor,
-            opacity: 1,
-          },
+          color: batteryColor,
+          opacity: 1,
         },
         label: {
           show: true,
@@ -1014,10 +1004,8 @@ export const batteryPowerOption = (soc: any) => {
         stack: '1',
         type: 'bar',
         itemStyle: {
-          normal: {
-            color: '#36405E',
-            opacity: 0.7,
-          },
+          color: '#36405E',
+          opacity: 0.7,
         },
         silent: true,
         barWidth: 100,
@@ -1162,7 +1150,7 @@ export const soCountOptions = (socTrendData: any, isToday: boolean) => {
       trigger: 'axis',
     },
     legend: {
-      data: ['今日', '昨日'],
+      // data: ['今日', '昨日'],
       x: 'center',
       textStyle: {
         color: '#fff',

@@ -1,3 +1,4 @@
+import { formatXAxis } from '@/utils/common';
 import { Tooltip } from 'antd';
 import * as echarts from 'echarts';
 import moment from 'moment';
@@ -230,7 +231,6 @@ export const energyOverviewOptions = (data: any, type: any) => {
     color: ['#1877c8', '#26ad90', '#d3b53a', '#65bd35'],
     xAxis: {
       type: 'category',
-
       axisTick: {
         show: false, //是否显示刻度线
       },
@@ -314,17 +314,13 @@ export const elasticityOverviewOptions = (data: any) => {
   }
 
   // x轴坐标数据
-  const XData = Object.keys(data.basePowerTimeValueMap)
-    .map((item) => item.split(' ')[1].slice(0, 5))
-    .filter((item, index) => (index + 1) % 2 === 0);
+  const XData = Object.keys(data.basePowerTimeValueMap);
+
   // 实时负荷
-  const realTimeLoad = Object.values(data.totalPowerTimeValueMap).filter(
-    (item, index) => (index + 1) % 2 === 0,
-  );
+  const realTimeLoad = Object.values(data.totalPowerTimeValueMap);
+
   // 基线负荷
-  const baselineLoad = Object.values(data.basePowerTimeValueMap).filter(
-    (item, index) => (index + 1) % 2 === 0,
-  );
+  const baselineLoad = Object.values(data.basePowerTimeValueMap);
 
   return {
     tooltip: {
@@ -349,16 +345,13 @@ export const elasticityOverviewOptions = (data: any) => {
       {
         type: 'category',
         boundaryGap: false,
-        axisLabel: {
-          interval: 0, // 显示所有刻度
-        },
         axisLine: {
           show: true,
           lineStyle: {
             color: '#95a4ad',
           },
         },
-        data: XData,
+        data: formatXAxis(XData, 'day'),
       },
     ],
     yAxis: [

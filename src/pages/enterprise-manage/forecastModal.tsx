@@ -77,7 +77,6 @@ const ForecastModal = (props: currentInfo) => {
       }
       return row;
     });
-    console.log(updatedData, 111);
 
     setDataSource(updatedData);
   };

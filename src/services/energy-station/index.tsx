@@ -181,7 +181,7 @@ export const alarmEvent = (eventIds: string[]) => {
 
 // SVG 请求
 export const getSvgMeasurements = (measurementValues: any[]) => {
-  return request(`/api/solar/index/svg/measurements`, {
+  return request(`/api/solar/substation/svg/measurements`, {
     method: 'POST',
     data: measurementValues,
   });

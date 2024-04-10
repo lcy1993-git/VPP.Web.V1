@@ -4,22 +4,24 @@ import CustomDatePicker from '@/components/custom-datePicker';
 import GeneralTable from '@/components/general-table';
 import { exportExcel } from '@/utils/xlsx';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, message, Row, Tag } from 'antd';
+import { Button, Col, Form, Input, message, Row, Tag } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import { useRef, useState } from 'react';
-import SelectForm from '../select-form';
+import SelectForm from '../select-form/detail-select';
 dayjs.locale('zh-cn');
 
 const CarbonDetail = () => {
   // form
   const [searchForm] = Form.useForm();
   // 分类类型
-  const [type, setType] = useState<number>(0);
+  const [type, setType] = useState<number>(-1);
   // 企业code
   const [substationCode, setSubstationCode] = useState<string>('');
   // 行业code
   const [industry, setIndustry] = useState<string>('');
+  // 区域id
+  const [area, setArea] = useState<string>('');
   // table 示例
   const tableRef = useRef(null);
   // 表格 checkbox 被选中
@@ -56,8 +58,8 @@ const CarbonDetail = () => {
       align: 'center' as any,
       ellipsis: true,
       render: (text: string) => {
-        const eunm: any = { area: '区域', industry: '行业', enterprise: '企业' };
-        return eunm[text] || '未知';
+        const enumText: any = { area: '区域', industry: '行业', enterprise: '企业' };
+        return enumText[text] || '未知';
       },
     },
     {
@@ -110,7 +112,10 @@ const CarbonDetail = () => {
       type,
     };
     switch (type) {
+      case -1:
+        break;
       case 0:
+        params.area = area;
         break;
       case 1:
         params.substationCode = substationCode;
@@ -149,29 +154,31 @@ const CarbonDetail = () => {
   /** 搜索区域 */
   const renderSearch = () => {
     return (
-      <>
-        <Form name="basic" autoComplete="off" form={searchForm}>
-          <Row>
-            <Col span={12}>
-              <SelectForm
-                setType={setType}
-                setIndustryCode={setIndustry}
-                setSubstationCode={setSubstationCode}
-              />
-            </Col>
-            <Col span={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Form.Item label="时间" style={{ marginRight: '20px' }}>
-                <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
-              </Form.Item>
-              <Form.Item>
-                <Button icon={<SearchOutlined />} onClick={queryTableData}>
-                  查询
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </>
+      <Row>
+        <Col span={12}>
+          <SelectForm
+            setType={setType}
+            setArea={setArea}
+            setIndustryCode={setIndustry}
+            setSubstationCode={setSubstationCode}
+          />
+        </Col>
+        <Col span={12}>
+          <Form name="basic" autoComplete="off" form={searchForm} style={{ display: 'flex' }}>
+            <Form.Item label="时间" style={{ marginRight: '20px' }}>
+              <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
+            </Form.Item>
+            <Form.Item label="关键词" style={{ marginRight: '20px' }} name="keyword">
+              <Input placeholder="请输入关键词" style={{ width: 260 }} />
+            </Form.Item>
+            <Form.Item>
+              <Button icon={<SearchOutlined />} onClick={queryTableData}>
+                查询
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
     );
   };
 
@@ -197,7 +204,7 @@ const CarbonDetail = () => {
           type="checkbox"
           filterParams={{
             date: dayjs(new Date()).format('YYYY-MM-DD'),
-            type: 0,
+            type: -1,
             unit: 'day',
           }}
         />

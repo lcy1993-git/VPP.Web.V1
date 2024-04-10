@@ -2,6 +2,12 @@ import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-pro
 import 'react-circular-progressbar/dist/styles.css';
 import styles from './index.less';
 
+/** 圆环组件
+  @params pathColor?: string; 圆环颜色
+  @params value: number; 值
+  @params textName?: string; 标题
+  @params subTitle?: string; 副标题
+*/
 interface PropsType {
   pathColor?: string; // 圆环颜色
   value?: number | string; // 值
@@ -12,12 +18,7 @@ interface PropsType {
   breadth?: any;
   size?: number;
 }
-/** 圆环组件
-  @params pathColor?: string; 圆环颜色
-  @params value: number; 值
-  @params textName?: string; 标题
-  @params subTitle?: string; 副标题
-*/
+
 const CircleRingChart = (props: PropsType) => {
   const {
     pathColor = '#1cc078', // 圆环颜色

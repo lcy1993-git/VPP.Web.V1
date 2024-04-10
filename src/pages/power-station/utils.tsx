@@ -159,7 +159,7 @@ export const renderInverter = (inverterData: any, subStationCode: string, module
       <div className={styles.inverterWrap}>
         {inverterData?.map((item: any) => {
           return (
-            <div className={styles.moduleItem} key={item.deviceName}>
+            <div className={styles.moduleItem} key={item.deviceCode}>
               <div className={styles.ItemHeader}>
                 <div className={styles.circle}>
                   {handleInverterStatus(item.status) === '运行' ? (
@@ -241,7 +241,7 @@ export const renderInverter = (inverterData: any, subStationCode: string, module
       <div className={styles.inverterWrap}>
         {inverterData.map((item: any) => {
           return (
-            <div className={styles.clusterModule} key={item.id}>
+            <div className={styles.clusterModule} key={item.deviceCode}>
               <div className={styles.clusterModuleHead}>
                 <div className={styles.moduleIcon}>
                   <i className="iconfont" style={{ color: '#00FF90' }}>
@@ -569,7 +569,7 @@ export const powerGenerationOptions = (data: any, timeType: string) => {
         },
       },
       nameTextStyle: {
-        align: 'right'
+        align: 'right',
       },
       name: '电量/kWh',
       type: 'value',
@@ -662,7 +662,7 @@ export const powerCountOptions = (powerGenerationTrends: any, isToday: boolean) 
       },
       name: '有功/kW',
       nameTextStyle: {
-        align: 'right'
+        align: 'right',
       },
       type: 'value',
     },

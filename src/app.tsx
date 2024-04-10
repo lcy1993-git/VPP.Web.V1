@@ -1,13 +1,11 @@
-import { LinkOutlined, MenuFoldOutlined } from '@ant-design/icons';
-import { PageLoading, Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
+import { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
+import { history } from '@umijs/max';
+import { ConfigProvider } from 'antd';
 import defaultSettings from '../config/defaultSettings';
-import { errorConfig } from './requestErrorConfig';
-import React from 'react';
-import { ConfigProvider, Space } from 'antd';
 import LayoutHeader from './components/layout-header';
+import { errorConfig } from './requestErrorConfig';
+import { getUserAuth } from './services/login';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -18,12 +16,10 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: any;
   loading?: boolean;
-  collapsed: boolean,
+  collapsed: boolean;
   fetchUserInfo?: () => Promise<any | undefined>;
 }> {
-  const fetchUserInfo = async () => {
-
-  };
+  const fetchUserInfo = async () => {};
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
@@ -44,7 +40,6 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-
   const onCollapse = (): void => {
     setInitialState({
       ...initialState,
@@ -52,18 +47,28 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     }).then();
   };
 
-
   return {
     avatarProps: {
       render: () => {
-        return <span>test</span>
+        return <span>test</span>;
+      },
+    },
+    menu: {
+      locale: false,
+      params: {
+        userId: localStorage.getItem('userId'),
+      },
+      request: async (params) => {
+        const menuAuth = params.userId && (await getUserAuth(params.userId));
+        return menuAuth;
       },
     },
     footerRender: () => null,
     headerRender: () => <LayoutHeader />,
     onPageChange: () => {
       const { location } = history;
-      if (!initialState?.currentUser && location.pathname !== loginPath) { }
+      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      }
     },
     contentStyle: { padding: '0 20px 0 20px' },
     siderWidth: 208,
@@ -74,9 +79,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     menuHeaderRender: () => (
       // 自定义导航栏折叠按钮
       <div style={{ width: '100%', paddingLeft: '7px' }} onClick={onCollapse}>
-          <i className="iconfont" style={{ fontSize: 12 }}>
+        <i className="iconfont" style={{ fontSize: 12 }}>
           &#xe631;
-          </i>
+        </i>
       </div>
     ),
     // 增加一个 loading 的状态
@@ -104,8 +109,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
               components: {
                 Segmented: {
                   itemSelectedBg: '#1292ff',
-                }
-              }
+                },
+              },
             }}
           >
             {children}

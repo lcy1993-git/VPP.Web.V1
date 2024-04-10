@@ -2,7 +2,6 @@ import Empty from '@/components/empty';
 import Svg from '@/components/svg';
 import { Modal } from 'antd';
 import { useEffect, useState } from 'react';
-import styles from './index.less';
 
 const SvgModal = (props: any) => {
   const { setModalVisible, modalVisible, svgPath } = props;
@@ -37,7 +36,6 @@ const SvgModal = (props: any) => {
       open={modalVisible}
       width={window.innerWidth}
       style={{ top: 0 }}
-      bodyStyle={{ height: 'calc(100vh - 100px)', overflow: 'hidden' }}
       centered
       title="一次性接线图"
       closeIcon={
@@ -46,7 +44,7 @@ const SvgModal = (props: any) => {
       destroyOnClose
       onCancel={() => setModalVisible(false)}
     >
-      <div className={styles.modalComtainer}>
+      <div style={{ height: 'calc(100vh - 200px)', overflow: 'hidden' }}>
         {svgPath && svgPath !== null ? (
           isDownLoadSuccess ? (
             <Svg svgPath={svgPaths} />

@@ -1,30 +1,63 @@
+import { Tooltip } from 'antd';
 import * as echarts from 'echarts';
+
+export const columns = [
+  {
+    title: '排名',
+    dataIndex: 'name',
+    key: 'name',
+    align: 'center' as any,
+    width: 60,
+    render: (_text: any, record: any, index: number) => {
+      return <span>{index + 1}</span>;
+    },
+  },
+  {
+    title: '企业名称',
+    dataIndex: 'companyName',
+    align: 'center' as any,
+    ellipsis: true,
+    key: 'companyName',
+    render: (text: any) => {
+      return (
+        <Tooltip placement="top" title={text}>
+          {text}
+        </Tooltip>
+      );
+    },
+  },
+  {
+    title: '用电量(kWh)',
+    align: 'center' as any,
+    dataIndex: 'electricityConsumption',
+    key: 'electricityConsumption',
+    ellipsis: true,
+  },
+];
 
 // 用能详情charts options
 export const energyDetail = (data: any, selectDate: any) => {
-
   if (!data) {
-    return false
+    return false;
   }
 
-  let type = 'day'
+  let type = 'day';
   if (selectDate) {
-    type = ['year','month', 'day'][selectDate?.split('-').length - 1]
+    type = ['year', 'month', 'day'][selectDate?.split('-').length - 1];
   }
   // X轴
-  let XData
+  let XData;
   if (type === 'day') {
-    XData = Object.keys(data.eneryMap).map(item => item.split(' ')[1].slice(0, 5))
+    XData = Object.keys(data.energyMap).map((item) => item.split(' ')[1].slice(0, 5));
   } else if (type === 'month') {
-    XData = Object.keys(data.eneryMap).map(item => item.split(' ')[0].slice(8, 10) + '日')
+    XData = Object.keys(data.energyMap).map((item) => item.split(' ')[0].slice(8, 10) + '日');
   } else {
-    XData = Object.keys(data.eneryMap).map(item => item.split(' ')[0].slice(5, 7) + '月')
+    XData = Object.keys(data.energyMap).map((item) => item.split(' ')[0].slice(5, 7) + '月');
   }
 
   if (!XData.length) {
     return false;
   }
-
 
   return {
     tooltip: {
@@ -37,7 +70,7 @@ export const energyDetail = (data: any, selectDate: any) => {
       left: '3%',
       right: '4%',
       bottom: '4%',
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -48,9 +81,9 @@ export const energyDetail = (data: any, selectDate: any) => {
           color: '#8396ad',
         },
       },
-      axisLable:{
-        interval:0
-      }
+      axisLable: {
+        interval: 0,
+      },
     },
     yAxis: {
       type: 'value',
@@ -74,34 +107,36 @@ export const energyDetail = (data: any, selectDate: any) => {
     },
     series: [
       {
-        data: Object.values(data.eneryMap),
+        data: Object.values(data.energyMap),
         type: 'bar',
         itemStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 1,
-            color: '#2080D4'
-          }, {
-            offset: 0,
-            color: '#74D9FB'
-          }])
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 1,
+              color: '#2080D4',
+            },
+            {
+              offset: 0,
+              color: '#74D9FB',
+            },
+          ]),
         },
-      }
-    ]
+      },
+    ],
   };
-}
+};
 
 // 能源结构 charts options
 export const energyStructureOptions = (data: any) => {
-
   return {
     tooltip: {
-      trigger: 'item'
+      trigger: 'item',
     },
     legend: {
       bottom: 4,
       icon: 'circle',
       textStyle: {
-        color: '#d7eaef'
+        color: '#d7eaef',
       },
     },
     color: ['#63D058', '#0599FF'],
@@ -110,7 +145,7 @@ export const energyStructureOptions = (data: any) => {
       left: '3%',
       right: '4%',
       bottom: '4%',
-      containLabel: true
+      containLabel: true,
     },
     series: [
       {
@@ -124,24 +159,22 @@ export const energyStructureOptions = (data: any) => {
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        }
-      }
-    ]
-  }
-}
-
-
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        },
+      },
+    ],
+  };
+};
 
 // 负荷详情 charts options
 export const loadDetail = (data: any) => {
   if (!data) {
-    return false
+    return false;
   }
 
-  if (!Object.keys(data.eneryMap).length) {
-    return false
+  if (!Object.keys(data.energyMap).length) {
+    return false;
   }
 
   return {
@@ -155,14 +188,14 @@ export const loadDetail = (data: any) => {
       left: '3%',
       right: '4%',
       bottom: '4%',
-      containLabel: true
+      containLabel: true,
     },
     color: ['#FF8F44'],
     xAxis: {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: Object.keys(data.eneryMap).map(item => item.split(' ')[1].slice(0, 5)),
+      data: Object.keys(data.energyMap).map((item) => item.split(' ')[1].slice(0, 5)),
       axisLine: {
         show: true,
         lineStyle: {
@@ -172,7 +205,7 @@ export const loadDetail = (data: any) => {
     },
     yAxis: {
       type: 'value',
-      name: 'KW',
+      name: 'kW',
       nameTextStyle: {
         align: 'right',
       },
@@ -192,19 +225,22 @@ export const loadDetail = (data: any) => {
     },
     series: [
       {
-        data: Object.values(data.eneryMap),
+        data: Object.values(data.energyMap),
         type: 'line',
         smooth: true,
         areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 1,
-            color: '#112654'
-          }, {
-            offset: 0,
-            color: '#664c4f'
-          }])
-        }
-      }
-    ]
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            {
+              offset: 1,
+              color: '#112654',
+            },
+            {
+              offset: 0,
+              color: '#664c4f',
+            },
+          ]),
+        },
+      },
+    ],
   };
-}
+};

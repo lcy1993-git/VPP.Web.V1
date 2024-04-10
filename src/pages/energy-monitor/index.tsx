@@ -1,94 +1,54 @@
 import ContainerPage from '@/components/container-page';
 import CustomCard from '@/components/custom-card';
 import CustomCharts from '@/components/custom-charts';
-import SegmentDatepicker from '@/components/segment-datepicker';
+import CustomDatePicker from '@/components/custom-datePicker';
 import {
   getEnergyStructure,
-  getEnterpriseName,
-  getIndustry,
-  getLoadetails,
+  getLoadDetails,
   getMonitorDetails,
   getMonitorOverview,
   getRanking,
 } from '@/services/energy-monitor';
+import { currentDay } from '@/utils/common';
 import { useRequest } from 'ahooks';
-import { Button, DatePicker, Form, Select, Table, Tooltip, message } from 'antd';
-import { useForm } from 'antd/es/form/Form';
+import { Table } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import ReactECharts from 'echarts-for-react';
 import { useEffect, useRef, useState } from 'react';
+import SelectForm from '../clear-consume/select-form/all-region-select';
 import CustomProgress from './custom-progress';
 import styles from './index.less';
-import { energyDetail, energyStructureOptions, loadDetail } from './utils';
+import { columns, energyDetail, energyStructureOptions, loadDetail } from './utils';
 dayjs.locale('zh-cn');
 
 const EnergyMonitor = () => {
   // 表格外层容器，用于设置表格滚动高度
   const tableWrapRef = useRef(null);
-  // select 名称
-  const [selectValue, setSelectValue] = useState<number>(0);
-  // 用能详情 日期组件
-  const [selectDate, setSelectDate] = useState<string>('');
+  // 用能详情 日期
+  const [energyDate, setEnergyDate] = useState<string>(currentDay);
+  const [energyDateType, setEnergyDateType] = useState<string>('day');
   // 能源结构 日期组件
-  const [structureDate, setStructureDate] = useState<string>('');
+  const [structureDate, setStructureDate] = useState<string>(currentDay);
+  const [structureDateType, setStructureDateType] = useState<string>('day');
+  // 分类类型
+  const [type, setType] = useState<number>(0);
+  // 企业code
+  const [substationCode, setSubstationCode] = useState<string>('');
+  // 行业code
+  const [industry, setIndustry] = useState<string>('');
   // 企业排名
-  const [enterRank, setEnterRank] = useState<string>('');
-
-  const [form] = useForm();
-
-  const type = Form.useWatch('type', form);
-
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const columns = [
-    {
-      title: '排名',
-      dataIndex: 'name',
-      key: 'name',
-      align: 'center' as any,
-      width: 60,
-      render: (_text: any, record: any, index: number) => {
-        return <span>{index + 1}</span>;
-      },
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'companyName',
-      align: 'center' as any,
-      ellipsis: true,
-      key: 'companyName',
-      render: (text: any) => {
-        return (
-          <Tooltip placement="top" title={text}>
-            {text}
-          </Tooltip>
-        );
-      },
-    },
-    {
-      title: '用电量(kWh)',
-      align: 'center' as any,
-      dataIndex: 'electricityConsumption',
-      key: 'electricityConsumption',
-      ellipsis: true,
-    },
-  ];
-
-  // 数据过滤
-  const dataFilter = (data: any) => {
-    if (data?.code === 200) {
-      return data.data;
-    }
-    return null;
-  };
+  const [rankingDate, setRankingDate] = useState<string>(currentDay);
+  const [rankingDateType, setRankingDateType] = useState<string>('day');
+  // 负荷详情日期
+  const [loadDate, setLoadDate] = useState<string>(currentDay);
 
   // 用能详情
   const { data: detailsData, run: fetchMonitorDetails } = useRequest(getMonitorDetails, {
     manual: true,
   });
 
-  // 用能总览
+  // 能耗总览
   const { data: overviewData, run: fetchMonitorOverview } = useRequest(getMonitorOverview, {
     manual: true,
   });
@@ -99,7 +59,7 @@ const EnergyMonitor = () => {
   });
 
   // 负荷详情
-  const { data: loadDetailData, run: fetchLoadetails } = useRequest(getLoadetails, {
+  const { data: loadDetailData, run: fetchLoadDetails } = useRequest(getLoadDetails, {
     manual: true,
   });
 
@@ -108,139 +68,100 @@ const EnergyMonitor = () => {
     manual: true,
   });
 
-  // 企业名称
-  const { data: enterpriseNameData } = useRequest(getEnterpriseName);
-  // 行业
-  const { data: industryData } = useRequest(getIndustry);
-
-  // 获取企业、行业名称
-  const selectOptions = () => {
-    if (selectValue === 2) {
-      // 行业
-      return dataFilter(industryData)?.map((item: any) => {
-        return {
-          label: item.name,
-          value: item.id,
-        };
-      });
-    } else if (selectValue === 1) {
-      // 企业
-      return dataFilter(enterpriseNameData)?.map((item: any) => {
-        return {
-          label: item.name,
-          value: item.substationCode,
-        };
-      });
-    } else {
-      return [];
+  // 数据过滤
+  const dataFilter = (data: any) => {
+    if (data?.code === 200) {
+      return data.data;
     }
+    return null;
   };
 
-  // 负荷详情 时间组件变化
-  const loadDetailDateChange = (date: any) => {
-    const formatDate = dayjs(date).format('YYYY-MM-DD');
-    fetchLoadetails({
-      date: formatDate,
-      industry: '',
-      substationCode: '',
-      type: selectValue,
-    });
+  // 处理请求参数
+  const handleParams = (moduleType: 'overview' | 'structure' | 'energy' | 'load') => {
+    let params: any = { type };
+    // 不同区域类型请求参数不同
+    switch (type) {
+      case 0:
+        break;
+      case 1:
+        params.substationCode = substationCode;
+        break;
+      case 2:
+        params.industry = industry;
+        break;
+    }
+    // 不同模块类型请求参数不同
+    switch (moduleType) {
+      case 'overview':
+        break;
+      case 'structure':
+        params.date = structureDate;
+        params.unit = structureDateType;
+        break;
+      case 'energy':
+        params.date = energyDate;
+        params.unit = energyDateType;
+        break;
+      case 'load':
+        params.date = loadDate;
+        break;
+    }
+    return params;
+  };
+
+  // 处理progress数据和提示
+  const handleProgress = (progressType: string, unit: string, data: any, totalData: any) => {
+    const proportion = (data / totalData).toFixed(2);
+    const hint =
+      type === 0
+        ? `区域总${progressType}为${data + unit}`
+        : `区域总${progressType}为${totalData + unit}，街道/行业${progressType}为${
+            data + unit
+          }，占比为${proportion}%`;
+    return hint;
   };
 
   // 企业排名
   useEffect(() => {
-    if (enterRank) {
+    if (rankingDate && rankingDateType) {
       fetchRanking({
-        date: dayjs(new Date()).format('YYYY-MM-DD'),
-        unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
+        date: rankingDate,
+        unit: rankingDateType,
       });
     }
-  }, [enterRank]);
-
-  useEffect(() => {
-    // 用能总览
-    fetchMonitorOverview({
-      type: 0,
-    });
-    // 负荷详情
-    fetchLoadetails({
-      date: dayjs(new Date()).format('YYYY-MM-DD'),
-      type: 0,
-    });
-  }, []);
+  }, [rankingDate, rankingDateType]);
 
   // 能源结构
   useEffect(() => {
-    if (structureDate) {
-      fetchEnergyStructure({
-        date: structureDate,
-        type: 0,
-        unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
-      });
+    if (structureDate && structureDateType) {
+      fetchEnergyStructure(handleParams('structure'));
     }
-  }, [structureDate]);
+  }, [structureDate, structureDateType]);
 
   // 用能详情数据请求
   useEffect(() => {
-    if (selectDate) {
-      fetchMonitorDetails({
-        date: selectDate,
-        type: 0,
-        unit: ['year', 'month', 'day'][selectDate.split('-').length - 1],
-      });
+    if (energyDate) {
+      fetchMonitorDetails(handleParams('energy'));
     }
-  }, [selectDate]);
+  }, [energyDate]);
 
-  // 保存名称选择，解决数据同步异步问题
+  // 负荷详情
   useEffect(() => {
-    setSelectValue(type);
-    form.setFieldsValue({
-      industry: null,
-      substationCode: null,
-    });
-  }, [type]);
+    if (loadDate) fetchLoadDetails(handleParams('load'));
+  }, [loadDate]);
 
-  // 点击查询
-  const searchPageData = () => {
-    if (type === 1 && !form.getFieldsValue()?.substationCode) {
-      messageApi.info('请选择企业');
-      return false;
+  // 选择类型切换
+  useEffect(() => {
+    if (type !== undefined && structureDate && structureDateType && loadDate) {
+      // 行业和企业未选择返回
+      if (type === 1 && !substationCode) return;
+      if (type === 2 && !industry) return;
+      fetchMonitorOverview(handleParams('overview'));
+      fetchEnergyStructure(handleParams('structure'));
+      fetchLoadDetails(handleParams('load'));
+      fetchMonitorDetails(handleParams('energy'));
     }
-
-    if (type === 2 && !form.getFieldsValue()?.industry) {
-      messageApi.info('请选择行业');
-      return false;
-    }
-
-    const params = {
-      type: type,
-      industry: type === 2 ? form.getFieldsValue()?.industry : '',
-      substationCode: type === 1 ? form.getFieldsValue()?.substationCode : '',
-    };
-
-    const unit = ['year', 'month', 'day'][selectDate.split('-').length - 1];
-    const dateType: any = { year: 'YYYY', month: 'YYYY-MM', day: 'YYYY-MM-DD' };
-
-    // 用能详情数据请求
-    fetchMonitorDetails({
-      ...params,
-      date: dayjs(structureDate).format(dateType[unit]),
-      unit,
-    });
-    // 能源结构
-    fetchEnergyStructure({
-      ...params,
-      date: dayjs(structureDate).format(dateType[unit]),
-      unit,
-    });
-    // 用能总览
-    fetchMonitorOverview({ ...params });
-    // 负荷详情
-    fetchLoadetails({
-      ...params,
-      date: dayjs(new Date()).format('YYYY-MM-DD'),
-    });
-  };
+  }, [type, industry, substationCode]);
 
   return (
     <ContainerPage>
@@ -251,7 +172,11 @@ const EnergyMonitor = () => {
               <div className={styles.title}>企业排名</div>
               <div className={styles.content}>
                 <div className={styles.search}>
-                  <SegmentDatepicker setSelectDate={setEnterRank} />
+                  <CustomDatePicker
+                    datePickerType=""
+                    setDate={setRankingDate}
+                    setUnit={setRankingDateType}
+                  />
                 </div>
                 <div className={styles.table} ref={tableWrapRef}>
                   <Table
@@ -267,47 +192,14 @@ const EnergyMonitor = () => {
           </CustomCard>
         </div>
         <div className={styles.pageRight}>
-          {/* <Spin /> */}
           <CustomCard style={{ borderLeft: 'none', borderRight: 'none' }}>
             <div className={styles.content}>
               <div className={styles.contentTitle}>
-                <Form layout="inline" form={form} initialValues={{ type: 0 }}>
-                  <Form.Item label="名称" name="type">
-                    <Select
-                      placeholder="请选择区域"
-                      allowClear
-                      options={[
-                        { label: '全区域', value: 0 },
-                        { label: '行业', value: 2 },
-                        { label: '企业', value: 1 },
-                      ]}
-                      style={{ width: 260 }}
-                    />
-                  </Form.Item>
-                  {selectValue === 2 && (
-                    <Form.Item label="行业名称" name="industry">
-                      <Select
-                        placeholder="请选择行业"
-                        allowClear
-                        options={selectOptions()}
-                        style={{ width: 260 }}
-                      />
-                    </Form.Item>
-                  )}
-                  {selectValue === 1 && (
-                    <Form.Item label="企业名称" name="substationCode">
-                      <Select
-                        placeholder="请选择企业"
-                        allowClear
-                        options={selectOptions()}
-                        style={{ width: 260 }}
-                      />
-                    </Form.Item>
-                  )}
-                  <Form.Item>
-                    <Button onClick={searchPageData}>查询</Button>
-                  </Form.Item>
-                </Form>
+                <SelectForm
+                  setType={setType}
+                  setIndustryCode={setIndustry}
+                  setSubstationCode={setSubstationCode}
+                />
               </div>
               <div className={styles.contentMain}>
                 <div className={styles.mainBody}>
@@ -315,49 +207,88 @@ const EnergyMonitor = () => {
                     <div className={styles.areaHead}>
                       <div className={styles.areaHeadTitle}>能耗总览</div>
                     </div>
-                    <div className={`${styles.areaBody} ${styles.overview}`} style={{}}>
+                    <div className={`${styles.areaBody} ${styles.overview}`}>
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.3}
+                        progress={
+                          dataFilter(overviewData)?.realPower / dataFilter(overviewData)?.totalPower
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="实时负荷"
                         value={`${dataFilter(overviewData)?.realPower || 0}kW`}
+                        hintText={handleProgress(
+                          '实时负荷',
+                          'kW',
+                          dataFilter(overviewData)?.realPower,
+                          dataFilter(overviewData)?.totalPower,
+                        )}
                       />
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.1}
+                        progress={
+                          dataFilter(overviewData)?.dayElectricity /
+                          dataFilter(overviewData)?.totalDayElectricity
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="日用电量"
                         value={`${dataFilter(overviewData)?.dayElectricity || 0}kWh`}
+                        hintText={handleProgress(
+                          '日用电量',
+                          'kWh',
+                          dataFilter(overviewData)?.dayElectricity,
+                          dataFilter(overviewData)?.totalDayElectricity,
+                        )}
                       />
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.5}
+                        progress={
+                          dataFilter(overviewData)?.monthElectricity /
+                          dataFilter(overviewData)?.totalMonthElectricity
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="月用电量"
                         value={`${dataFilter(overviewData)?.monthElectricity || 0}kWh`}
+                        hintText={handleProgress(
+                          '月用电量',
+                          'kWh',
+                          dataFilter(overviewData)?.monthElectricity,
+                          dataFilter(overviewData)?.totalMonthElectricity,
+                        )}
                       />
                       <CustomProgress
                         width={300}
                         height={20}
-                        progress={0.8}
+                        progress={
+                          dataFilter(overviewData)?.yearElectricity /
+                          dataFilter(overviewData)?.totalYearElectricity
+                        }
                         color={['#5A49FF', '#A49BFF']}
                         title="年用电量"
                         value={`${dataFilter(overviewData)?.yearElectricity || 0}kWh`}
+                        hintText={handleProgress(
+                          '年用电量',
+                          'kWh',
+                          dataFilter(overviewData)?.yearElectricity,
+                          dataFilter(overviewData)?.totalYearElectricity,
+                        )}
                       />
                     </div>
                   </div>
                   <div className={styles.mainBodyRight}>
                     <div className={styles.areaHead}>
                       <div className={styles.areaHeadTitle}>用能详情</div>
-                      <SegmentDatepicker setSelectDate={setSelectDate} />
+                      <CustomDatePicker
+                        datePickerType=""
+                        setDate={setEnergyDate}
+                        setUnit={setEnergyDateType}
+                      />
                     </div>
                     <div className={styles.areaBody}>
                       <CustomCharts
-                        options={energyDetail(dataFilter(detailsData), selectDate)}
+                        options={energyDetail(dataFilter(detailsData), energyDate)}
                         loading={false}
                       />
                     </div>
@@ -367,7 +298,11 @@ const EnergyMonitor = () => {
                   <div className={styles.mainBodyLeft}>
                     <div className={styles.areaHead}>
                       <div className={styles.areaHeadTitle}>能源结构</div>
-                      <SegmentDatepicker setSelectDate={setStructureDate} />
+                      <CustomDatePicker
+                        datePickerType=""
+                        setDate={setStructureDate}
+                        setUnit={setStructureDateType}
+                      />
                     </div>
                     <div className={styles.areaBody}>
                       <div className={styles.structure}>
@@ -409,11 +344,7 @@ const EnergyMonitor = () => {
                   <div className={styles.mainBodyRight}>
                     <div className={styles.areaHead}>
                       <div className={styles.areaHeadTitle}>负荷详情</div>
-                      <DatePicker
-                        defaultValue={dayjs(new Date())}
-                        onChange={loadDetailDateChange}
-                        allowClear={false}
-                      />
+                      <CustomDatePicker datePickerType="day" setDate={setLoadDate} />
                     </div>
                     <div className={styles.areaBody}>
                       <CustomCharts
@@ -428,7 +359,6 @@ const EnergyMonitor = () => {
           </CustomCard>
         </div>
       </div>
-      {contextHolder}
     </ContainerPage>
   );
 };

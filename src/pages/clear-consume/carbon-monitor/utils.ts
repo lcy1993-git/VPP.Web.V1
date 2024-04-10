@@ -1,15 +1,16 @@
 import { formatXAxis } from '@/utils/common';
 import * as echarts from 'echarts';
 
-export const monitorOptions = (data?: any, unit: string) => {
+export const monitorOptions = (data: any, unit: string) => {
   if (!data) {
     return false;
   }
 
-  const emun: any = {
+  const nameEnum: any = {
     hbTimeValueMap: '环比',
     tbTimeValueMap: '同比',
   };
+
   const colorEnum: any = {
     hbTimeValueMap: '#39ffc5',
     tbTimeValueMap: '#00a8ff',
@@ -42,7 +43,7 @@ export const monitorOptions = (data?: any, unit: string) => {
       };
     }
     return {
-      name: emun[item],
+      name: nameEnum[item],
       type: 'line',
       color: colorEnum[item],
       tooltip: {

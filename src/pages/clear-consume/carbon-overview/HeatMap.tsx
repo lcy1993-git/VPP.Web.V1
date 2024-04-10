@@ -86,7 +86,7 @@ const HeatMap = (props: HeatMapInfo) => {
         params.substationCode = substationCode;
         break;
       case 2:
-        params.industryCode = industryCode;
+        params.industryCode = industry;
         break;
     }
     return params;

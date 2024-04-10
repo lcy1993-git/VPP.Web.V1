@@ -1,5 +1,4 @@
 /**乌兰察布 通用表格组件 */
-
 import { tableRequest } from '@/utils/tableRequest';
 import { useRequest } from 'ahooks';
 import { ConfigProvider, Pagination, Table } from 'antd';
@@ -48,7 +47,6 @@ const withGeneralTable =
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
     const [expandedRowKeys, setExpandedRowKeys] = useState<any[]>([]); // 树形列表展开收起功能
-
     const [requestParams, setRequestParams] = useState<any>(null);
 
     const {
@@ -138,7 +136,7 @@ const withGeneralTable =
       if (
         tableData &&
         tableData.data &&
-        Object.prototype.toString.call(tableData.data.dataList) === '[object Array]'
+        Object.prototype.toString.call(tableData.data) === '[object Array]'
       ) {
         const copyData = [...tableData.data];
         mapTreeData(copyData);
@@ -170,17 +168,20 @@ const withGeneralTable =
       /**筛选查询 */
       searchByParams: (params: any = {}, hasPage = true) => {
         setRequestParams(params);
+
         //处理参数传空字符串的情况
-        const paramsKeys = Object.keys(params);
-        paramsKeys.map((item: any) => {
-          if (params[item] === '') delete params[item];
-        });
+        const filteredParams = Object.keys(params).reduce((acc: any, key) => {
+          if (params[key] !== '') {
+            acc[key] = params[key];
+          }
+          return acc;
+        }, {});
 
         setCurrentPage(1);
         const searchPar = hasPage
           ? {
               url,
-              filterParams: params,
+              filterParams: filteredParams,
               pageSize: pageSize,
               pageNum: 1,
               postType,
@@ -189,7 +190,7 @@ const withGeneralTable =
             }
           : {
               url,
-              filterParams: params,
+              filterParams: filteredParams,
               postType,
               requestType,
               hasPage: false,
@@ -323,11 +324,11 @@ const withGeneralTable =
                 onExpand: (_expanded: any, record: { id: any }) => {
                   const isExist = expandedRowKeys.find((item) => item === record.id);
                   if (isExist) {
-                    const expandeds = expandedRowKeys.filter((item) => item !== record.id);
-                    setExpandedRowKeys(expandeds);
+                    const expandedKeys = expandedRowKeys.filter((item) => item !== record.id);
+                    setExpandedRowKeys(expandedKeys);
                   } else {
-                    const expandeds = [...expandedRowKeys, record.id];
-                    setExpandedRowKeys(expandeds);
+                    const expandedKeys = [...expandedRowKeys, record.id];
+                    setExpandedRowKeys(expandedKeys);
                   }
                 },
               }}

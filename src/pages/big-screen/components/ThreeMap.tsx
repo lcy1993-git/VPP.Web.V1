@@ -341,7 +341,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
   const addMark = (position_: any) => {
     const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
     const [x, y] = projection(position_);
-    const position = new THREE.Vector3(x, -y, 0);
+    const position = new THREE.Vector3(x, 5.4, -y);
 
     // 创建一个点位图片
     const textureLoader = new THREE.TextureLoader();
@@ -351,11 +351,9 @@ const ThreeMap = (props: ThreeMapInfo) => {
     sprite.position.copy(position); // 设置图片位置
 
     sprite.scale.set(1, 1, 1); // 设置图片大小
-    sprite.rotation.x = Math.PI * 0.5;
+    sprite.rotation.x = Math.PI * 1.5;
     // 设置平移
-    console.log(sprite.position);
-
-    const translation = new THREE.Vector3(0, 3, 0); // 平移向量
+    const translation = new THREE.Vector3(0, -3, 0); // 平移向量
     sprite.position.add(translation); // 平移点位
     viewScene.current.add(sprite);
     // viewCamera.current.look
@@ -461,6 +459,17 @@ const initHeatmap = (heatMapData: any) => {
   }
 }
 
+// 添加标注
+const initMark = (markData: any) =>{
+  // const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
+  let i = 0;
+  while (i < markData.length) {
+    const lont = [parseFloat(markData[i]?.longitude), parseFloat(markData[i]?.latitude)]
+    addMark(lont)
+    i++;
+  }
+  
+}
 
   // 初始化三维场景
   const initMap = (width: number, height: number) => {
@@ -474,6 +483,8 @@ const initHeatmap = (heatMapData: any) => {
 
     if (isHeatmap)
       initHeatmap(data || []);
+    else
+      initMark(data || []);
 
     function animate() {
       requestAnimationFrame(animate);

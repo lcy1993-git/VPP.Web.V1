@@ -37,6 +37,13 @@ export const getTypicalResponseAnalysis = (type: string) => {
   });
 };
 
+// 特色场景-大屏地图-电站数据
+export const getsubstationData = () => {
+  return request(`/api/bigScreen/scene/substationData`, {
+    method: 'GET',
+  });
+};
+
 /*--------------------------能源综合看板-------------------------------*/
 // 综能看板--- 区域用能管理 --- 现状
 export const getStatusQuo = () => {

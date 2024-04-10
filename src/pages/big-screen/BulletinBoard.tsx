@@ -103,10 +103,11 @@ const BulletinBoard = () => {
   });
 
   // 大屏中间数据
-  // const { data: substationData } = useRequest(getBoardSubstationData, {
-  //   pollingInterval: INTERVALTIME,
-  //   pollingErrorRetryCount: 3,
-  // });
+  const { data: substationData } = useRequest(getBoardSubstationData, {
+    pollingInterval: INTERVALTIME,
+    pollingErrorRetryCount: 3,
+  });
+
   /** 区域用能概览 日期改变  */
   const datePickerChange = (date: any) => {
     if (!date) {
@@ -304,7 +305,7 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap isHeatmap={true}/>
+              <ThreeMap isHeatmap={true} data={substationData?.data}/>
             </div>
           </div>
           {/* right */}

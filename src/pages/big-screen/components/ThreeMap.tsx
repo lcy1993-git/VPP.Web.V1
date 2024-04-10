@@ -17,11 +17,13 @@ import Mark1 from './image/mark1.png';
 
 interface ThreeMapInfo {
   isHeatmap?: boolean; // 是否加载热力图
+  data?: any; // 热力图数据
 }
 
 
 const ThreeMap = (props: ThreeMapInfo) => {
-  const { isHeatmap = false } = props;
+  const { isHeatmap = false, data } = props;
+  
   const chart_dom: any = useRef(null);
   const heat_dom: any = useRef(null);
   // 场景对象
@@ -135,7 +137,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 是否可以缩放
     control.enableZoom = true;
     // 是否可以旋转
-    control.enableRotate = false;
+    // control.enableRotate = false;
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点
@@ -362,8 +364,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // viewCamera.current.updateProjectionMatrix();
     // renderer.current.setSize( width, height);
 
-    console.log(chart_dom.current);
-
     viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
     console.log(chart_dom.current.clientWidth,  chart_dom.current.clientHeight);
 
@@ -379,6 +379,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       if (chart_dom?.current) {
         const containrtWidth = chart_dom.current?.offsetWidth;
         const containrtHeight = chart_dom.current?.offsetHeight;
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         initMap(containrtWidth, containrtHeight)
 
       }
@@ -386,7 +387,9 @@ const ThreeMap = (props: ThreeMapInfo) => {
   }
 
   // 添加热力图
-  const initHeatmap = () => {
+  const initHeatmap = (heatMapData:any) => {
+    if(heatMapData.length === 0)  return;
+    console.log(22222);
     let heatmap = h337.create({
       container: heat_dom.current,
       width: 256,
@@ -396,12 +399,13 @@ const ThreeMap = (props: ThreeMapInfo) => {
     });
     const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
     let i = 0, max = 6, data = [];
-    while (i < 200) {
+    while (i < heatMapData.length * 2) {
       // 生成指定范围内的随机经度
       const randomLon = 104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
       // 生成指定范围内的随机纬度
       const randomLat = 30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
       const lont = [randomLon, randomLat]
+      // const lont = [parseFloat(heatMapData[i]?.longitude), parseFloat(heatMapData[i]?.latitude)]
       const [x, y] = projection(lont)
       // data.push({ x: getRandom( 128 + x * (256 / 50), 128 + x * (256 / 50)), y: getRandom(28 + y * (256 / 50), 128 + y * (256 / 50)), value: getRandom(1, 6) });
       data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
@@ -413,6 +417,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       data: data
     });
 
+    console.log(data);
     texture = new THREE.Texture(heatmap._renderer.canvas);
     geometry = new THREE.PlaneGeometry(50, 50, 1000, 1000);
     geometry.rotateX(-Math.PI * 0.5);
@@ -429,6 +434,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // console.log(vertexShaderRef.current.textContent);
     // console.log(fragmentShaderRef.current.textContent);
     mesh = new THREE.Mesh(geometry, material);
+    // if(!mesh)
     viewScene.current.add(mesh);
     // initGui();
     // animateHeatmap();
@@ -445,7 +451,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     window.addEventListener( 'resize', onWindowResize );
 
     if (isHeatmap)
-      initHeatmap();
+      initHeatmap(data || []);
 
     function animate() {
       requestAnimationFrame(animate);
@@ -490,6 +496,23 @@ const ThreeMap = (props: ThreeMapInfo) => {
       // }
     }
   }, []);
+  useEffect(() => {
+    // initHeatmap(data || []);
+    
+    if (renderer.current) {
+      const rendererDomElement = renderer.current.domElement;
+      if (rendererDomElement.parentNode === chart_dom.current) {
+        chart_dom.current.removeChild(rendererDomElement);
+      }
+
+      if (chart_dom?.current) {
+        const containrtWidth = chart_dom.current?.offsetWidth;
+        const containrtHeight = chart_dom.current?.offsetHeight;
+        initMap(containrtWidth, containrtHeight)
+
+      }
+    }
+}, [data]);
 
   return <>
     <script type="x-shader/x-vertex" ref={vertexShaderRef}>

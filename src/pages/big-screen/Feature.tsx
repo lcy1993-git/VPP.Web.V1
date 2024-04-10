@@ -7,6 +7,7 @@ import {
   getEnergyUse,
   getResponseStatistic,
   getTypicalResponseAnalysis,
+  getsubstationData,
 } from '@/services/big-screen';
 import { history } from '@umijs/max';
 import { useRequest } from 'ahooks';
@@ -72,6 +73,12 @@ const Feature = () => {
 
   // 响应统计
   const { data: responseStatisticData } = useRequest(getResponseStatistic, {
+    pollingInterval: INTERVALTIME,
+    pollingErrorRetryCount: 3,
+  });
+
+   // 特色场景-大屏地图-电站数据
+   const { data: substationData } = useRequest(getsubstationData, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
@@ -292,7 +299,7 @@ const Feature = () => {
                     ?.totalAdjustPower.toString()
                     .split('')
                     .map((item: string, index: any) => {
-                      return Number(item) ? (
+                      return Number(item) || Number(item)=== 0 ? (
                         <span key={`${item}-totalAdjustPower-${index}`}>{item}</span>
                       ) : (
                         <i key={`${item}-${index}`}>{item}</i>
@@ -307,7 +314,7 @@ const Feature = () => {
                     ?.maxUpAdjustPower.toString()
                     .split('')
                     .map((item: string, index: any) => {
-                      return Number(item) ? (
+                      return Number(item) || Number(item)=== 0 ? (
                         <span key={`${item}-maxUpAdjustPower-${index}`}>{item}</span>
                       ) : (
                         <i key={`${item}-${index}`}>{item}</i>
@@ -322,7 +329,7 @@ const Feature = () => {
                     ?.maxDownAdjustPower.toString()
                     .split('')
                     .map((item: string, index: any) => {
-                      return Number(item) ? (
+                      return Number(item) || Number(item)=== 0 ? (
                         <span key={`${item}-maxDownAdjustPower-${index}`}>{item}</span>
                       ) : (
                         <i key={`${item}-${index}`}>{item}</i>
@@ -332,7 +339,7 @@ const Feature = () => {
               </div>
             </div>
             <div className={styles.three}>
-              <ThreeMap />
+             {substationData && <ThreeMap data={substationData?.data}/> }
             </div>
           </div>
           {/* right */}

@@ -37,6 +37,13 @@ export const getTypicalResponseAnalysis = (type: string) => {
   });
 };
 
+// 特色场景-大屏地图-电站数据
+export const getsubstationData = () => {
+  return request(`/api/bigScreen/scene/substationData`, {
+    method: 'GET',
+  });
+};
+
 /*--------------------------能源综合看板-------------------------------*/
 // 综能看板--- 区域用能管理 --- 现状
 export const getStatusQuo = () => {
@@ -84,8 +91,18 @@ export const getBoardCenterData = () => {
 };
 
 // 综能看板--- 电站数据
-export const getBoardSubstationData = () => {
+export const getBoardSubstationData = (params: any) => {
   return request(`/api/bigScreen/energyBoard/substationData`, {
     method: 'GET',
+    params
   });
 };
+
+// 综能看板--- 清洁能源管理
+export const getCleanEnergyManageData = (params: any) => {
+  return request(`/api/bigScreen/energyBoard/cleanEnergyManage`, {
+    method: 'GET',
+    params
+  });
+};
+

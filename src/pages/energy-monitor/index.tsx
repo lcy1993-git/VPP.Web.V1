@@ -111,13 +111,13 @@ const EnergyMonitor = () => {
 
   // 处理progress数据和提示
   const handleProgress = (progressType: string, unit: string, data: any, totalData: any) => {
-    const proportion = (data / totalData).toFixed(2);
+    const proportion: any = (data / totalData).toFixed(2);
     const hint =
       type === 0
         ? `区域总${progressType}为${data + unit}`
         : `区域总${progressType}为${totalData + unit}，街道/行业${progressType}为${
             data + unit
-          }，占比为${proportion}%`;
+          }，占比为${proportion * 100}%`;
     return hint;
   };
 

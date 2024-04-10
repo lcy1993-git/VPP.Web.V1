@@ -10,7 +10,7 @@ export const renderOverviewData = (info: any) => {
       unit: load,
       id: 1,
       value: info?.realTimePower,
-      icon: '',
+      icon: 'icon-gongshuai',
     },
     {
       label: '日用电量',

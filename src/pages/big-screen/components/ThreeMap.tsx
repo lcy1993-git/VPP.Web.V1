@@ -143,7 +143,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 是否可以缩放
     control.enableZoom = true;
     // 是否可以旋转
-    // control.enableRotate = false;
+    control.enableRotate = false;
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点

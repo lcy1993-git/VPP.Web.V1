@@ -3,12 +3,12 @@ import ContentPage from '@/components/content-page';
 import CustomDatePicker from '@/components/custom-datePicker';
 import GeneralTable from '@/components/general-table';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Modal, Row, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Space } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import { useEffect, useRef, useState } from 'react';
 import SelectForm from '../select-form/analysis-select';
-import styles from './index.less';
+import ReportModal from './reportModal';
 dayjs.locale('zh-cn');
 
 const CarbonAnalysis = () => {
@@ -30,10 +30,11 @@ const CarbonAnalysis = () => {
   const [date, setDate] = useState<string>('');
   // 日期类型
   const [unit, setUnit] = useState<string>('');
-  // modal状态
-  const [visible, setVisible] = useState<boolean>(false);
   // column
   const [column, setColumn] = useState<any>();
+  // 弹框状态
+  const [visible, setVisible] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<number>(0);
 
   // 企业
   const enterpriseColumns = [
@@ -119,7 +120,7 @@ const CarbonAnalysis = () => {
       render: () => {
         return (
           <Space>
-            <Button size="small" type="default">
+            <Button size="small" onClick={() => setVisible(true)}>
               报告查询
             </Button>
             <Button size="small">报告下载</Button>
@@ -185,7 +186,7 @@ const CarbonAnalysis = () => {
       render: () => {
         return (
           <Space>
-            <Button size="small" type="default">
+            <Button size="small" onClick={() => setVisible(true)}>
               报告查询
             </Button>
             <Button size="small">报告下载</Button>
@@ -198,6 +199,7 @@ const CarbonAnalysis = () => {
   // 点击查询
   const queryTableData = () => {
     const formParams = searchForm.getFieldsValue();
+    setModalType(type);
     let params = {
       ...formParams,
       unit,
@@ -280,35 +282,7 @@ const CarbonAnalysis = () => {
           }}
         />
 
-        <Modal
-          title="一汽大众负荷趋势"
-          centered
-          width={1000}
-          open={visible}
-          footer={false}
-          onCancel={() => setVisible(false)}
-        >
-          <div className={styles.pdfView}>
-            <div className={styles.pdfTitle}>xxx企业能源排放分析报告</div>
-            <div className={styles.baseInfo}>
-              <h3>一、企业基本信息</h3>
-              <div className={styles.table}>
-                <p>
-                  <span>企业名称</span>
-                  <span>xxx企业</span>
-                </p>
-                <p>
-                  <span>企业人数</span>
-                  <span></span>
-                </p>
-                <p>
-                  <span></span>
-                  <span></span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </Modal>
+        <ReportModal visible={visible} setVisible={setVisible} type={modalType} />
       </ContentComponent>
     </ContentPage>
   );

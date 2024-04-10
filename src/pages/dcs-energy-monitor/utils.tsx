@@ -28,14 +28,14 @@ export const handleSolarData = (data: any) => {
       unit: powerGeneration,
       id: 2,
       value: parseInt(data?.dayGenerated) / powerGenerationConversion,
-      icon: '',
+      icon: 'icon-rifadianliang',
     },
     {
       label: '累计发电量',
       unit: powerGeneration,
       id: 3,
       value: parseInt(data?.totalGenerated) / powerGenerationConversion,
-      icon: '',
+      icon: 'icon-zongyongdianliang',
     },
   ];
 };
@@ -56,14 +56,14 @@ export const handleEssData = (data: any) => {
       unit: powerGeneration,
       id: 2,
       value: parseInt(data?.dayCharge) / powerGenerationConversion,
-      icon: '',
+      icon: 'icon-rifadianliang',
     },
     {
       label: '日放电量',
       unit: powerGeneration,
       id: 3,
       value: parseInt(data?.dayDischarge) / powerGenerationConversion,
-      icon: '',
+      icon: 'icon-riyongdianliang',
     },
   ];
 };
@@ -77,14 +77,14 @@ export const handleChargeData = (data: any) => {
       unit: powerGeneration,
       id: 1,
       value: parseInt(data?.dayCharge) / powerGenerationConversion,
-      icon: '',
+      icon: 'icon-rifadianliang',
     },
     {
       label: '累计充电量',
       unit: powerGeneration,
       id: 2,
       value: parseInt(data?.totalCharge) / powerGenerationConversion,
-      icon: '',
+      icon: 'icon-zongyongdianliang',
     },
   ];
 };

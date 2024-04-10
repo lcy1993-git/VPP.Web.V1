@@ -9,6 +9,7 @@ import {
   getEnterpriseEnergyMonitor,
   getStatusQuo,
 } from '@/services/big-screen';
+import { history } from '@umijs/max';
 import { useRequest } from 'ahooks';
 import { ConfigProvider, DatePicker, Space } from 'antd';
 import dayjs from 'dayjs';
@@ -208,7 +209,9 @@ const BulletinBoard = () => {
             <img src={title} alt="title" />
           </div>
           <div className={styles.headerRight}>
-            <div className={styles.menuButton}>菜单</div>
+            <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>
+              菜单
+            </div>
           </div>
         </div>
         <div className={styles.content}>

@@ -68,7 +68,7 @@ export const getOnline = () => {
 export const getInverterOverview = (status: string, substationCode: string) => {
   return request(`/api/distributed/monitor/inverter/overview`, {
     method: 'get',
-    params: { status: status === '全部' ? null : status === '运行' ? 1 : 2, substationCode },
+    params: { status: status === '全部' ? null : status === '运行' ? 2 : 1, substationCode },
   });
 };
 
@@ -76,7 +76,7 @@ export const getInverterOverview = (status: string, substationCode: string) => {
 export const getBMSOverview = (status: string, substationCode: string) => {
   return request(`/api/distributed/monitor/bms/overview`, {
     method: 'get',
-    params: { status: status === '全部' ? null : status === '运行' ? 1 : 2, substationCode },
+    params: { status: status === '全部' ? null : status === '运行' ? 2 : 1, substationCode },
   });
 };
 
@@ -95,6 +95,6 @@ export const getChargePileOverview = (type: string, substationCode: string) => {
 export const getPCSOverview = (status: string, substationCode: string) => {
   return request(`/api/distributed/monitor/pcs/overview`, {
     method: 'get',
-    params: { status: status === '全部' ? null : status === '运行' ? 1 : 2, substationCode },
+    params: { status: status === '全部' ? null : status === '运行' ? 2 : 1, substationCode },
   });
 };

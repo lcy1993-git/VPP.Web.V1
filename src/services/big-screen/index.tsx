@@ -84,8 +84,18 @@ export const getBoardCenterData = () => {
 };
 
 // 综能看板--- 电站数据
-export const getBoardSubstationData = () => {
+export const getBoardSubstationData = (params: any) => {
   return request(`/api/bigScreen/energyBoard/substationData`, {
     method: 'GET',
+    params
   });
 };
+
+// 综能看板--- 清洁能源管理
+export const getCleanEnergyManageData = (params: any) => {
+  return request(`/api/bigScreen/energyBoard/cleanEnergyManage`, {
+    method: 'GET',
+    params
+  });
+};
+

@@ -12,6 +12,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import h337 from 'heatmap.js';
 import Mark1 from './image/mark1.png';
+import { forEach } from "lodash";
 // import h337 from './js/heatmap.js';
 // import mapBg from './bg01.png';
 
@@ -23,7 +24,7 @@ interface ThreeMapInfo {
 
 const ThreeMap = (props: ThreeMapInfo) => {
   const { isHeatmap = false, data } = props;
-  
+
   const chart_dom: any = useRef(null);
   const heat_dom: any = useRef(null);
   // 场景对象
@@ -44,9 +45,14 @@ const ThreeMap = (props: ThreeMapInfo) => {
   const light: any = useRef(null);
   // 光源
   const amlight: any = useRef(null);
+  // 热力图对象
+  const heatmap: any = useRef(null);
 
   // 热力图相关
-  let geometry: any, material: any, mesh: any, texture: any;
+  const geometry: any = useRef(null);
+  const material: any = useRef(null);
+  const mesh: any = useRef(null);
+  const texture: any = useRef(null);
 
   // 顶点着色器渲染
   // 根据高度图调整顶点的位置，从而实现对热力图的高度显示效果
@@ -344,13 +350,12 @@ const ThreeMap = (props: ThreeMapInfo) => {
     const sprite = new THREE.Sprite(spriteMaterial);
     sprite.position.copy(position); // 设置图片位置
 
-    sprite.scale.set(5, 5, 5); // 设置图片大小
-
-    sprite.rotation.x = Math.PI * 1.5;
+    sprite.scale.set(1, 1, 1); // 设置图片大小
+    sprite.rotation.x = Math.PI * 0.5;
     // 设置平移
     console.log(sprite.position);
 
-    const translation = new THREE.Vector3(0, 0, 0); // 平移向量
+    const translation = new THREE.Vector3(0, 3, 0); // 平移向量
     sprite.position.add(translation); // 平移点位
     viewScene.current.add(sprite);
     // viewCamera.current.look
@@ -365,7 +370,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // renderer.current.setSize( width, height);
 
     viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
-    console.log(chart_dom.current.clientWidth,  chart_dom.current.clientHeight);
+    console.log(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
 
     viewCamera.current.updateProjectionMatrix();
     renderer.current.setSize(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
@@ -386,59 +391,76 @@ const ThreeMap = (props: ThreeMapInfo) => {
     }
   }
 
-  // 添加热力图
-  const initHeatmap = (heatMapData:any) => {
-    if(heatMapData.length === 0)  return;
-    console.log(22222);
-    let heatmap = h337.create({
+// 添加热力图
+const initHeatmap = (heatMapData: any) => {
+  if (heatMapData.length === 0) return;
+
+  // 检查 heatmap 是否已经存在
+  if (!heatmap.current) {
+    heatmap.current = h337.create({
       container: heat_dom.current,
       width: 256,
       height: 256,
       blur: '.8',
       radius: 6
     });
-    const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
-    let i = 0, max = 6, data = [];
-    while (i < heatMapData.length * 2) {
-      // 生成指定范围内的随机经度
-      const randomLon = 104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
-      // 生成指定范围内的随机纬度
-      const randomLat = 30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
-      const lont = [randomLon, randomLat]
-      // const lont = [parseFloat(heatMapData[i]?.longitude), parseFloat(heatMapData[i]?.latitude)]
-      const [x, y] = projection(lont)
-      // data.push({ x: getRandom( 128 + x * (256 / 50), 128 + x * (256 / 50)), y: getRandom(28 + y * (256 / 50), 128 + y * (256 / 50)), value: getRandom(1, 6) });
-      data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
-      i++;
-    }
+  }
 
-    heatmap.setData({
-      max: max,
-      data: data
-    });
+  const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
+  let i = 0, max = 6, data = [];
+  while (i < heatMapData.length * 10) {
 
-    console.log(data);
-    texture = new THREE.Texture(heatmap._renderer.canvas);
-    geometry = new THREE.PlaneGeometry(50, 50, 1000, 1000);
-    geometry.rotateX(-Math.PI * 0.5);
-    material = new THREE.ShaderMaterial({
+    // 生成指定范围内的随机经度
+    const randomLon = 104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
+    // 生成指定范围内的随机纬度
+    const randomLat = 30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
+    const lont = [randomLon, randomLat]
+    // const lont = [parseFloat(heatMapData[i]?.longitude), parseFloat(heatMapData[i]?.latitude)]
+    const [x, y] = projection(lont)
+    data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
+    i++;
+  }
+
+  heatmap.current.setData({
+    max: max,
+    data: data
+  });
+
+  // 创建或更新热力图的纹理和几何体
+  if (texture.current && geometry.current && material.current && mesh.current) {
+    texture.current.needsUpdate = true; // 更新纹理
+    mesh.current.geometry.dispose(); // 释放几何体
+    mesh.current.geometry = new THREE.PlaneGeometry(50, 50, 1000, 1000); // 创建新的几何体
+    mesh.current.geometry.rotateX(-Math.PI * 0.5);
+    mesh.current.material.dispose(); // 释放材质
+    mesh.current.material = new THREE.ShaderMaterial({ // 创建新的材质
       uniforms: {
-        heightMap: { value: texture },
+        heightMap: { value: texture.current },
         heightRatio: { value: 5 }
       },
       vertexShader: vertexShaderRef.current.textContent,
       fragmentShader: fragmentShaderRef.current.textContent,
       transparent: true,
     });
-
-    // console.log(vertexShaderRef.current.textContent);
-    // console.log(fragmentShaderRef.current.textContent);
-    mesh = new THREE.Mesh(geometry, material);
-    // if(!mesh)
-    viewScene.current.add(mesh);
-    // initGui();
-    // animateHeatmap();
+  } else {
+    texture.current = new THREE.Texture(heatmap.current._renderer.canvas);
+    geometry.current = new THREE.PlaneGeometry(50, 50, 1000, 1000);
+    geometry.current.rotateX(-Math.PI * 0.5);
+    material.current = new THREE.ShaderMaterial({
+      uniforms: {
+        heightMap: { value: texture.current },
+        heightRatio: { value: 5 }
+      },
+      vertexShader: vertexShaderRef.current.textContent,
+      fragmentShader: fragmentShaderRef.current.textContent,
+      transparent: true,
+    });
+    mesh.current = new THREE.Mesh(geometry.current, material.current);
+    mesh.current.name = 'heatmap';
+    viewScene.current.add(mesh.current);
   }
+}
+
 
   // 初始化三维场景
   const initMap = (width: number, height: number) => {
@@ -448,22 +470,22 @@ const ThreeMap = (props: ThreeMapInfo) => {
     initRenderer(width, height);
     initControls()
     drawShapeOptionFun()
-    window.addEventListener( 'resize', onWindowResize );
+    window.addEventListener('resize', onWindowResize);
 
     if (isHeatmap)
       initHeatmap(data || []);
 
     function animate() {
       requestAnimationFrame(animate);
-      if (texture)
-        texture.needsUpdate = true;
+      if (texture.current)
+        texture.current.needsUpdate = true;
       controls.current.update();
       // console.log(viewCamera.current.position);
 
       // if (!isHeatmap && composer.current)
       //   composer.current.render();
       // if (isHeatmap)
-        renderer.current.render(viewScene.current, viewCamera.current);
+      renderer.current.render(viewScene.current, viewCamera.current);
 
     }
     animate();
@@ -476,43 +498,35 @@ const ThreeMap = (props: ThreeMapInfo) => {
       initMap(containrtWidth, containrtHeight)
 
     }
-    return () =>{
+    return () => {
       if (chart_dom?.current) {
         window.removeEventListener('resize', onWindowResize);
       }
-
-      // 清空场景中的对象
-      // viewScene.current.remove(mapObj.current);
-
-       // 从DOM中移除渲染器的canvas元素
-       chart_dom.current?.removeChild(renderer.current.domElement);
-
-       // 从DOM中移除渲染器
-      // if (renderer.current) {
-      //   const rendererDomElement = renderer.current.domElement;
-      //   if (rendererDomElement.parentNode === chart_dom.current) {
-      //     chart_dom.current.removeChild(rendererDomElement);
-      //   }
-      // }
+      // 从DOM中移除渲染器的canvas元素
+      chart_dom.current?.removeChild(renderer.current.domElement);
     }
   }, []);
   useEffect(() => {
     // initHeatmap(data || []);
-    
-    if (renderer.current) {
-      const rendererDomElement = renderer.current.domElement;
-      if (rendererDomElement.parentNode === chart_dom.current) {
-        chart_dom.current.removeChild(rendererDomElement);
-      }
 
-      if (chart_dom?.current) {
-        const containrtWidth = chart_dom.current?.offsetWidth;
-        const containrtHeight = chart_dom.current?.offsetHeight;
-        initMap(containrtWidth, containrtHeight)
+    // if (renderer.current) {
+    //   const rendererDomElement = renderer.current.domElement;
+    //   if (rendererDomElement.parentNode === chart_dom.current) {
+    //     chart_dom.current.removeChild(rendererDomElement);
+    //   }
 
-      }
+    //   if (chart_dom?.current) {
+    //     const containrtWidth = chart_dom.current?.offsetWidth;
+    //     const containrtHeight = chart_dom.current?.offsetHeight;
+    //     initMap(containrtWidth, containrtHeight)
+
+    //   }
+    // }
+    if (heat_dom.current) {
+      // heat_dom.current.innerHTML = '';
+      initHeatmap(data || []);
     }
-}, [data]);
+  }, [data]);
 
   return <>
     <script type="x-shader/x-vertex" ref={vertexShaderRef}>
@@ -522,7 +536,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       {fragmentShader}
     </script>
 
-    { isHeatmap && <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>}
+    {isHeatmap && <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>}
     <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}></div>
 
   </>

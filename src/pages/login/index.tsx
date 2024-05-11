@@ -4,7 +4,7 @@ import { getUserAuth, loginRequest } from '@/services/login';
 import { history } from '@umijs/max';
 import { Button, Col, ConfigProvider, Form, Input, Row, message } from 'antd';
 import { md5 } from 'js-md5';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Captcha from 'react-captcha-code';
 import styles from './index.less';
 
@@ -54,6 +54,32 @@ const Login = () => {
     }
   };
 
+  // 处理屏幕尺寸变化
+  const handleScreenAuto = () => {
+    const designDraftWidth = 1920;
+    const designDraftHeight = 1065;
+    const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+    const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+
+    (document.querySelector('#root') as any).style.width = '1920px';
+    (document.querySelector('#root') as any).style.height = '1080px';
+    (
+      document.querySelector('#root') as any
+    ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
+  };
+
+  useEffect(() => {
+    // 初始化自适应
+    handleScreenAuto();
+    // 定义事件处理函数
+    const handleResize = () => handleScreenAuto();
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize); // 移除事件监听器
+    };
+  }, []);
+
   return (
     <div className={styles.loginPage}>
       <div className={styles.loginLogo}>
@@ -96,6 +122,7 @@ const Login = () => {
                 <Form.Item
                   className={`${styles.formItem} ${styles.password}`}
                   name="password"
+                  style={{ marginTop: '30px', marginBottom: '30px' }}
                   rules={[{ required: true, message: '请输入密码！' }]}
                 >
                   <Input.Password
@@ -125,7 +152,7 @@ const Login = () => {
                       ref={captchaRef}
                       charNum={4}
                       width={110}
-                      height={46}
+                      height={50}
                       onChange={handleChange}
                       bgColor="#11325e"
                       onClick={() => (captchaRef as any).current.refresh()}

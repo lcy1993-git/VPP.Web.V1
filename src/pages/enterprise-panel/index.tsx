@@ -106,7 +106,7 @@ const EnterprisePanel = () => {
           filterParams={{ unit, date }}
         />
         <Modal
-          title="负荷趋势"
+          title={<span className={styles.modalTitle}>负荷趋势</span>}
           centered
           width={1000}
           open={powerVisible}
@@ -123,7 +123,7 @@ const EnterprisePanel = () => {
           </div>
         </Modal>
         <Modal
-          title="用量趋势"
+          title={<span className={styles.modalTitle}>用量趋势</span>}
           centered
           width={1000}
           open={electricityVisible}

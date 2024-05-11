@@ -55,15 +55,6 @@ const BulletinBoard = () => {
     return null;
   };
 
-  // 监听页面尺寸变化，重新绘制圆环 ---- 响应统计
-  const handleWindowResize = () => {
-    if (tableWrapRef?.current) {
-      // 获取表格高度
-      const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
-      setTableHeight(tableOffsetHeight);
-    }
-  };
-
   // 区域用能概览 --- 现状
   const { data: statusQuoData } = useRequest(getStatusQuo, {
     pollingInterval: INTERVALTIME,
@@ -105,14 +96,14 @@ const BulletinBoard = () => {
     pollingErrorRetryCount: 3,
   });
 
-   // 清洁能源管理
-   const { data: cleanEnergyManageData } = useRequest(getCleanEnergyManageData, {
+  // 清洁能源管理
+  const { data: cleanEnergyManageData } = useRequest(getCleanEnergyManageData, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
 
   // 热力图数据
-  const { data: substationData,  run: fetchHeatDatas } = useRequest(getBoardSubstationData, {
+  const { data: substationData, run: fetchHeatDatas } = useRequest(getBoardSubstationData, {
     manual: true,
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
@@ -175,20 +166,42 @@ const BulletinBoard = () => {
     }
   }, [fullAndPutDate, currentView]);
 
-  // 监听窗口尺寸变化
-  useEffect(() => {
-    // fetchHeatDatas({type});
-    handleWindowResize();
-    window.addEventListener('resize', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, []);
-
   useEffect(() => {
     fetchHeatDatas({ type });
   }, [type]); // 监听 type 的变化
 
+  // 处理屏幕尺寸变化
+  const handleScreenAuto = () => {
+    const designDraftWidth = 1915;
+    const designDraftHeight = 1030;
+    const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+    const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+
+    (document.querySelector('#root') as any).style.width = '1920px';
+    (document.querySelector('#root') as any).style.height = '1030px';
+    (
+      document.querySelector('#root') as any
+    ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
+    if (tableWrapRef?.current) {
+      // 获取表格高度
+      const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
+      setTableHeight(tableOffsetHeight);
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    // 初始化自适应
+    handleScreenAuto();
+    // 定义事件处理函数
+    const handleResize = () => handleScreenAuto();
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize); // 移除事件监听器
+    };
+  }, []);
+  
   return (
     <ConfigProvider
       theme={{
@@ -322,7 +335,7 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap isHeatmap={true} data={substationData?.data}/>
+              <ThreeMap isHeatmap={true} data={substationData?.data} />
             </div>
           </div>
           {/* right */}
@@ -331,71 +344,99 @@ const BulletinBoard = () => {
               <BlockWrap title="清洁能源管理" isPaddingTop={false}>
                 <div className={styles.clear}>
                   <div className={styles.clearItem}>
-                    <div className={styles.clearItemTotal}>{pageDataHandle(cleanEnergyManageData)?.essNum}</div>
+                    <div className={styles.clearItemTotal}>
+                      {pageDataHandle(cleanEnergyManageData)?.essNum}
+                    </div>
                     <div className={styles.clearItemUl}>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>总容量</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.essCapacity}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.essCapacity}
+                        </span>
                         <span className={styles.unit}>MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>实时充电功率</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.essPower}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.essPower}
+                        </span>
                         <span className={styles.unit}>MW</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>剩余可充放电量</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.essDischargeQuantity}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.essDischargeQuantity}
+                        </span>
                         <span className={styles.unit}>MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>接入完成率</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.essCompleteRate}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.essCompleteRate}
+                        </span>
                         <span className={styles.unit}>%</span>
                       </div>
                     </div>
                   </div>
                   <div className={`${styles.clearItem} ${styles.clearMiddleItem}`}>
-                    <div className={styles.clearItemTotal}>{pageDataHandle(cleanEnergyManageData)?.solarNum}</div>
+                    <div className={styles.clearItemTotal}>
+                      {pageDataHandle(cleanEnergyManageData)?.solarNum}
+                    </div>
                     <div className={styles.clearItemUl}>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>总容量</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.solarCapacity}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.solarCapacity}
+                        </span>
                         <span className={styles.unit}>MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>实时发电功率</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.solarPower}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.solarPower}
+                        </span>
                         <span className={styles.unit}>MW</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>累计发电量</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.solarGenerated}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.solarGenerated}
+                        </span>
                         <span className={styles.unit}>MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>接入完成率</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.solarCompleteRate}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.solarCompleteRate}
+                        </span>
                         <span className={styles.unit}>%</span>
                       </div>
                     </div>
                   </div>
                   <div className={styles.clearItem}>
-                    <div className={styles.clearItemTotal}>{pageDataHandle(cleanEnergyManageData)?.chargePileNum}</div>
+                    <div className={styles.clearItemTotal}>
+                      {pageDataHandle(cleanEnergyManageData)?.chargePileNum}
+                    </div>
                     <div className={styles.clearItemUl}>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>总容量</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.chargePileCapacity}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.chargePileCapacity}
+                        </span>
                         <span className={styles.unit}>MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>实时负荷功率</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.chargePilePower}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.chargePilePower}
+                        </span>
                         <span className={styles.unit}>MW</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>接入完成率</span>
-                        <span className={styles.value}>{pageDataHandle(cleanEnergyManageData)?.chargePileCompleteRate}</span>
+                        <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.chargePileCompleteRate}
+                        </span>
                         <span className={styles.unit}>%</span>
                       </div>
                     </div>
@@ -438,8 +479,12 @@ const BulletinBoard = () => {
           </div>
         </div>
         <div className={styles.footer}>
-          <div className={`${styles.button} ${styles.buttonLeft}` } onClick = {() => setType(0)}>负荷热力</div>
-          <div className={`${styles.button} ${styles.buttonRight}`} onClick = {() => setType(1)}>电量热力</div>
+          <div className={`${styles.button} ${styles.buttonLeft}`} onClick={() => setType(0)}>
+            负荷热力
+          </div>
+          <div className={`${styles.button} ${styles.buttonRight}`} onClick={() => setType(1)}>
+            电量热力
+          </div>
         </div>
       </div>
     </ConfigProvider>

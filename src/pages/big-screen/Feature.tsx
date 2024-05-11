@@ -27,6 +27,7 @@ import {
   disableDate,
   elasticityOverviewOptions,
   energyOverviewOptions,
+  handleScreenAuto,
   typicalResponse,
 } from './utils';
 dayjs.locale('zh-cn');
@@ -77,8 +78,8 @@ const Feature = () => {
     pollingErrorRetryCount: 3,
   });
 
-   // 特色场景-大屏地图-电站数据
-   const { data: substationData } = useRequest(getsubstationData, {
+  // 特色场景-大屏地图-电站数据
+  const { data: substationData } = useRequest(getsubstationData, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
@@ -144,20 +145,6 @@ const Feature = () => {
     );
   };
 
-  // 监听页面尺寸变化，重新绘制圆环 ---- 响应统计
-  const handleWindowResize = () => {
-    if (canvasWrapRef?.current) {
-      const offsetWidth = (canvasWrapRef.current! as any).offsetWidth;
-      const offsetHeight = (canvasWrapRef.current! as any).offsetHeight;
-      const _width = offsetWidth > offsetHeight ? offsetHeight : offsetWidth;
-      setCircleWidth(_width);
-
-      // 获取表格高度
-      const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
-      setTableHeight(tableOffsetHeight);
-    }
-  };
-
   // 处理页面所有请求返回的数据
   const pageDataHandle = (data: any) => {
     if (data?.code === 200) {
@@ -180,14 +167,14 @@ const Feature = () => {
     }
   };
 
-  // 监听窗口尺寸变化
-  useEffect(() => {
-    handleWindowResize();
-    window.addEventListener('resize', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, []);
+  // // 监听窗口尺寸变化
+  // useEffect(() => {
+  //   handleWindowResize();
+  //   window.addEventListener('resize', handleWindowResize);
+  //   return () => {
+  //     window.removeEventListener('resize', handleWindowResize);
+  //   };
+  // }, []);
 
   // 典型响应分析
   useEffect(() => {
@@ -211,6 +198,19 @@ const Feature = () => {
       unit: unit === 'date' ? 'day' : unit,
     });
   }, [fullAndPutDate]);
+
+  useEffect(() => {
+    // 初始化自适应
+    handleScreenAuto(canvasWrapRef, tableWrapRef, setCircleWidth, setTableHeight);
+    // 定义事件处理函数
+    const handleResize = () =>
+      handleScreenAuto(canvasWrapRef, tableWrapRef, setCircleWidth, setTableHeight);
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize); // 移除事件监听器
+    };
+  }, []);
 
   return (
     <ConfigProvider
@@ -299,7 +299,7 @@ const Feature = () => {
                     ?.totalAdjustPower.toString()
                     .split('')
                     .map((item: string, index: any) => {
-                      return Number(item) || Number(item)=== 0 ? (
+                      return Number(item) || Number(item) === 0 ? (
                         <span key={`${item}-totalAdjustPower-${index}`}>{item}</span>
                       ) : (
                         <i key={`${item}-${index}`}>{item}</i>
@@ -314,7 +314,7 @@ const Feature = () => {
                     ?.maxUpAdjustPower.toString()
                     .split('')
                     .map((item: string, index: any) => {
-                      return Number(item) || Number(item)=== 0 ? (
+                      return Number(item) || Number(item) === 0 ? (
                         <span key={`${item}-maxUpAdjustPower-${index}`}>{item}</span>
                       ) : (
                         <i key={`${item}-${index}`}>{item}</i>
@@ -329,7 +329,7 @@ const Feature = () => {
                     ?.maxDownAdjustPower.toString()
                     .split('')
                     .map((item: string, index: any) => {
-                      return Number(item) || Number(item)=== 0 ? (
+                      return Number(item) || Number(item) === 0 ? (
                         <span key={`${item}-maxDownAdjustPower-${index}`}>{item}</span>
                       ) : (
                         <i key={`${item}-${index}`}>{item}</i>
@@ -339,7 +339,7 @@ const Feature = () => {
               </div>
             </div>
             <div className={styles.three}>
-             {substationData && <ThreeMap data={substationData?.data}/> }
+              {substationData && <ThreeMap data={substationData?.data} />}
             </div>
           </div>
           {/* right */}

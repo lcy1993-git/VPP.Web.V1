@@ -474,8 +474,9 @@ export const onlineChart = (data: any) => {
           },
           b: {
             fontWeight: 'bold',
-            fontSize: 30,
+            fontSize: 32,
             color: '#0084FF',
+            fontFamily: 'DIN-Bold',
           },
         },
       },
@@ -505,7 +506,8 @@ export const onlineChart = (data: any) => {
             a: {
               fontWeight: 'bold',
               color: '#fff', // 数字颜色白色
-              fontSize: 28,
+              fontSize: 30,
+              fontFamily: 'DIN-Bold',
             },
             b: {
               color: '#abadbc', // 在线设备文字颜色

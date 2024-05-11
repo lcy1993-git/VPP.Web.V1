@@ -2,7 +2,9 @@ import { Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import { ConfigProvider } from 'antd';
+import { useEffect } from 'react';
 import defaultSettings from '../config/defaultSettings';
+import './assets/fonts/font.css';
 import LayoutHeader from './components/layout-header';
 import { errorConfig } from './requestErrorConfig';
 import { getUserAuth } from './services/login';
@@ -39,13 +41,40 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }: any) => {
   const onCollapse = (): void => {
     setInitialState({
       ...initialState,
       collapsed: !initialState?.collapsed,
     }).then();
   };
+
+  const designDraftWidth = 1915;
+  const designDraftHeight = 1000;
+  // 处理屏幕尺寸变化
+  const handleScreenAuto = () => {
+    const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+    const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+
+    (document.querySelector('#root') as any).style.width = '1920px';
+    (document.querySelector('#root') as any).style.height = '1030px';
+    (
+      document.querySelector('#root') as any
+    ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
+  };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    // 初始化自适应
+    handleScreenAuto();
+    // 定义事件处理函数
+    const handleResize = () => handleScreenAuto();
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize); // 移除事件监听器
+    };
+  }, []);
 
   return {
     avatarProps: {

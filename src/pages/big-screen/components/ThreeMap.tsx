@@ -1,18 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 // import * as THREE from './js/three.js';
 import * as d3 from 'd3';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Outline from './image/outline.png';
-import mapBg from './image/map-bg.png';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { OutlinePass } from 'three/examples/jsm/postprocessing/outlinePass';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/Effectcomposer';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import h337 from 'heatmap.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/Effectcomposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/outlinePass';
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
+import mapBg from './image/map-bg.png';
 import Mark1 from './image/mark1.png';
-import { forEach } from "lodash";
+import Outline from './image/outline.png';
 // import h337 from './js/heatmap.js';
 // import mapBg from './bg01.png';
 
@@ -20,7 +19,6 @@ interface ThreeMapInfo {
   isHeatmap?: boolean; // 是否加载热力图
   data?: any; // 热力图数据
 }
-
 
 const ThreeMap = (props: ThreeMapInfo) => {
   const { isHeatmap = false, data } = props;
@@ -87,7 +85,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
 `;
   const fragmentShaderRef: any = useRef(null);
 
-
   // 初始化场景对象
   const initScene = () => {
     // 场景
@@ -105,7 +102,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // light.current.position.set(10, 10, 10);
     scene.add(light.current);
 
-
     // 辅助箭头    红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
     // const axes = new THREE.AxesHelper(100);
     // scene.add(axes);
@@ -116,10 +112,8 @@ const ThreeMap = (props: ThreeMapInfo) => {
   const initCamera = (divWidth: number, divHeight: number) => {
     const camera = new THREE.PerspectiveCamera(2, divWidth / divHeight, 1, 10000);
     // camera.position.set(0.09495576553561131, -1.0789913218408212, 9.961011790443024);
-    if (isHeatmap)
-      camera.position.set(-13.179706235621579, 895.0838483998507, 83.07607286622547);
-    else
-      camera.position.set(-41.32864202838264, 831.5910748493473, 340.6301189988112);
+    if (isHeatmap) camera.position.set(-13.179706235621579, 895.0838483998507, 83.07607286622547);
+    else camera.position.set(-41.32864202838264, 831.5910748493473, 340.6301189988112);
 
     viewCamera.current = camera;
   };
@@ -156,7 +150,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
     controls.current = control;
   };
 
-
   // 地图样式
   const normalStyle = () => {
     const textureLoader1 = new THREE.TextureLoader();
@@ -183,7 +176,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
     return materials;
   };
 
-
   // 使mesh轮廓发光
   const initoutlinePass = (mesh: any) => {
     const containrtWidth = chart_dom.current?.offsetWidth;
@@ -193,7 +185,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       new THREE.Vector2(containrtWidth, containrtHeight),
       viewScene.current,
       viewCamera.current,
-      [mesh]
+      [mesh],
     );
     // 将此通道结果渲染到屏幕
     // outlinePass.renderToScreen = true
@@ -218,17 +210,13 @@ const ThreeMap = (props: ThreeMapInfo) => {
     const _pixelRatio = renderer.current.getPixelRatio();
     const _width = size.width;
     const _height = size.height;
-    const renderTarget = new THREE.WebGLRenderTarget(
-      _width * _pixelRatio,
-      _height * _pixelRatio,
-      {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.LinearFilter,
-        format: THREE.RGBAFormat,
-        encoding: 3001
-      }
-    );
-    renderTarget.texture.name = "EffectComposer.rt1";
+    const renderTarget = new THREE.WebGLRenderTarget(_width * _pixelRatio, _height * _pixelRatio, {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBAFormat,
+      encoding: 3001,
+    });
+    renderTarget.texture.name = 'EffectComposer.rt1';
     composer.current = new EffectComposer(renderer.current, renderTarget);
 
     // composer.current = new EffectComposer(renderer.current);
@@ -240,7 +228,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
     composer.current.addPass(renderScene);
     composer.current.addPass(outlinePass);
-  }
+  };
 
   // 绘制地图
   const drawMap = (data: any) => {
@@ -300,26 +288,24 @@ const ThreeMap = (props: ThreeMapInfo) => {
         });
       });
       mapObj.current.add(province);
-
     });
 
     // if (!isHeatmap)
     //   initoutlinePass(mapObj.current);
-    viewScene.current.add(mapObj.current)
-  }
+    viewScene.current.add(mapObj.current);
+  };
 
   // 加载json文件，准备绘制地图
   const drawShapeOptionFun = function () {
     const loader = new THREE.FileLoader();
     loader.load('/jsonData/510112_full.json', (data: any) => {
-      drawMap(JSON.parse(data))
+      drawMap(JSON.parse(data));
     });
   };
 
-
   const getRandom = (max: any, min: any) => {
     return Math.round((Math.random() * (max - min + 1) + min) * 10) / 10;
-  }
+  };
 
   const animateHeatmap = () => {
     let time = 0;
@@ -341,7 +327,11 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
   // 添加标注
   const addMark = (position_: any) => {
-    const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
+    const projection = d3
+      .geoMercator()
+      .center([104.300989, 30.607689])
+      .scale(5000)
+      .translate([0, 0]);
     const [x, y] = projection(position_);
     const position = new THREE.Vector3(x, 5.4, -y);
 
@@ -360,7 +350,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
     viewScene.current.add(sprite);
     // viewCamera.current.look
   };
-
 
   const onWindowResize = () => {
     // const width = chart_dom.current?.offsetWidth;
@@ -386,19 +375,18 @@ const ThreeMap = (props: ThreeMapInfo) => {
         const containrtHeight = chart_dom.current?.offsetHeight;
 
         heatmap.current = null;
-        texture.current  = null;
+        texture.current = null;
         geometry.current = null;
-        material.current = null; 
+        material.current = null;
         mesh.current = null;
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        initMap(containrtWidth, containrtHeight)
-
+        initMap(containrtWidth, containrtHeight);
       }
     }
-  }
+  };
 
   // 添加热力图
-  const initHeatmap = (heatMapData: any) => {    
+  const initHeatmap = (heatMapData: any) => {
     if (heatMapData.length === 0) return;
 
     // 检查 heatmap 是否已经存在
@@ -408,28 +396,39 @@ const ThreeMap = (props: ThreeMapInfo) => {
         width: 256,
         height: 256,
         blur: '.8',
-        radius: 6
+        radius: 6,
       });
     }
 
-    const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
-    let i = 0, max = 6, data = [];
+    const projection = d3
+      .geoMercator()
+      .center([104.300989, 30.607689])
+      .scale(5000)
+      .translate([0, 0]);
+    let i = 0,
+      max = 6,
+      data = [];
     while (i < heatMapData.length * 10) {
-
       // 生成指定范围内的随机经度
-      const randomLon = 104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
+      const randomLon =
+        104.20566118664469 + Math.random() * (104.43389055234029 - 104.20566118664469);
       // 生成指定范围内的随机纬度
-      const randomLat = 30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
-      const lont = [randomLon, randomLat]
+      const randomLat =
+        30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
+      const lont = [randomLon, randomLat];
       // const lont = [parseFloat(heatMapData[i]?.longitude), parseFloat(heatMapData[i]?.latitude)]
-      const [x, y] = projection(lont)
-      data.push({ x: parseFloat((128 + x * (256 / 50)).toFixed(1)), y: parseFloat((128 + y * (256 / 50)).toFixed(1)), value: getRandom(1, 6) });
+      const [x, y] = projection(lont);
+      data.push({
+        x: parseFloat((128 + x * (256 / 50)).toFixed(1)),
+        y: parseFloat((128 + y * (256 / 50)).toFixed(1)),
+        value: getRandom(1, 6),
+      });
       i++;
     }
 
     heatmap.current.setData({
       max: max,
-      data: data
+      data: data,
     });
 
     // 创建或更新热力图的纹理和几何体
@@ -439,10 +438,11 @@ const ThreeMap = (props: ThreeMapInfo) => {
       mesh.current.geometry = new THREE.PlaneGeometry(50, 50, 1000, 1000); // 创建新的几何体
       mesh.current.geometry.rotateX(-Math.PI * 0.5);
       mesh.current.material.dispose(); // 释放材质
-      mesh.current.material = new THREE.ShaderMaterial({ // 创建新的材质
+      mesh.current.material = new THREE.ShaderMaterial({
+        // 创建新的材质
         uniforms: {
           heightMap: { value: texture.current },
-          heightRatio: { value: 5 }
+          heightRatio: { value: 5 },
         },
         vertexShader: vertexShaderRef.current.textContent,
         fragmentShader: fragmentShaderRef.current.textContent,
@@ -455,7 +455,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       material.current = new THREE.ShaderMaterial({
         uniforms: {
           heightMap: { value: texture.current },
-          heightRatio: { value: 5 }
+          heightRatio: { value: 5 },
         },
         vertexShader: vertexShaderRef.current.textContent,
         fragmentShader: fragmentShaderRef.current.textContent,
@@ -465,39 +465,35 @@ const ThreeMap = (props: ThreeMapInfo) => {
       mesh.current.name = 'heatmap';
       viewScene.current.add(mesh.current);
     }
-  }
+  };
 
   // 添加标注
   const initMark = (markData: any) => {
     // const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
     let i = 0;
     while (i < markData.length) {
-      const lont = [parseFloat(markData[i]?.longitude), parseFloat(markData[i]?.latitude)]
-      addMark(lont)
+      const lont = [parseFloat(markData[i]?.longitude), parseFloat(markData[i]?.latitude)];
+      addMark(lont);
       i++;
     }
-
-  }
+  };
 
   // 初始化三维场景
   const initMap = (width: number, height: number) => {
-    mapObj.current = new THREE.Object3D()
+    mapObj.current = new THREE.Object3D();
     initScene();
     initCamera(width, height);
     initRenderer(width, height);
-    initControls()
-    drawShapeOptionFun()
+    initControls();
+    drawShapeOptionFun();
     window.addEventListener('resize', onWindowResize);
 
-    if (isHeatmap)
-      initHeatmap(mapData || []);
-    else
-      initMark(mapData || []);
+    if (isHeatmap) initHeatmap(mapData || []);
+    else initMark(mapData || []);
 
     function animate() {
       requestAnimationFrame(animate);
-      if (texture.current)
-        texture.current.needsUpdate = true;
+      if (texture.current) texture.current.needsUpdate = true;
       controls.current.update();
       // console.log(viewCamera.current.position);
 
@@ -505,7 +501,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
       //   composer.current.render();
       // if (isHeatmap)
       renderer.current.render(viewScene.current, viewCamera.current);
-
     }
     animate();
   };
@@ -514,8 +509,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     if (chart_dom?.current) {
       const containrtWidth = chart_dom.current?.offsetWidth;
       const containrtHeight = chart_dom.current?.offsetHeight;
-      initMap(containrtWidth, containrtHeight)
-
+      initMap(containrtWidth, containrtHeight);
     }
     return () => {
       if (chart_dom?.current) {
@@ -523,7 +517,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
       }
       // 从DOM中移除渲染器的canvas元素
       chart_dom.current?.removeChild(renderer.current.domElement);
-    }
+    };
   }, []);
   useEffect(() => {
     // initHeatmap(data || []);
@@ -548,18 +542,18 @@ const ThreeMap = (props: ThreeMapInfo) => {
     }
   }, [data]);
 
-  return <>
-    <script type="x-shader/x-vertex" ref={vertexShaderRef}>
-      {vertexShader}
-    </script>
-    <script type="x-shader/x-vertex" ref={fragmentShaderRef}>
-      {fragmentShader}
-    </script>
+  return (
+    <>
+      <script type="x-shader/x-vertex" ref={vertexShaderRef}>
+        {vertexShader}
+      </script>
+      <script type="x-shader/x-vertex" ref={fragmentShaderRef}>
+        {fragmentShader}
+      </script>
 
-    {isHeatmap && <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>}
-    <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}></div>
-
-  </>
-
-}
-export default ThreeMap
+      {isHeatmap && <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>}
+      <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}></div>
+    </>
+  );
+};
+export default ThreeMap;

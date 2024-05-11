@@ -1,54 +1,53 @@
-
 .loginPage {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  background-image: url('/image/log_bg.png');
-  background-size: 100% 100%;
-  background-position: center center;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-image: url('/image/log_bg.png');
+  background-position: center center;
+  background-size: 100% 100%;
 
   .loginLogo {
+    display: flex;
+    align-items: flex-end;
     width: 100%;
     height: 120px;
     padding-left: 80px;
-    display: flex;
-    align-items: flex-end;
     img {
       width: 150px;
-      height: 56px;
+      height: 60px;
     }
   }
 
   .loginPageContent {
-    width: 100%;
-    flex: 1;
     display: flex;
-    justify-content: center;
+    flex: 1;
     align-items: center;
+    justify-content: center;
+    width: 100%;
     .formWrap {
-      width: 510px;
-      height: 560px;
-      background-image: url('/image/form_bg.png');
-      background-size: 100% 100%;
-      background-position: center center;
-      padding: 70px 68px 30px 68px;
       display: flex;
       flex-direction: column;
+      width: 540px;
+      height: 650px;
+      padding: 70px 68px 30px 68px;
+      background-image: url('/image/form_bg.png');
+      background-position: center center;
+      background-size: 100% 100%;
 
       .title {
         img {
           width: 308px;
-          height: 23px;
+          height: 30px;
         }
 
         p {
           height: 40px;
-          line-height: 40px;
+          color: #ffffff;
           font-weight: 400;
           font-size: 20px;
-          color: #FFFFFF;
+          line-height: 45px;
           opacity: 0.6;
         }
       }
@@ -59,45 +58,42 @@
         padding-top: 60px;
       }
     }
-
   }
 
   .loginPageFooter {
-    width: 100%;
-    height: 80px;
     display: flex;
     justify-content: center;
+    width: 100%;
+    height: 80px;
+    color: #ffffff;
     font-weight: 300;
     font-size: 16px;
-    color: #FFFFFF;
     opacity: 0.5;
   }
 }
 
-
 .formItem {
   position: relative;
   width: 100%;
-  height: 46px;
-  border: 1px solid #1292FF;
-  border-radius: 6px;
+  height: 55px;
   padding-left: 52px;
+  border: 1px solid #1292ff;
+  border-radius: 6px;
 
   .formItemInput {
+    position: relative;
     width: 100%;
-    height: 44px;
+    height: 50px;
     // margin-bottom: 10px;
     color: #fff;
-    font-size: 16px;
+    font-size: 18px;
     border-radius: 0;
-    position: relative;
   }
-
 }
 
 .user::after {
   position: absolute;
-  top: 10px;
+  top: 15px;
   left: 16px;
   width: 20px;
   height: 20px;
@@ -108,7 +104,7 @@
 
 .user::before {
   position: absolute;
-  top: 10px;
+  top: 13px;
   left: 50px;
   width: 1px;
   height: 24px;
@@ -118,7 +114,7 @@
 
 .password::after {
   position: absolute;
-  top: 10px;
+  top: 15px;
   left: 18px;
   width: 18px;
   height: 21px;
@@ -129,7 +125,7 @@
 
 .password::before {
   position: absolute;
-  top: 10px;
+  top: 13px;
   left: 50px;
   width: 1px;
   height: 24px;
@@ -139,20 +135,20 @@
 
 .code::after {
   position: absolute;
-  top: 12px;
+  top: 15px;
   left: 18px;
   width: 18px;
   height: 19px;
   background-image: url('@/assets/image/base/codeIcon.png');
+  background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
-  background-repeat: no-repeat;
   content: '';
 }
 
 .code::before {
   position: absolute;
-  top: 10px;
+  top: 13px;
   left: 50px;
   width: 1px;
   height: 24px;
@@ -161,17 +157,17 @@
 }
 
 .submitBtn:extend(.flex_center) {
-  height: 46px;
-  font-size: 18px;
-  margin-top: 10px;
+  height: 56px;
+  margin-top: 30px;
+  font-size: 22px;
   background: rgba(18, 146, 255, 1) !important;
 }
 
 .codeWrap {
-  width: 100px;
-  height: 46px;
-  border: 1px solid #1292FF;
   box-sizing: border-box;
-  border-radius: 6px;
+  width: 100px;
+  height: 56px;
   overflow: hidden;
+  border: 1px solid #1292ff;
+  border-radius: 6px;
 }

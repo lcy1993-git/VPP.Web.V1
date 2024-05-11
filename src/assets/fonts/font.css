@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "FZZDHJW";
+    src: url("./FZZDHJW.TTF");
+}
+
+@font-face {
+    font-family: "DIN-Medium";
+    src: url("./DIN Medium.ttf");
+}
+
+@font-face {
+    font-family: "DIN-Regular";
+    src: url("./DIN Regular.otf");
+}
+
+@font-face {
+    font-family: "DIN-Black";
+    src: url("./DIN-Black.otf");
+}
+
+@font-face {
+    font-family: "DIN-Bold";
+    src: url("./DIN-Bold.otf");
+}
+
+@font-face {
+    font-family: "DIN-Light";
+    src: url("./DIN-Light.otf");
+}
+
+@font-face {
+    font-family: "pic";
+    src: url("./58pic.TTF");
+}
+
+@font-face {
+    font-family: "DIN-Condensed";
+    src: url("./DIN\ Condensed\ Bold.ttf");
+}
+
+@font-face {
+    font-family: "DIN-EngschriftStd";
+    src: url("./DINEngschriftStd.otf");
+}

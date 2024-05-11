@@ -37,6 +37,8 @@ export const waterWaveOption = (data: any) => {
           // 数值样式设置
           color: '#ffffff',
           fontSize: 26,
+          fontFamily: 'DIN-Medium',
+          fontWeight: 'bold',
         },
         color: [
           {

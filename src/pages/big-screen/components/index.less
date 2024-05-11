@@ -1,39 +1,40 @@
 /*------------------ 特色场景大屏组件样式 start -------------------*/
 .itemComponent {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   background: rgba(8, 26, 59, 0.6);
-  display: flex;
-  flex-direction: column;
 
   .componentHead {
-    height: 44px;
-    width: 100%;
     display: flex;
+    width: 100%;
+    height: 44px;
+    background-color: #052b4f;
     background-image: url('@/assets/image/big-screen/card_bg.png');
-    background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center center;
-    background-color: #052b4f;
+    background-size: 100% 100%;
 
-    .title, .filter {
+    .title,
+    .filter {
+      display: flex;
       flex: 1;
+      align-items: center;
+      justify-content: flex-end;
       height: 100%;
       overflow: hidden;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
     }
 
     .title {
       justify-content: flex-start;
-      padding-left: 40px;
-      color:#fff;
       width: 129px;
-      font-weight: 600;
-      font-size: 18px;
-      color: #FFFFFF;
-      background: linear-gradient(0deg, #B6DEFF 0%, #FFFFFF 100%);
+      padding-left: 40px;
+      color: #fff;
+      font-weight: 400;
+      font-size: 22px;
+      font-family: FZZDHJW;
+      background: linear-gradient(0deg, #b6deff 0%, #ffffff 100%);
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -44,52 +45,49 @@
     width: 100%;
     overflow: hidden;
     color: #fff;
-
   }
 }
 /*------------------ 特色场景大屏组件样式 end ---------------------*/
 
-
 /*----------------------- circleWrap start-----------------------*/
 .circleWrap {
-  padding: 10px;
-  border-radius: 50%;
-  border: 1px solid #0a305c;
-  box-shadow: 0 0 10px 4px rgba(1, 70, 160, 0.5) inset;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid #0a305c;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 4px rgba(1, 70, 160, 0.5) inset;
 
   .circleMiddle {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
-    border: 10px solid transparent;
     padding: 10px;
-
+    border: 10px solid transparent;
+    border-radius: 50%;
 
     .circleValue {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 2px solid #1991f7;
-      box-shadow: 0 0 20px 4px rgba(1, 70, 160, 0.5) inset;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border: 2px solid #1991f7;
+      border-radius: 50%;
+      box-shadow: 0 0 20px 4px rgba(1, 70, 160, 0.5) inset;
 
       .value {
+        color: #33ec9b;
         font-weight: 500;
         font-size: 36px;
-        color: #33EC9B;
       }
 
       .label {
+        color: #0084ff;
         font-weight: 400;
         font-size: 16px;
-        color: #0084FF;
         line-height: 30px;
       }
     }
@@ -97,26 +95,25 @@
 
   .canvas {
     position: absolute;
-    top:0;
-    left:0;
+    top: 0;
     right: 0;
     bottom: 0;
+    left: 0;
     margin: auto;
     animation: circles 5s linear infinite;
     animation-delay: 2s;
   }
-
 }
 
 @keyframes circles {
-  from{
-    transform:rotate(0deg);
-  }to{
-    transform:rotate(360deg);
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 /*----------------------- circleWrap end-------------------------*/
-
 
 .scrollableTable {
   width: 100%;
@@ -125,9 +122,9 @@
   .theadContainer {
     width: 100%;
     height: 52px;
-    background: #102E66;
-    color: #0084FF;
+    color: #0084ff;
     font-size: 14px;
+    background: #102e66;
 
     thead tr th {
       width: 16%;
@@ -156,11 +153,10 @@
     }
 
     .tdContainer {
-      font-size: 14px;
       overflow: hidden;
+      font-size: 14px;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
   }
 }
-

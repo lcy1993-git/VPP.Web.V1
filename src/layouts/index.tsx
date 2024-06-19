@@ -68,6 +68,7 @@ const Layout = () => {
     }
   }, 1000);
 
+
   return (
     <>
       <ConfigProvider
@@ -97,7 +98,7 @@ const Layout = () => {
           }}
         >
           <div className={styles.layout}>
-            <div className={styles.outlet}>
+            <div className={styles.outlet} id="outlet">
               <ReactAudioPlayer
                 src={normalAlarm}
                 autoPlay={false}

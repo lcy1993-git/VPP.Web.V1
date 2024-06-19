@@ -55,6 +55,15 @@ const BulletinBoard = () => {
     return null;
   };
 
+  // 监听页面尺寸变化，重新绘制圆环 ---- 响应统计
+  const handleWindowResize = () => {
+    if (tableWrapRef?.current) {
+      // 获取表格高度
+      const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight - 10;
+      setTableHeight(tableOffsetHeight)
+    }
+  }
+
   // 区域用能概览 --- 现状
   const { data: statusQuoData } = useRequest(getStatusQuo, {
     pollingInterval: INTERVALTIME,
@@ -170,38 +179,15 @@ const BulletinBoard = () => {
     fetchHeatDatas({ type });
   }, [type]); // 监听 type 的变化
 
-  // 处理屏幕尺寸变化
-  const handleScreenAuto = () => {
-    const designDraftWidth = 1915;
-    const designDraftHeight = 1030;
-    const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
-    const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
-
-    (document.querySelector('#root') as any).style.width = '1920px';
-    (document.querySelector('#root') as any).style.height = '1030px';
-    (
-      document.querySelector('#root') as any
-    ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
-    if (tableWrapRef?.current) {
-      // 获取表格高度
-      const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
-      setTableHeight(tableOffsetHeight);
-    }
-  };
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  // 监听窗口尺寸变化
   useEffect(() => {
-    // 初始化自适应
-    handleScreenAuto();
-    // 定义事件处理函数
-    const handleResize = () => handleScreenAuto();
-    // 添加事件监听器
-    window.addEventListener('resize', handleResize);
+    handleWindowResize();
+    window.addEventListener("resize", handleWindowResize)
     return () => {
-      window.removeEventListener('resize', handleResize); // 移除事件监听器
-    };
-  }, []);
-  
+      window.removeEventListener("resize", handleWindowResize)
+    }
+  }, [])
+
   return (
     <ConfigProvider
       theme={{
@@ -238,9 +224,14 @@ const BulletinBoard = () => {
             <img src={title} alt="title" />
           </div>
           <div className={styles.headerRight}>
-            <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>
-              菜单
-            </div>
+            <Space>
+              <div className={styles.menuButton} onClick={() => history.push('/big-screen/feature')}>
+                特色场景
+              </div>
+              <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>
+                首页
+              </div>
+            </Space>
           </div>
         </div>
         <div className={styles.content}>
@@ -479,15 +470,18 @@ const BulletinBoard = () => {
           </div>
         </div>
         <div className={styles.footer}>
-          <div className={`${styles.button} ${styles.buttonLeft}`} onClick={() => setType(0)}>
-            负荷热力
-          </div>
-          <div className={`${styles.button} ${styles.buttonRight}`} onClick={() => setType(1)}>
-            电量热力
+          <div className={styles.footerWrap}>
+            <div className={`${styles.button} ${styles.buttonLeft} ${type === 0 ? styles.activeBtn : null}`} onClick={() => setType(0)}>
+              负荷热力
+            </div>
+            <div className={`${styles.button} ${styles.buttonRight} ${type === 1 ? styles.activeBtn : null}`}  onClick={() => setType(1)}>
+              电量热力
+            </div>
           </div>
         </div>
       </div>
     </ConfigProvider>
   );
 };
+
 export default BulletinBoard;

@@ -447,31 +447,45 @@
     width: 100%;
     height: 40px;
     background-image: url('@/assets/image/big-screen/footer_board.png');
-    background-position: center center;
+    background-position: -10px center;
     background-size: 100% 100%;
-    .button {
-      width: 8%;
+
+    .footerWrap {
+      width: 14%;
       height: 20px;
-      color: #fff;
-      font-size: 14px;
-      line-height: 20px;
-      background-repeat: no-repeat;
-      background-size: contain;
-    }
-    .buttonLeft {
-      padding-right: 20px;
-      text-align: right;
-      background-image: url('@/assets/image/big-screen/button01.png');
-      background-position: center right;
-      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 4px;
+
+      .button {
+        flex: 1;
+        height: 20px;
+        color: #fff;
+        font-size: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #3885e6;
+        background: #163aa3;
+      }
+      .buttonLeft {
+        border-radius: 20px 0 0 0;
+        cursor: pointer;
+      }
+
+      .buttonRight {
+        border-radius: 0 20px 0 0;
+        cursor: pointer;
+      }
+
+      .activeBtn {
+        background: '#004198';
+        box-shadow: inset 0 0 10px #2870e3;
+      }
     }
 
-    .buttonRight {
-      text-indent: 20px;
-      background-image: url('@/assets/image/big-screen/button03.png');
-      background-position: center left;
-      cursor: pointer;
-    }
+
 
     // .selectButton {
     //   background-image: url('@/assets/image/big-screen/button01.png');

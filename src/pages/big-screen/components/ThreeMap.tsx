@@ -357,30 +357,32 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // viewCamera.current.aspect = width / height;
     // viewCamera.current.updateProjectionMatrix();
     // renderer.current.setSize( width, height);
+    if (chart_dom.current) {
 
-    viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
-    console.log(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
 
-    viewCamera.current.updateProjectionMatrix();
-    renderer.current.setSize(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
+      viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
+      console.log(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
 
-    if (renderer.current) {
-      const rendererDomElement = renderer.current.domElement;
-      if (rendererDomElement.parentNode === chart_dom.current) {
-        chart_dom.current.removeChild(rendererDomElement);
-      }
+      viewCamera.current.updateProjectionMatrix();
+      renderer.current.setSize(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
 
-      if (chart_dom?.current) {
-        const containrtWidth = chart_dom.current?.offsetWidth;
-        const containrtHeight = chart_dom.current?.offsetHeight;
+      if (renderer.current) {
+        const rendererDomElement = renderer.current.domElement;
+        if (rendererDomElement.parentNode === chart_dom.current) {
+          chart_dom.current.removeChild(rendererDomElement);
+        }
 
-        heatmap.current = null;
-        texture.current = null;
-        geometry.current = null;
-        material.current = null;
-        mesh.current = null;
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        initMap(containrtWidth, containrtHeight);
+        if (chart_dom?.current) {
+          const containrtWidth = chart_dom.current?.offsetWidth;
+          const containrtHeight = chart_dom.current?.offsetHeight;
+
+          heatmap.current = null;
+          texture.current = null;
+          geometry.current = null;
+          material.current = null;
+          mesh.current = null;
+          initMap(containrtWidth, containrtHeight);
+        }
       }
     }
   };
@@ -416,7 +418,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
       const randomLat =
         30.490946342140475 + Math.random() * (30.674863928145456 - 30.490946342140475);
       const lont = [randomLon, randomLat];
-      // const lont = [parseFloat(heatMapData[i]?.longitude), parseFloat(heatMapData[i]?.latitude)]
       const [x, y] = projection(lont);
       data.push({
         x: parseFloat((128 + x * (256 / 50)).toFixed(1)),
@@ -469,7 +470,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
   // 添加标注
   const initMark = (markData: any) => {
-    // const projection = d3.geoMercator().center([104.300989, 30.607689]).scale(5000).translate([0, 0]);
     let i = 0;
     while (i < markData.length) {
       const lont = [parseFloat(markData[i]?.longitude), parseFloat(markData[i]?.latitude)];
@@ -495,11 +495,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
       requestAnimationFrame(animate);
       if (texture.current) texture.current.needsUpdate = true;
       controls.current.update();
-      // console.log(viewCamera.current.position);
-
-      // if (!isHeatmap && composer.current)
-      //   composer.current.render();
-      // if (isHeatmap)
       renderer.current.render(viewScene.current, viewCamera.current);
     }
     animate();
@@ -520,23 +515,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     };
   }, []);
   useEffect(() => {
-    // initHeatmap(data || []);
-
-    // if (renderer.current) {
-    //   const rendererDomElement = renderer.current.domElement;
-    //   if (rendererDomElement.parentNode === chart_dom.current) {
-    //     chart_dom.current.removeChild(rendererDomElement);
-    //   }
-
-    //   if (chart_dom?.current) {
-    //     const containrtWidth = chart_dom.current?.offsetWidth;
-    //     const containrtHeight = chart_dom.current?.offsetHeight;
-    //     initMap(containrtWidth, containrtHeight)
-
-    //   }
-    // }
     if (heat_dom.current) {
-      // heat_dom.current.innerHTML = '';
       initHeatmap(data || []);
       setMapData(data);
     }

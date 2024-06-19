@@ -49,31 +49,31 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }: a
     }).then();
   };
 
-  const designDraftWidth = 1915;
-  const designDraftHeight = 1000;
-  // 处理屏幕尺寸变化
-  const handleScreenAuto = () => {
-    const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
-    const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+  // const designDraftWidth = 1915;
+  // const designDraftHeight = 1000;
+  // // 处理屏幕尺寸变化
+  // const handleScreenAuto = () => {
+  //   const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+  //   const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
 
-    (document.querySelector('#root') as any).style.width = '1920px';
-    (document.querySelector('#root') as any).style.height = '1030px';
-    (
-      document.querySelector('#root') as any
-    ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
-  };
+  //   (document.querySelector('#root') as any).style.width = '1920px';
+  //   (document.querySelector('#root') as any).style.height = '1030px';
+  //   (
+  //     document.querySelector('#root') as any
+  //   ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
+  // };
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     // 初始化自适应
-    handleScreenAuto();
-    // 定义事件处理函数
-    const handleResize = () => handleScreenAuto();
-    // 添加事件监听器
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize); // 移除事件监听器
-    };
+    // handleScreenAuto();
+    // // 定义事件处理函数
+    // const handleResize = () => handleScreenAuto();
+    // // 添加事件监听器
+    // window.addEventListener('resize', handleResize);
+    // return () => {
+    //   window.removeEventListener('resize', handleResize); // 移除事件监听器
+    // };
   }, []);
 
   return {

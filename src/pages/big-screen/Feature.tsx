@@ -27,7 +27,6 @@ import {
   disableDate,
   elasticityOverviewOptions,
   energyOverviewOptions,
-  handleScreenAuto,
   typicalResponse,
 } from './utils';
 dayjs.locale('zh-cn');
@@ -167,15 +166,6 @@ const Feature = () => {
     }
   };
 
-  // // 监听窗口尺寸变化
-  // useEffect(() => {
-  //   handleWindowResize();
-  //   window.addEventListener('resize', handleWindowResize);
-  //   return () => {
-  //     window.removeEventListener('resize', handleWindowResize);
-  //   };
-  // }, []);
-
   // 典型响应分析
   useEffect(() => {
     fetchTypicalResponseAnalysis(typicalResponseAnalysisType);
@@ -199,18 +189,28 @@ const Feature = () => {
     });
   }, [fullAndPutDate]);
 
+  // 监听页面尺寸变化，重新绘制圆环 ---- 响应统计
+  const handleWindowResize = () => {
+    if (canvasWrapRef?.current) {
+      const offsetWidth = (canvasWrapRef.current! as any).offsetWidth;
+      const offsetHeight = (canvasWrapRef.current! as any).offsetHeight;
+      const _width = offsetWidth > offsetHeight ? offsetHeight : offsetWidth
+      setCircleWidth(_width)
+
+      // 获取表格高度
+      const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
+      setTableHeight(tableOffsetHeight)
+    }
+  }
+
+  // 监听窗口尺寸变化
   useEffect(() => {
-    // 初始化自适应
-    handleScreenAuto(canvasWrapRef, tableWrapRef, setCircleWidth, setTableHeight);
-    // 定义事件处理函数
-    const handleResize = () =>
-      handleScreenAuto(canvasWrapRef, tableWrapRef, setCircleWidth, setTableHeight);
-    // 添加事件监听器
-    window.addEventListener('resize', handleResize);
+    handleWindowResize();
+    window.addEventListener("resize", handleWindowResize)
     return () => {
-      window.removeEventListener('resize', handleResize); // 移除事件监听器
-    };
-  }, []);
+      window.removeEventListener("resize", handleWindowResize)
+    }
+  }, [])
 
   return (
     <ConfigProvider
@@ -248,9 +248,14 @@ const Feature = () => {
             <img src={title} alt="title" />
           </div>
           <div className={styles.headerRight}>
-            <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>
-              菜单
-            </div>
+            <Space>
+              <div className={styles.menuButton} onClick={() => history.push('/big-screen/bulletin-board')}>
+                能源看板
+              </div>
+              <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>
+                首页
+              </div>
+            </Space>
           </div>
         </div>
         <div className={styles.content}>
@@ -342,6 +347,7 @@ const Feature = () => {
               {substationData && <ThreeMap data={substationData?.data} />}
             </div>
           </div>
+
           {/* right */}
           <div className={styles.contentSide}>
             <div className={`${styles.sideItem} ${styles.marginB10}`}>

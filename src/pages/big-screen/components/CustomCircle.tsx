@@ -36,7 +36,7 @@ const CustomCircle = (props: propsType) => {
     const devicePixelRatio = window.devicePixelRatio || 1;
     eleCanvas.width = canvasWidth * devicePixelRatio;
     eleCanvas.height = canvasHeight * devicePixelRatio;
-
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     // 绘制圆圈背景
     ctx.beginPath();
     ctx.lineWidth = lineWidth;
@@ -69,7 +69,7 @@ const CustomCircle = (props: propsType) => {
     if (canvasRef && value) {
       createCanvas(canvasRef.current!, Number(value))
     }
-  }, [canvasWidth, canvasHeight, props])
+  }, [canvasWidth, canvasHeight, circleBgColor, circleColor, circleWidth, lineWidth, value])
 
   return <div className={styles.circleWrap} style={{ width: circleWidth - 20, height: circleWidth - 20 }}>
     {

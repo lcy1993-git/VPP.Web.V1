@@ -883,31 +883,30 @@ export const elasticEnergyColumns = [
 ];
 
 // 处理屏幕尺寸变化
-export const handleScreenAuto = (
-  canvasWrapRef,
-  tableWrapRef,
-  setCircleWidth,
-  setTableHeight,
-  is,
-) => {
-  const designDraftWidth = 1915;
-  const designDraftHeight = 1030;
-  const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
-  const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+// export const handleScreenAuto = (
+//   canvasWrapRef,
+//   tableWrapRef,
+//   setCircleWidth,
+//   setTableHeight,
+// ) => {
+//   const designDraftWidth = 1915;
+//   const designDraftHeight = 1030;
+//   const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+//   const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
 
-  (document.querySelector('#root') as any).style.width = '1920px';
-  (document.querySelector('#root') as any).style.height = '1030px';
-  (
-    document.querySelector('#root') as any
-  ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
-  if (canvasWrapRef?.current) {
-    const offsetWidth = (canvasWrapRef.current! as any).offsetWidth;
-    const offsetHeight = (canvasWrapRef.current! as any).offsetHeight;
-    const _width = offsetWidth > offsetHeight ? offsetHeight : offsetWidth;
-    setCircleWidth(_width);
+//   (document.querySelector('#root') as any).style.width = '1920px';
+//   (document.querySelector('#root') as any).style.height = '1030px';
+//   (
+//     document.querySelector('#root') as any
+//   ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
+//   if (canvasWrapRef?.current) {
+//     const offsetWidth = (canvasWrapRef.current! as any).offsetWidth;
+//     const offsetHeight = (canvasWrapRef.current! as any).offsetHeight;
+//     const _width = offsetWidth > offsetHeight ? offsetHeight : offsetWidth;
+//     setCircleWidth(_width);
 
-    // 获取表格高度
-    const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
-    setTableHeight(tableOffsetHeight);
-  }
-};
+//     // 获取表格高度
+//     const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
+//     setTableHeight(tableOffsetHeight);
+//   }
+// };

@@ -5,7 +5,7 @@ import { history } from '@umijs/max';
 import { Button, Col, ConfigProvider, Form, Input, Row, message } from 'antd';
 import { md5 } from 'js-md5';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Captcha from 'react-captcha-code';
+import Captcha from '@/components/captcha';
 import styles from './index.less';
 
 const Login = () => {
@@ -70,14 +70,14 @@ const Login = () => {
 
   useEffect(() => {
     // 初始化自适应
-    handleScreenAuto();
-    // 定义事件处理函数
-    const handleResize = () => handleScreenAuto();
-    // 添加事件监听器
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize); // 移除事件监听器
-    };
+    // handleScreenAuto();
+    // // 定义事件处理函数
+    // const handleResize = () => handleScreenAuto();
+    // // 添加事件监听器
+    // window.addEventListener('resize', handleResize);
+    // return () => {
+    //   window.removeEventListener('resize', handleResize); // 移除事件监听器
+    // };
   }, []);
 
   return (

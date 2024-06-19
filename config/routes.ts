@@ -178,6 +178,22 @@ export default [
     ],
   },
   {
+    path: '/elastic-load-response',
+    name: '弹性负荷响应',
+    routes: [
+      {
+        path: '/elastic-load-response/dispatch-implementation',
+        name: '调度实施',
+        component: './elastic-load-response/dispatch-implementation',
+      },
+      {
+        path: '/elastic-load-response/deal-manage',
+        name: '交易管理',
+        component: './elastic-load-response/deal-manage',
+      },
+    ],
+  },
+  {
     path: '/',
     redirect: '/login',
   },

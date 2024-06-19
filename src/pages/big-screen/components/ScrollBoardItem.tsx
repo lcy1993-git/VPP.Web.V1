@@ -12,7 +12,7 @@ interface CurrentFileInfo {
 
 // 电站概览
 const ScrollBoardItem = (props: CurrentFileInfo) => {
-  const { dataList, height, visibleRows = 5, interval = 2500, columns } = props;
+  const { dataList, height, visibleRows = 6, interval = 2500, columns } = props;
   const containerRef = useRef(null);
   // 定时器
   const timerRef = useRef();
@@ -40,7 +40,6 @@ const ScrollBoardItem = (props: CurrentFileInfo) => {
 
     // @ts-ignore
     timerRef.current = setInterval(scroll, interval);
-
     return () => clearInterval(timerRef.current);
   }, [calculatedRowHeight, interval, isHovered, scrollTop]);
 
@@ -53,7 +52,7 @@ const ScrollBoardItem = (props: CurrentFileInfo) => {
   const adjustScrollPosition = () => {
     // @ts-ignore
     const newScrollTop =
-      Math.round(containerRef.current.scrollTop / calculatedRowHeight) * calculatedRowHeight;
+      Math.round((containerRef.current! as any).scrollTop / calculatedRowHeight) * calculatedRowHeight;
     // @ts-ignore
     containerRef.current.scrollTop = newScrollTop;
     setScrollTop(newScrollTop);
@@ -113,7 +112,7 @@ const ScrollBoardItem = (props: CurrentFileInfo) => {
           <tbody>
             {dataList &&
               dataList.map((item: any, index: number) => (
-                <tr key={item.planId} style={{ height: `${calculatedRowHeight}px` }}>
+                <tr key={item.planId || item.substationName} style={{ height: `${calculatedRowHeight}px` }}>
                   {columns?.map((col) => {
                     return col.render(item, col, index);
                   })}

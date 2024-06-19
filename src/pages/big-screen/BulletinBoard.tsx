@@ -292,7 +292,7 @@ const BulletinBoard = () => {
                   <ScrollBoardItem
                     dataList={pageDataHandle(energyMonitorData)}
                     height={tableHeight}
-                    visibleRows={5}
+                    visibleRows={6}
                     columns={monitorColumns}
                   />
                 </div>
@@ -441,13 +441,13 @@ const BulletinBoard = () => {
                   <ScrollBoardItem
                     dataList={pageDataHandle(elasticEnergyData)}
                     height={tableHeight}
-                    visibleRows={5}
+                    visibleRows={6}
                     columns={elasticEnergyColumns}
                   />
                 </div>
               </BlockWrap>
               {/* right */}
-              <div className={styles.contentSide}>
+              {/* <div className={styles.contentSide}>
                 <div className={`${styles.sideItem} ${styles.marginB10}`}>
                   <BlockWrap title="清洁能源管理">
                     <div>清洁能源管理</div>
@@ -459,13 +459,13 @@ const BulletinBoard = () => {
                       <ScrollBoardItem
                         dataList={pageDataHandle(elasticEnergyData)}
                         height={tableHeight}
-                        visibleRows={5}
+                        visibleRows={6}
                         columns={elasticEnergyColumns}
                       />
                     </div>
                   </BlockWrap>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -47,7 +47,7 @@ const PowerStatistics = (props: any) => {
         </div>
       </div>
       <div className={styles.echartsModuleBody}>
-        <CustomCharts options={electricityStatisticsOptions(pcsQuantity)} height="230px" />
+        <CustomCharts options={electricityStatisticsOptions(pcsQuantity)} height={230} />
       </div>
     </div>
   );

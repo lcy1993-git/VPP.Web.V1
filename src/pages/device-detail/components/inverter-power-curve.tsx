@@ -68,7 +68,7 @@ const InverterPowerCurve = (props: any) => {
               ? chargePowerOptions(chargePower, isTodayRef.current)
               : powerCountOptions(inverterLineData, isTodayRef.current)
           }
-          height="230px"
+          height={230}
         />
       </div>
     </div>

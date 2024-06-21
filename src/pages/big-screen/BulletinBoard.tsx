@@ -31,6 +31,10 @@ import {
 } from './utils';
 dayjs.locale('zh-cn');
 
+
+let refeshThreeMap: any[] = []
+
+
 /** 能源综合看板 */
 const BulletinBoard = () => {
   // 区域用能概览页面状态
@@ -41,11 +45,15 @@ const BulletinBoard = () => {
   const [pickerType, setPickerType] = useState<'year' | 'month' | 'date'>('year');
   // 区域用能 日期
   const [dateValue, setDateValue] = useState<any>(dayjs(dayjs(`${new Date()}`), 'YYYY-MM-DD'));
-  // 计算表格高度
-  const [tableHeight, setTableHeight] = useState<number>(0);
+  // 计算大屏区域高度 自适应问题
+  const [blockHeight, setBlockHeight] = useState<number>(0);
+  // 计算大屏区域宽度 自适应问题
+  const [blockWidth, setBlockWidth] = useState<number>(0);
   const [type, setType] = useState<number>(0);
   // 企业用能监测表格
   const tableWrapRef = useRef(null);
+  // 区域用能概览--处理图标自适应问题
+  const chartsRef = useRef(null);
 
   // 页面数据处理
   const pageDataHandle = (data: any) => {
@@ -55,14 +63,7 @@ const BulletinBoard = () => {
     return null;
   };
 
-  // 监听页面尺寸变化，重新绘制圆环 ---- 响应统计
-  const handleWindowResize = () => {
-    if (tableWrapRef?.current) {
-      // 获取表格高度
-      const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight - 10;
-      setTableHeight(tableOffsetHeight)
-    }
-  }
+
 
   // 区域用能概览 --- 现状
   const { data: statusQuoData } = useRequest(getStatusQuo, {
@@ -179,14 +180,56 @@ const BulletinBoard = () => {
     fetchHeatDatas({ type });
   }, [type]); // 监听 type 的变化
 
-  // 监听窗口尺寸变化
-  useEffect(() => {
-    handleWindowResize();
-    window.addEventListener("resize", handleWindowResize)
-    return () => {
-      window.removeEventListener("resize", handleWindowResize)
+
+  // // 处理屏幕尺寸变化
+  const handleScreenAuto = () => {
+    // 自适应页面
+    const designDraftWidth = 1920;
+    const designDraftHeight = 919;
+    if (document.documentElement.offsetWidth < designDraftWidth || document.documentElement.offsetHeight < designDraftHeight) {
+      const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+      const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+
+      (document.querySelector('#root') as any).setAttribute("style", `
+          width: 1920px;
+          height: 919px;
+          transform: scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform-origin: 0 0;
+          transition: 0.3s;
+        `)
+      if (tableWrapRef?.current) {
+        // NOTE: 当在小屏幕上面的表格高度固定
+        setBlockHeight(313)
+        setBlockWidth(470)
+        return;
+      }
+    } else {
+      (document.querySelector('#root') as any).removeAttribute('style')
     }
-  }, [])
+    refeshThreeMap = []
+    if (tableWrapRef?.current) {
+      // 获取表格高度
+      const offsetHeight = (tableWrapRef.current! as any).offsetHeight - 10;
+      const offsetWidth = (tableWrapRef.current! as any).offsetWidth - 10;
+      setBlockWidth(offsetWidth)
+      setBlockHeight(offsetHeight)
+    }
+  };
+
+  useEffect(() => {
+    // 初始化自适应
+    handleScreenAuto();
+    // 定义事件处理函数
+    const handleResize = () => handleScreenAuto();
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize); // 移除事件监听器
+    };
+  }, []);
 
   return (
     <ConfigProvider
@@ -215,7 +258,7 @@ const BulletinBoard = () => {
         },
       }}
     >
-      <div className={styles.featurePage}>
+      <div className={styles.featurePage} id="bulletinBoard">
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <CurrentTime />
@@ -277,10 +320,12 @@ const BulletinBoard = () => {
                       </Space>
                     </div>
                   )}
-                  <div className={styles.energyOverviewChart}>
+                  <div className={styles.energyOverviewChart} ref={chartsRef}>
                     <CustomCharts
                       options={statusQuoChartOptions(getEnergyOverviewOptions())}
                       loading={false}
+                      height={blockHeight}
+                      width={blockWidth}
                     />
                   </div>
                 </div>
@@ -291,7 +336,7 @@ const BulletinBoard = () => {
                 <div style={{ width: '100%', height: '100%' }} ref={tableWrapRef}>
                   <ScrollBoardItem
                     dataList={pageDataHandle(energyMonitorData)}
-                    height={tableHeight}
+                    height={blockHeight}
                     visibleRows={6}
                     columns={monitorColumns}
                   />
@@ -326,7 +371,7 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap isHeatmap={true} data={substationData?.data} />
+              <ThreeMap isHeatmap={true} data={substationData?.data} refeshThreeMap={refeshThreeMap} />
             </div>
           </div>
           {/* right */}
@@ -440,7 +485,7 @@ const BulletinBoard = () => {
                 <div style={{ width: '100%', height: '100%' }}>
                   <ScrollBoardItem
                     dataList={pageDataHandle(elasticEnergyData)}
-                    height={tableHeight}
+                    height={blockHeight}
                     visibleRows={6}
                     columns={elasticEnergyColumns}
                   />
@@ -458,7 +503,7 @@ const BulletinBoard = () => {
                     <div style={{ width: '100%', height: '100%' }}>
                       <ScrollBoardItem
                         dataList={pageDataHandle(elasticEnergyData)}
-                        height={tableHeight}
+                        height={blockHeight}
                         visibleRows={6}
                         columns={elasticEnergyColumns}
                       />
@@ -474,7 +519,7 @@ const BulletinBoard = () => {
             <div className={`${styles.button} ${styles.buttonLeft} ${type === 0 ? styles.activeBtn : null}`} onClick={() => setType(0)}>
               负荷热力
             </div>
-            <div className={`${styles.button} ${styles.buttonRight} ${type === 1 ? styles.activeBtn : null}`}  onClick={() => setType(1)}>
+            <div className={`${styles.button} ${styles.buttonRight} ${type === 1 ? styles.activeBtn : null}`} onClick={() => setType(1)}>
               电量热力
             </div>
           </div>

@@ -74,6 +74,7 @@ const ScrollBoardItem = (props: CurrentFileInfo) => {
     }
   };
 
+
   return dataList && dataList.length ? (
     <div className={styles.scrollableTable}>
       <table className={styles.theadContainer}>

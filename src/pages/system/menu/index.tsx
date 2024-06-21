@@ -88,7 +88,7 @@ const SystemMenu: React.FC = () => {
       key: 'icon',
       align: 'center' as any,
       render: (text: any) => {
-        return <i className={`iconfont ${text}`}></i>;
+        return <i style={{fontSize: 20}} className={`iconfont ${text}`}></i>;
       },
     },
     {
@@ -140,7 +140,7 @@ const SystemMenu: React.FC = () => {
 
   // 菜单数据查询按钮点击事件
   const searchEvent = () => {
-    searchForm.validateFields().then(async (values) => {
+    searchForm.validateFields().then(async (values: any) => {
       if (tableRef && tableRef.current) {
         //@ts-ignore
         tableRef.current.searchByParams(

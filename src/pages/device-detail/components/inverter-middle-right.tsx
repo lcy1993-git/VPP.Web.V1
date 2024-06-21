@@ -54,7 +54,7 @@ const InverterMiddleRight = (props: any) => {
       <div className={styles.echartsModuleBody}>
         <CustomCharts
           options={directCurrentOptions(directCurrent, isTodayRef.current)}
-          height="230px"
+          height={230}
         />
       </div>
     </div>

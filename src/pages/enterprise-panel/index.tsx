@@ -117,8 +117,8 @@ const EnterprisePanel = () => {
             <CustomCharts
               options={chartOptions(substationPower?.powerOrElectricityMap)}
               loading={false}
-              width="952px"
-              height="380px"
+              width={952}
+              height={380}
             />
           </div>
         </Modal>
@@ -134,8 +134,8 @@ const EnterprisePanel = () => {
             <CustomCharts
               options={electricityOption(substationElectricity?.powerOrElectricityMap, unit)}
               loading={false}
-              width="952px"
-              height="380px"
+              width={952}
+              height={380}
             />
           </div>
         </Modal>

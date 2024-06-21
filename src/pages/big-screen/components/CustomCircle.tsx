@@ -21,22 +21,32 @@ const CustomCircle = (props: propsType) => {
   } = props
   // canvas元素对象
   const canvasRef = useRef(null);
+
   // 圆环宽高
-  const canvasWidth = circleWidth - 40;
-  const canvasHeight = circleWidth - 40;
+  // 解决边缘锯齿化问题
+  const devicePixelRatio = window.devicePixelRatio || 1;
+
+  const canvasWidth = devicePixelRatio === 1 ? circleWidth - 40 : circleWidth - 80 ;
+  const canvasHeight = devicePixelRatio === 1 ? circleWidth - 40 : circleWidth - 80 ;
+
   // 绘制圆圈
   const drawCircle = (eleCanvas: any, angle: number) => {
     const angle1 = 270 + angle;
     const ang = angle1 / 180 * Math.PI;
     const ctx = eleCanvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
     const x0 = canvasWidth / 2; // 原点X坐标
     const y0 = canvasHeight / 2;// 原点Y坐标
     const r = (canvasWidth - (props.lineWidth || 10)) / 2; // 半径
-    // 解决边缘锯齿化问题
-    const devicePixelRatio = window.devicePixelRatio || 1;
+
+
     eleCanvas.width = canvasWidth * devicePixelRatio;
     eleCanvas.height = canvasHeight * devicePixelRatio;
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+
     // 绘制圆圈背景
     ctx.beginPath();
     ctx.lineWidth = lineWidth;
@@ -65,16 +75,19 @@ const CustomCircle = (props: propsType) => {
     })
   }
 
+
+
   useEffect(() => {
     if (canvasRef && value) {
       createCanvas(canvasRef.current!, Number(value))
     }
   }, [canvasWidth, canvasHeight, circleBgColor, circleColor, circleWidth, lineWidth, value])
 
+
   return <div className={styles.circleWrap} style={{ width: circleWidth - 20, height: circleWidth - 20 }}>
     {
       value ? <>
-        <div className={styles.circleMiddle}>
+        <div className={styles.circleMiddle} >
           <div className={styles.circleValue}>
             <span className={styles.value} style={{ color: circleColor }}>
               {(Number(value)*100).toFixed(0)}%

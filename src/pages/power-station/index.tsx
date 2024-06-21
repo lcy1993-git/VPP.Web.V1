@@ -490,7 +490,7 @@ const PowerStation = () => {
                     <div className={styles.powerCountEchart}>
                       <CustomCharts
                         options={powerCountOptions(powerGenerationTrends, isTodayRef.current)}
-                        height="250px"
+                        height={250}
                         loading={powerTrendLoading}
                       />
                     </div>

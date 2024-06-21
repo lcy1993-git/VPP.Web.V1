@@ -449,7 +449,7 @@ const EnergyStation = () => {
                         <div className={styles.socEchartsLeft}>
                           <CustomCharts
                             options={batteryPowerOption(socAndPowerData?.soc)}
-                            height="180px"
+                            height={180}
                             loading={socLoading}
                           />
                         </div>
@@ -511,7 +511,7 @@ const EnergyStation = () => {
                     <div className={styles.moduleMain}>
                       <CustomCharts
                         options={powerGenerationOptions(fullAndPutPowerData, fullAndPutDate)}
-                        height="230px"
+                        height={230}
                         loading={fullAndPutPowerLoading}
                       />
                     </div>
@@ -536,7 +536,7 @@ const EnergyStation = () => {
                     <div className={`${styles.powerCountEchart}`}>
                       <CustomCharts
                         options={powerCountOptions(powerTrendData, powerTrenIsToday.current)}
-                        height="230px"
+                        height={230}
                         loading={powerTrendLoading}
                       />
                     </div>
@@ -555,7 +555,7 @@ const EnergyStation = () => {
                     <div className={styles.powerCountEchart}>
                       <CustomCharts
                         options={soCountOptions(socTrendData, socTrenIsToday.current)}
-                        height="230px"
+                        height={230}
                         loading={socTrendLoading}
                       />
                     </div>

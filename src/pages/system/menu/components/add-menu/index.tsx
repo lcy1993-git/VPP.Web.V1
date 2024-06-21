@@ -12,72 +12,21 @@ const { TextArea } = Input;
  * icons集合
  * */
 export const iconData = [
-  {
-    id: 1,
-    name: '光伏电站',
-    icon: 'icon-guangfu02',
-  },
-  {
-    id: 2,
-    name: '储能电站',
-    icon: 'icon-chuneng',
-  },
-  {
-    id: 3,
-    name: '主动巡视',
-    icon: 'icon-xunshi',
-  },
-  {
-    id: 4,
-    name: '资产管理',
-    icon: 'icon-zichanguanli',
-  },
-  {
-    id: 5,
-    name: '数据查询',
-    icon: 'icon-shujuguanli',
-  },
-  {
-    id: 6,
-    name: '告警管理',
-    icon: 'icon-gaojing03',
-  },
-  {
-    id: 7,
-    name: '智能分析',
-    icon: 'icon-zhenduanfenxi',
-  },
-  {
-    id: 8,
-    name: '智能辅助',
-    icon: 'icon-gongshuai',
-  },
-  {
-    id: 9,
-    name: '设备通讯',
-    icon: 'icon-shebeitongxun',
-  },
-  {
-    id: 10,
-    name: '系统管理',
-    icon: 'icon-xitongguanli',
-  },
-  {
-    id: 10,
-    name: '首页',
-    icon: 'icon-shouye01',
-  },
-  {
-    id: 11,
-    name: '设备详情',
-    icon: 'icon-shebeixiangqing'
-  },
-  {
-    id: 12,
-    name: '大屏',
-    icon: 'icon-icon_shujudaping'
+  'icon-tiaodushishi','icon-tesechangjing','icon-chunengdianzhan','icon-xitongpeizhi','icon-yongnengzhenduan','icon-tanpeieguanli','icon-yongnengzonglan1',
+  'icon-qiyemianban','icon-shebeixiangqing','icon-shebeiguanli','icon-tanpaifangguankong','icon-tanpaifangfenxi','icon-yonghuguanli','icon-gaojingguanli1',
+  'icon-tanzichanguanli', 'icon-qiyefangwen','icon-jiaoseguanli','icon-nenghaofenxi','icon-caidanguanli','icon-tanpaifangjiance','icon-jiaoyiguanli',
+  'icon-guangfudianzhan','icon-baobiaoguanli1','icon-chongdiandianzhan','icon-tanpaifangxiangqing','icon-baobiaobaogao','icon-nenghaojiance1','icon-yunhangjiance1',
+  'icon-zonghenengyuankanban','icon-yongnengfenxi', 'icon-tanpaifangzonglan','icon-qiyeguanli','icon-SVGpeizhi','icon-fenbushinengyuanjiance','icon-qingjienengyuan1',
+  'icon-danxingfuhexiangying', 'icon-xitongguanli', 'icon-quyuyongnengjiance', 'icon-daping',
+].map((item, index) => {
+  return {
+    id: index + 1,
+    icon: item
   }
-];
+})
+
+
+
 interface Props {
   form: FormInstance;
 }
@@ -239,7 +188,7 @@ const AddMenuForm: React.FC<Props> = (props) => {
                   }}
                 >
                   {/* <IconSymbol key={`${s.id}-symbol`} className={styles.bigScreen} name={s.icon} /> */}
-                  <i className={`iconfont ${s.icon}`}></i>
+                  <i style={{fontSize: 26}} className={`iconfont ${s.icon}`}></i>
                 </div>
               ))}
             </div>

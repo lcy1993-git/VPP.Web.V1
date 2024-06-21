@@ -18,10 +18,11 @@ import Outline from './image/outline.png';
 interface ThreeMapInfo {
   isHeatmap?: boolean; // 是否加载热力图
   data?: any; // 热力图数据
+  refeshThreeMap: any[]
 }
 
 const ThreeMap = (props: ThreeMapInfo) => {
-  const { isHeatmap = false, data } = props;
+  const { isHeatmap = false, data, refeshThreeMap } = props;
 
   const chart_dom: any = useRef(null);
   const heat_dom: any = useRef(null);
@@ -111,7 +112,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
   // 初始化相机
   const initCamera = (divWidth: number, divHeight: number) => {
     const camera = new THREE.PerspectiveCamera(2, divWidth / divHeight, 1, 10000);
-    // camera.position.set(0.09495576553561131, -1.0789913218408212, 9.961011790443024);
     if (isHeatmap) camera.position.set(-13.179706235621579, 895.0838483998507, 83.07607286622547);
     else camera.position.set(-41.32864202838264, 831.5910748493473, 340.6301189988112);
 
@@ -144,9 +144,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
     control.enablePan = false;
     // 设置控制器中心点
     control.target.set(0, 0, 2);
-    // control.minDistance = 8;
-    // control.maxDistance = 20;
-
     controls.current = control;
   };
 
@@ -219,8 +216,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
     renderTarget.texture.name = 'EffectComposer.rt1';
     composer.current = new EffectComposer(renderer.current, renderTarget);
 
-    // composer.current = new EffectComposer(renderer.current);
-
     const effectFXAA = new ShaderPass(FXAAShader);
     effectFXAA.uniforms['resolution'].value.set(1 / containrtWidth, 1 / containrtHeight);
     effectFXAA.renderToScreen = true;
@@ -290,8 +285,6 @@ const ThreeMap = (props: ThreeMapInfo) => {
       mapObj.current.add(province);
     });
 
-    // if (!isHeatmap)
-    //   initoutlinePass(mapObj.current);
     viewScene.current.add(mapObj.current);
   };
 
@@ -352,20 +345,10 @@ const ThreeMap = (props: ThreeMapInfo) => {
   };
 
   const onWindowResize = () => {
-    // const width = chart_dom.current?.offsetWidth;
-    // const height = chart_dom.current?.offsetHeight;
-    // viewCamera.current.aspect = width / height;
-    // viewCamera.current.updateProjectionMatrix();
-    // renderer.current.setSize( width, height);
     if (chart_dom.current) {
-
-
       viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
-      console.log(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
-
       viewCamera.current.updateProjectionMatrix();
       renderer.current.setSize(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
-
       if (renderer.current) {
         const rendererDomElement = renderer.current.domElement;
         if (rendererDomElement.parentNode === chart_dom.current) {
@@ -487,10 +470,11 @@ const ThreeMap = (props: ThreeMapInfo) => {
     initControls();
     drawShapeOptionFun();
     window.addEventListener('resize', onWindowResize);
-
-    if (isHeatmap) initHeatmap(mapData || []);
-    else initMark(mapData || []);
-
+    if (isHeatmap) {
+      initHeatmap(mapData || [])
+    } else {
+      initMark(mapData || [])
+    };
     function animate() {
       requestAnimationFrame(animate);
       if (texture.current) texture.current.needsUpdate = true;

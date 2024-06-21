@@ -12,15 +12,14 @@ import styles from './index.less';
 interface propsType {
   options: any;
   loading?: boolean; // 图表加载状态
-  width?: string;
-  height?: string;
+  width?: string | number;
+  height?: string | number;
 }
 
 const CustomCharts = (props: propsType) => {
-  const { options, loading, width = '100%', height = '100%' } = props;
-
+  const { options, loading, width, height } = props;
   return (
-    <div className={styles.boxWrap} style={{ height: height, width: width }}>
+    <div className={styles.boxWrap} style={{ height: height ? `${height}px` : '100%', width: width ? `${width}px` : '100%' }}>
       {loading ? (
         <Spin size="large" className={styles.loadingStyle} />
       ) : options ? (
@@ -30,7 +29,7 @@ const CustomCharts = (props: propsType) => {
             notMerge={true}
             lazyUpdate={false}
             theme={'theme_name'}
-            style={{ width: width, height: height }}
+            style={{ width: width ? `${width}px` : '100%', height: height ? `${height}px` : '100%' }}
           />
         </div>
       ) : (

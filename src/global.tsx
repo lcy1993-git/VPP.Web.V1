@@ -89,3 +89,59 @@ if (pwa) {
 
   clearCache();
 }
+
+/**
+ * 解决搜狗浏览器中
+ * canvas没有roundRect方法的问题
+ * */
+(function (global) {
+  "use strict";
+  if(!global.CanvasRenderingContext2D.prototype.roundRect) {
+    global.CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+      let ctx = this;
+
+    let [
+      topLeftRadius,
+      topRightRadius,
+      bottomRightRadius,
+      bottomLeftRadius
+    ] = [0, 0, 0, 0];
+    if(Array.isArray(radius)) {
+      if(radius.length === 4) {
+        [
+          topLeftRadius,
+          topRightRadius,
+          bottomRightRadius,
+          bottomLeftRadius
+        ] = radius as any;
+      } else {
+        return
+      }
+    } else {
+      [
+        topLeftRadius,
+        topRightRadius,
+        bottomRightRadius,
+        bottomLeftRadius
+      ] = [radius, radius, radius, radius] as any;
+    }
+
+    if (width < topLeftRadius + topRightRadius || height < bottomLeftRadius + bottomRightRadius) {
+         console.error("Cannot draw the rounded rectangle because the specified dimensions are too small for the given radii.");
+         return;
+     }
+       ctx.beginPath();
+       ctx.moveTo(x + topLeftRadius, y);
+       ctx.lineTo(x + width - topRightRadius, y);
+       ctx.quadraticCurveTo(x + width, y, x + width, y + topRightRadius);
+       ctx.lineTo(x + width, y + height - bottomRightRadius);
+       ctx.quadraticCurveTo(x + width, y + height, x + width - bottomRightRadius, y + height);
+       ctx.lineTo(x + bottomLeftRadius, y + height);
+       ctx.quadraticCurveTo(x, y + height, x, y + height - bottomLeftRadius);
+       ctx.lineTo(x, y + topLeftRadius);
+       ctx.quadraticCurveTo(x, y, x + topLeftRadius, y);
+       ctx.closePath();
+    }
+  }
+
+})(window);

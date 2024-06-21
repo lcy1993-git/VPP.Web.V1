@@ -54,7 +54,7 @@ const ClusterMiddleRight = (props: any) => {
       <div className={styles.echartsModuleBody}>
         <CustomCharts
           options={soCountOptions(powerCurve, isTodayRef.current)}
-          height="240px"
+          height={240}
           loading={false}
         />
       </div>

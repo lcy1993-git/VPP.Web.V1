@@ -63,7 +63,7 @@ const PcsMiddleRight = (props: any) => {
       <div className={styles.echartsModuleBody}>
         <CustomCharts
           options={powerOptions(powerCurve, curveType, isTodayRef.current)}
-          height="230px"
+          height={230}
         />
       </div>
     </div>

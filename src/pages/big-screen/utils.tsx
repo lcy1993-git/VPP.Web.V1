@@ -2,6 +2,7 @@ import { formatXAxis } from '@/utils/common';
 import { Tooltip } from 'antd';
 import * as echarts from 'echarts';
 import moment from 'moment';
+import { MutableRefObject, SetStateAction } from 'react';
 import styles from './components/index.less';
 /***
  * 页面请求轮询时间
@@ -24,7 +25,7 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer} style={{ width: col.width }}>
+              <td className={styles.tdContainer} key={`totalDeviation-${item.planId || item.substationName}`} style={{ width: col.width }}>
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -39,7 +40,7 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer} style={{ width: col.width }}>
+              <td className={styles.tdContainer}  key={`responseDeviationRate-${item.planId || item.substationName}`} style={{ width: col.width }}>
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -54,7 +55,7 @@ export const typicalResponse = (type: string) => {
           width: '18%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer} style={{ width: col.width }}>
+              <td className={styles.tdContainer}  key={`deviationPower-${item.planId || item.substationName}`} style={{ width: col.width }}>
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {parseFloat(item[col.dataIndex]).toFixed(2) || '未知'}
                 </Tooltip>
@@ -73,7 +74,7 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer} style={{ width: col.width }}>
+              <td className={styles.tdContainer}  key={`deviationStartTime-${item.planId || item.substationName}`} style={{ width: col.width }}>
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -88,7 +89,7 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer} style={{ width: col.width }}>
+              <td className={styles.tdContainer}  key={`deviationEndTime-${item.planId || item.substationName}`} style={{ width: col.width }}>
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -103,7 +104,7 @@ export const typicalResponse = (type: string) => {
           width: '18%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer} style={{ width: col.width }}>
+              <td className={styles.tdContainer}  key={`differenceInTime-${item.planId || item.substationName}`} style={{ width: col.width }}>
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {parseFloat(item[col.dataIndex]).toFixed(2) || '未知'}
                 </Tooltip>
@@ -120,9 +121,9 @@ export const typicalResponse = (type: string) => {
       key: 'index',
       dataIndex: 'index',
       width: '9%',
-      render: (_item: any, col: any, index: number) => {
+      render: (item: any, col: any, index: number) => {
         return (
-          <td className={styles.tdContainer} style={{ width: col.width }}>
+          <td className={styles.tdContainer} key={`index-${item.planId || item.substationName}`} style={{ width: col.width }}>
             {index + 1}
           </td>
         );
@@ -135,7 +136,7 @@ export const typicalResponse = (type: string) => {
       width: '18%',
       render: (item: any, col: any) => {
         return (
-          <td className={styles.tdContainer} style={{ width: col.width }}>
+          <td className={styles.tdContainer} key={`planType-${item.planId || item.substationName}`} style={{ width: col.width }}>
             <Tooltip title={enumName[item[col.dataIndex]] || '未知'}>
               {enumName[item[col.dataIndex]] || '未知'}
             </Tooltip>
@@ -151,7 +152,7 @@ export const typicalResponse = (type: string) => {
       width: '17%',
       render: (item: any, col: any) => {
         return (
-          <td className={styles.tdContainer} style={{ width: col.width }}>
+          <td className={styles.tdContainer} key={`enterprise-${item.planId || item.substationName}`} style={{ width: col.width }}>
             <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
           </td>
         );
@@ -721,7 +722,7 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`substationName-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -734,7 +735,7 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`industryType-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={monitorEnum[item[col.dataIndex] - 1] || '未知'}>
             {monitorEnum[item[col.dataIndex] - 1] || '未知'}
           </Tooltip>
@@ -749,7 +750,7 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`energyUseDay-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -762,7 +763,7 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`energyUseMonth-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -775,7 +776,7 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`energyUseYear-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -788,7 +789,7 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`power-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -807,7 +808,7 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`planName-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -820,7 +821,7 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer}  key={`enterpriseName-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -833,7 +834,7 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`planEnergy-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -846,7 +847,7 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`completeEnergy-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -859,7 +860,7 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`deviationRate-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -872,7 +873,7 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} style={{ width: col.width }}>
+        <td className={styles.tdContainer} key={`status-${item.planId || item.substationName}`} style={{ width: col.width }}>
           <Tooltip title={completionStateEnum[item[col.dataIndex] - 1] || '未知'}>
             {completionStateEnum[item[col.dataIndex] - 1] || '未知'}
           </Tooltip>
@@ -882,31 +883,3 @@ export const elasticEnergyColumns = [
   },
 ];
 
-// 处理屏幕尺寸变化
-// export const handleScreenAuto = (
-//   canvasWrapRef,
-//   tableWrapRef,
-//   setCircleWidth,
-//   setTableHeight,
-// ) => {
-//   const designDraftWidth = 1915;
-//   const designDraftHeight = 1030;
-//   const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
-//   const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
-
-//   (document.querySelector('#root') as any).style.width = '1920px';
-//   (document.querySelector('#root') as any).style.height = '1030px';
-//   (
-//     document.querySelector('#root') as any
-//   ).style.transform = `scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0)`;
-//   if (canvasWrapRef?.current) {
-//     const offsetWidth = (canvasWrapRef.current! as any).offsetWidth;
-//     const offsetHeight = (canvasWrapRef.current! as any).offsetHeight;
-//     const _width = offsetWidth > offsetHeight ? offsetHeight : offsetWidth;
-//     setCircleWidth(_width);
-
-//     // 获取表格高度
-//     const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
-//     setTableHeight(tableOffsetHeight);
-//   }
-// };

@@ -1,0 +1,372 @@
+
+.historyPlan {
+  width: 100%;
+  height: 310px;
+
+  .wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+
+    .statistics {
+      width: 600px;
+      height: 100%;
+      position: relative;
+      .statisticsLabel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        width: 180px;
+        height: 180px;
+        border: 1px solid #14339c;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: inset 0 0 10px #14339c;
+
+        .labelValue {
+          font-size: 32px;
+          color: #fff;
+          font-weight: 600;
+        }
+
+        .labelText {
+          font-size: 14px;
+          color: #a4aabb;
+          line-height: 20px;
+        }
+      }
+    }
+
+    .cardList {
+      flex: 1;
+      height: 100%;
+      border-left: 1px solid;
+      border-image: linear-gradient(180deg,
+      rgb(220 144 13 / 0%) 10%,
+      rgb(17, 98, 155) 50%,
+      rgb(226 19 68 / 0%) 90%) 2 2 2 2;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      min-width: 620px;
+      padding: 0 0 0 20px;
+
+      .cardListItem {
+        width: 32%;
+        min-width: 200px;
+        height: 114px;
+        border: 1px solid;
+        border-radius: 6px;
+        border-top-color: #0052ec;
+        border-right-color: #003495;
+        border-bottom-color: #00297c;
+        border-left-color: #003495;
+        box-shadow: inset 0 0 6px #14339c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        padding-left: 10px;
+        .listItemIcon {
+          width: 100px;
+          height: 100px;
+          background-image: url('@/assets/image/base/cardItem.png');
+          background-size: contain;
+          background-position: center 20px;
+          background-repeat: no-repeat;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          i {
+            font-size: 36px;
+            margin-bottom: 30px;
+            background: -webkit-linear-gradient(#d2e3fa, #0191fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #0191fd;
+          }
+        }
+
+        .listItemContent {
+          flex: 1;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          padding-left: 10px;
+
+          .column {
+            line-height: 26px;
+          }
+
+          .label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            opacity: 0.8;
+            line-height: 26px;
+          }
+
+          .value {
+            font-family: DIN Medium;
+            font-weight: 400;
+            font-size: 22px;
+            color: #FFFFFF;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.planList {
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  .planDate {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  }
+
+  .planContent {
+    width: 100%;
+    height: auto;
+    padding: 0 20px;
+    padding-bottom: 20px;
+
+    .planContentWrap {
+      width: 100%;
+      height: auto;
+      border: 1px solid #013994;
+      display: flex;
+    }
+
+    .planMenu {
+      width: 290px;
+      height: 1100px;
+      overflow: auto;
+
+      .planMenuDay {
+        width: 100%;
+        height: 40px;
+        background-image: url('@/assets/image/base/table-header.png');
+        background-clip: border-box;
+        background-size: cover;
+        font-family: Source Han Sans SC;
+        font-weight: bold;
+        font-size: 20px;
+        color: #0084FF;
+        line-height: 40px;
+        text-align: center;
+      }
+
+      .realtime {
+        background: #015cbe;
+        color: #fff;
+        font-family: PingFang SC;
+        font-weight: 400;
+        font-size: 16px;
+        color: #FFFFFF;
+      }
+
+      .planMenuDayList {
+        width: 100%;
+        height: auto;
+
+        p {
+          width: 100%;
+          height: 34px;
+          line-height: 34px;
+          text-align: center;
+          cursor: pointer;
+        }
+        p:nth-child(odd){
+          background: #022369;
+        }
+
+        /* 偶数行 */
+        p:nth-child(even){
+          background:#02205e;
+        }
+      }
+
+
+    }
+
+    .planInfo {
+      flex: 1;
+      overflow-x: hidden;
+      height: auto;
+
+      .planInfoTitle {
+        width: 100%;
+        height: 56px;
+        line-height: 56px;
+        border-left: 1px solid #013994;
+        padding-left: 22px;
+        font-family: Source Han Sans SC;
+        font-weight: 400;
+        font-size: 16px;
+        color: #FFFFFF;
+      }
+
+      .planInfoBasic {
+        width: 100%;
+        height: 86px;
+        padding: 10px 22px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-end;
+        border-left: 1px solid #013994;
+        border-top: 1px solid #013994;
+
+        p {
+          width: 23%;
+          height: 30px;
+          line-height: 30px;
+          font-family: Source Han Sans SC;
+          font-weight: 400;
+          font-size: 16px;
+          color: #FFFFFF;
+        }
+      }
+
+      .planCharts {
+        border-left: 1px solid #013994;
+        border-top: 1px solid #013994;
+        padding-bottom: 10px;
+          .planChartsHead {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 22px;
+          }
+
+          .planCard {
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            .cardItem {
+              width: 222px;
+              height: 76px;
+              margin: 0 10px;
+              border: 1px solid;
+              border-radius: 6px;
+              border-top-color: #0052ec;
+              border-right-color: #003495;
+              border-bottom-color: #00297c;
+              border-left-color: #003495;
+              box-shadow: inset 0 0 6px #14339c;
+              display: flex;
+              align-items: center;
+              padding-left: 10px;
+              .cardIcon {
+                width: 46px;
+                height: 46px;
+                margin-right: 10px;
+                background-image: url('@/assets/image/icon/iconBg.png');
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                i {
+                  font-size: 20px;
+                  color:#accce9;
+                }
+              }
+              .cardContent {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .label {
+                  font-family: PingFang SC;
+                  font-weight: 400;
+                  font-size: 16px;
+                  color: #FFFFFF;
+                  line-height: 30px;
+                  opacity: 0.8;
+                }
+
+                .value {
+                  font-family: DIN Medium;
+                  font-weight: 400;
+                  font-size: 22px;
+                  color: #FFFFFF;
+                }
+              }
+            }
+          }
+
+          .planChart {
+            width: 100%;
+            height: 320px;
+          }
+
+      }
+
+      .planTable {
+        height: 500px;
+        border-left: 1px solid #013994;
+        border-top: 1px solid #013994;
+
+        .planTableHead {
+          width: 100%;
+          height: 50px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 22px;
+        }
+
+        .planTableWrap {
+          width: 100%;
+          height: 450px;
+          padding: 0 20px 20px 22px;
+        }
+      }
+
+    }
+  }
+}
+
+
+.title {
+  font-family: Source Han Sans SC;
+  font-weight: bold;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-indent: 10px;
+  position: relative;
+}
+
+.title::after {
+  position: absolute;
+  width: 2px;
+  height: 16px;
+  background: #fff;
+  top: 2px;
+  left: 0;
+  content: '';
+}

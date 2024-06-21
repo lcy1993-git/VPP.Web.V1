@@ -31,6 +31,7 @@ import {
 } from './utils';
 dayjs.locale('zh-cn');
 
+let refeshThreeMap: any[] = []
 /***
  *特色场景
  * */
@@ -42,7 +43,7 @@ const Feature = () => {
   // 响应统计 圆环宽度
   const [circleWidth, setCircleWidth] = useState<number>(0);
   // 计算表格高度
-  const [tableHeight, setTableHeight] = useState<number>(0);
+  const [blockWidthOrHeight, setBlockWidthOrHeight] = useState({ width: 0, height: 0 });
   // 区域用能 年月日 切换
   const [fullAndPutDate, setFullAndPutDate] = useState<string>('日');
   // 区域用能 日期组件切换
@@ -189,28 +190,64 @@ const Feature = () => {
     });
   }, [fullAndPutDate]);
 
-  // 监听页面尺寸变化，重新绘制圆环 ---- 响应统计
-  const handleWindowResize = () => {
+
+  const handleScreenAuto = () => {
+    const designDraftWidth = 1920;
+    const designDraftHeight = 919;
+    if (document.documentElement.offsetWidth < designDraftWidth || document.documentElement.offsetHeight < designDraftHeight) {
+      const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+      const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+      (document.querySelector('#root') as any).setAttribute("style", `
+      width: 1920px;
+      height: 919px;
+      transform: scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0 0;
+      transition: 0.3s;
+    `)
+
+      setCircleWidth(188);
+      setBlockWidthOrHeight({
+        width: 470,
+        height: 313
+      });
+      return;
+    } else {
+      (document.querySelector('#root') as any).removeAttribute('style')
+    }
+    refeshThreeMap = []
     if (canvasWrapRef?.current) {
       const offsetWidth = (canvasWrapRef.current! as any).offsetWidth;
       const offsetHeight = (canvasWrapRef.current! as any).offsetHeight;
-      const _width = offsetWidth > offsetHeight ? offsetHeight : offsetWidth
-      setCircleWidth(_width)
+      const _width = offsetWidth > offsetHeight ? offsetHeight : offsetWidth;
+      setCircleWidth(_width);
 
       // 获取表格高度
       const tableOffsetHeight = (tableWrapRef.current! as any).offsetHeight;
-      setTableHeight(tableOffsetHeight)
+      const tableOffsetWidth = (tableWrapRef.current! as any).offsetWidth;
+      setBlockWidthOrHeight({
+        width: tableOffsetWidth,
+        height: tableOffsetHeight
+      });
     }
-  }
+  };
 
-  // 监听窗口尺寸变化
+
+
   useEffect(() => {
-    handleWindowResize();
-    window.addEventListener("resize", handleWindowResize)
+    // 初始化自适应
+    handleScreenAuto();
+    // 定义事件处理函数
+    const handleResize = () =>
+      handleScreenAuto();
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleWindowResize)
-    }
-  }, [])
+      window.removeEventListener('resize', handleResize); // 移除事件监听器
+    };
+  }, []);
 
   return (
     <ConfigProvider
@@ -265,6 +302,8 @@ const Feature = () => {
                 <CustomCharts
                   options={energyOverviewOptions(pageDataHandle(energyUseData), fullAndPutDate)}
                   loading={false}
+                  width={blockWidthOrHeight.width}
+                  height={blockWidthOrHeight.height}
                 />
               </BlockWrap>
             </div>
@@ -288,6 +327,8 @@ const Feature = () => {
                     <CustomCharts
                       options={elasticityOverviewOptions(pageDataHandle(elasticEnergyOverViewData))}
                       loading={false}
+                      width={blockWidthOrHeight.width}
+                      height={blockWidthOrHeight.height - 65}
                     />
                   </div>
                 </div>
@@ -344,7 +385,7 @@ const Feature = () => {
               </div>
             </div>
             <div className={styles.three}>
-              {substationData && <ThreeMap data={substationData?.data} />}
+              {substationData && <ThreeMap data={substationData?.data} refeshThreeMap={refeshThreeMap} />}
             </div>
           </div>
 
@@ -415,7 +456,7 @@ const Feature = () => {
                 <div style={{ width: '100%', height: '100%' }} ref={tableWrapRef}>
                   <ScrollBoardItem
                     dataList={pageDataHandle(typicalResponseData)}
-                    height={tableHeight}
+                    height={blockWidthOrHeight.height}
                     visibleRows={5}
                     columns={typicalResponse(typicalResponseAnalysisType)}
                   />

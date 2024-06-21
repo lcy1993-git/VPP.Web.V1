@@ -4,7 +4,7 @@ import { useInterval } from 'ahooks';
 import { ConfigProvider } from 'antd';
 import locale from 'antd/locale/zh_CN';
 import 'dayjs/locale/zh-cn';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import styles from './index.less';
 import { MyWorkProvider } from './myContext';
@@ -67,6 +67,42 @@ const Layout = () => {
       audioStop();
     }
   }, 1000);
+
+
+  // 自适应页面
+  const designDraftWidth = 1920;
+  const designDraftHeight = 919;
+  // // 处理屏幕尺寸变化
+  const handleScreenAuto = () => {
+    if (document.documentElement.offsetWidth < designDraftWidth || document.documentElement.offsetHeight < designDraftHeight) {
+      const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
+      const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
+      (document.querySelector('#root') as any).setAttribute("style", `
+        width: 1920px;
+        height: 919px;
+        transform: scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: 0 0;
+        transition: 0.3s;
+      `)
+    }else {
+      (document.querySelector('#root') as any).removeAttribute('style')
+    }
+  };
+
+  useEffect(() => {
+    // 初始化自适应
+    handleScreenAuto();
+    // 定义事件处理函数
+    const handleResize = () => handleScreenAuto();
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize); // 移除事件监听器
+    };
+  }, []);
 
 
   return (

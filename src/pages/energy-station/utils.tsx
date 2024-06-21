@@ -305,7 +305,7 @@ const renderPcsOverview = (pcsOverview: any, subStationId: string) => {
                         handleInverterStatus_psc(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe662;
+                    &#xe6a2;
                   </i>
                 ) : (
                   <i
@@ -315,7 +315,7 @@ const renderPcsOverview = (pcsOverview: any, subStationId: string) => {
                         handleInverterStatus_psc(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe661;
+                    &#xe619;
                   </i>
                 )}
               </div>
@@ -405,7 +405,7 @@ const renderOnGridOverview = (gridOverview: any, subStationId: string) => {
                       color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#00FF90',
                     }}
                   >
-                    &#xe662;
+                    &#xe619;
                   </i>
                 ) : (
                   <i
@@ -414,7 +414,7 @@ const renderOnGridOverview = (gridOverview: any, subStationId: string) => {
                       color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#00FF90',
                     }}
                   >
-                    &#xe661;
+                    &#xe6a2;
                   </i>
                 )}
               </div>
@@ -531,7 +531,7 @@ const renderAirCondition = (airCondition: any) => {
                         handleInverterStatus_air(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe662;
+                    &#xe6a2;
                   </i>
                 ) : (
                   <i
@@ -541,7 +541,7 @@ const renderAirCondition = (airCondition: any) => {
                         handleInverterStatus_air(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe661;
+                    &#xe619;
                   </i>
                 )}
               </div>
@@ -674,7 +674,7 @@ const renderClusterOverview = (clusterOverview: any, subStationId: string) => {
                           : '#FF3838',
                     }}
                   >
-                    &#xe662;
+                    &#xe6a2;
                   </i>
                 ) : (
                   <i
@@ -686,7 +686,7 @@ const renderClusterOverview = (clusterOverview: any, subStationId: string) => {
                           : '#FF3838',
                     }}
                   >
-                    &#xe661;
+                    &#xe619;
                   </i>
                 )}
               </div>

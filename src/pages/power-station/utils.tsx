@@ -169,7 +169,7 @@ export const renderInverter = (inverterData: any, subStationCode: string, module
                         color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
                       }}
                     >
-                      &#xe662;
+                      &#xe619;
                     </i>
                   ) : (
                     <i
@@ -178,7 +178,7 @@ export const renderInverter = (inverterData: any, subStationCode: string, module
                         color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
                       }}
                     >
-                      &#xe661;
+                      &#xe619;
                     </i>
                   )}
                 </div>
@@ -245,7 +245,7 @@ export const renderInverter = (inverterData: any, subStationCode: string, module
               <div className={styles.clusterModuleHead}>
                 <div className={styles.moduleIcon}>
                   <i className="iconfont" style={{ color: '#00FF90' }}>
-                    &#xe662;
+                    &#xe619;
                   </i>
                 </div>
                 <dl className={styles.moduleText}>

@@ -278,21 +278,23 @@ const withGeneralTable =
         <div className={styles.tableContent}>
           <ConfigProvider
             theme={{
-              token: {
-                borderRadius: 2,
-                colorPrimaryHover: '#10a2fa',
-                colorTextPlaceholder: '#0143cc',
-                controlOutline: 'transparent', // 输入组件 激活边框颜色
-                colorBorder: '#16489f', // checkout 边框
-                colorBgBase: '#032566', // 所有组件的基础背景色
-                colorBgContainer: 'transparent',
-                colorPrimary: '#1292ff', // 主色调
-                colorError: '#ff0000',
-                colorBgElevated: ' #001d51', // 模态框、悬浮框背景色
-                controlItemBgActiveHover: 'rgba(0, 84, 255, 0.2)', // 控制组件项在鼠标悬浮且激活状态下的背景颜色
-                controlItemBgHover: 'rgba(0, 84, 255, 0.2)', // 下拉框，手鼠hover背景色
-                controlItemBgActive: 'rgba(0, 84, 255, 0.3)', // 控制组件项在激活状态下的背景颜色
-              },
+              components: {
+                Table: {
+                    borderRadius: 2,
+                    colorPrimaryHover: '#10a2fa',
+                    colorTextPlaceholder: '#0143cc',
+                    controlOutline: 'transparent', // 输入组件 激活边框颜色
+                    colorBorder: '#16489f', // checkout 边框
+                    colorBgBase: '#032566', // 所有组件的基础背景色
+                    colorPrimary: '#1292ff', // 主色调
+                    colorError: '#ff0000',
+                    colorBgElevated: '#001d51', // 模态框、悬浮框背景色
+                    filterDropdownBg: '#0c2f75',
+                    controlItemBgActiveHover: 'rgba(0, 84, 255, 0.2)', // 控制组件项在鼠标悬浮且激活状态下的背景颜色
+                    controlItemBgHover: 'rgba(0, 84, 255, 0.2)', // 下拉框，手鼠hover背景色
+                    controlItemBgActive: 'rgba(0, 84, 255, 0.3)', // 控制组件项在激活状态下的背景颜色
+                }
+              }
             }}
           >
             <WrapperComponent

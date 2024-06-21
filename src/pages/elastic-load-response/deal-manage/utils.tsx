@@ -441,3 +441,173 @@ export const userDetailColumns: any = [
     },
   },
 ];
+
+
+
+
+// 合同管理表格Columns
+export const contractColumns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+    align: 'center' as any,
+    render: (_text: any, _record: any, index: number) => {
+      return index + 1;
+    },
+  },
+  {
+    title: '计划编号',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '合同名称',
+    align: 'center' as any,
+    dataIndex: 'index',
+    key: 'index',
+  },
+  {
+    align: 'center' as any,
+    title: '合同类型',
+    dataIndex: 'index',
+    key: 'index',
+    filters: [
+      {
+        text: '需求响应代理合同',
+        value: '1',
+      },
+      {
+        text: '电网结算合同',
+        value: '2',
+      },
+    ],
+    onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+  },
+  {
+    align: 'center' as any,
+    title: '结算方式',
+    dataIndex: 'index',
+    key: 'index',
+    filters: [
+      {
+        text: '收益与考核比例结算',
+        value: '1',
+      },
+      {
+        text: '电网结算',
+        value: '2',
+      },
+    ],
+    onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+  },
+  {
+    title: '签订对象',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+    filters: [
+      {
+        text: '收益与考核比例结算',
+        value: '1',
+      },
+      {
+        text: '电网结算',
+        value: '2',
+      },
+    ],
+    onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+  },
+  {
+    title: '开始时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '结束时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '状态',
+    align: 'center' as any,
+    dataIndex: 'index',
+    key: 'index',
+  },
+
+]
+
+// 合同管理新增模态框表格
+export const addContractTableColumns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+    align: 'center' as any,
+    render: (_text: any, _record: any, index: number) => {
+      return index + 1;
+    },
+  },
+  {
+    title: '合同编号',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '合同名称',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '合同类型',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '结算方式',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '签订对象',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '开始时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '结束时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '操作',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+    width: 180,
+    render: () => {
+      return (
+        <Space>
+          <Button size="small">下载</Button>
+          <Button size="small" danger>删除</Button>
+        </Space>
+      );
+    },
+  },
+]

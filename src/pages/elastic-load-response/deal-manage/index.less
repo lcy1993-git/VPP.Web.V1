@@ -1,0 +1,275 @@
+.dealPage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 12px 20px 20px 12px;
+
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .firstBtn {
+      border-radius: 34px 0 0 0;
+    }
+
+    .lastBtn {
+      border-radius: 0 34px 0 0;
+    }
+
+    .selectedStyle {
+      color: #fff;
+      background: linear-gradient(0deg, #002374 0%, #008ffe 100%);
+    }
+
+    .unSelectedStyle {
+      color: #2897ff;
+      background: linear-gradient(0deg, #002b83 0%, #0066ff 100%);
+    }
+
+    .btn {
+      width: 140px;
+      height: 36px;
+      margin: 0 4px;
+      font-weight: 400;
+      font-size: 16px;
+      font-family: PingFang SC;
+      line-height: 30px;
+      text-align: center;
+      border: 2px solid #004394;
+    }
+  }
+
+  .dealContainer {
+    flex: 1;
+    margin-top: 15px;
+  }
+}
+
+.noticePage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 16px);
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .container {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    margin-top: 12px;
+    border: 1px solid rgba(0, 74, 192, 0.6);
+
+    .infoContainer {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      height: 100%;
+      border-left: 1px solid rgba(0, 74, 192, 0.6);
+
+      .planNum {
+        height: 45px;
+        padding-left: 22px;
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Source Han Sans SC;
+        line-height: 45px;
+        border-bottom: 1px solid rgba(0, 74, 192, 0.6);
+      }
+
+      .demandCapacity {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding: 15px;
+        border-top: 1px solid rgba(0, 74, 192, 0.6);
+
+        .titleText {
+          position: relative;
+          padding-left: 8px;
+          font-weight: bold;
+          font-size: 16px;
+
+          &::before {
+            position: absolute;
+            top: 10;
+            left: 0;
+            width: 2px;
+            height: 17px;
+            background: #fff;
+            content: '';
+          }
+        }
+
+        .bar {
+          flex: 1;
+        }
+
+        .table {
+          .header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  .listTitle {
+    width: 100%;
+    height: 44px;
+    color: #0084ff;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: Source Han Sans SC;
+    line-height: 44px;
+    background: repeating-linear-gradient(
+      120deg,
+      #01297d,
+      #01297d 18px,
+      #012777 18px,
+      #012777 36px
+    );
+  }
+
+  .listOption {
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+
+    .option {
+      width: 100%;
+      height: 48px;
+      color: #ffffff;
+      font-weight: 400;
+      font-size: 16px;
+      font-family: PingFang SC;
+      line-height: 48px;
+      cursor: pointer;
+    }
+
+    // 偶数
+    .evenBg {
+      background-color: #02246c;
+    }
+
+    .oddBg {
+      background-color: #02205d;
+    }
+
+    .selectedBg {
+      background-color: #015cbf;
+    }
+  }
+}
+
+.loadManagePage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .header {
+    margin-bottom: 15px;
+  }
+
+  .container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid rgba(0, 74, 192, 0.6);
+
+    .check {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .loadDetail {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      justify-content: flex-end;
+      margin-top: 20px;
+
+      .curveOrTable {
+        width: 90%;
+      }
+    }
+  }
+}
+
+.dealDeclarationPage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-top: 15px;
+    border: 1px solid rgba(0, 74, 192, 0.6);
+
+    .topContainer {
+      border-bottom: 1px solid rgba(0, 74, 192, 0.6);
+    }
+
+    .topContainer,
+    .bottomContainer {
+      padding: 20px 20px 0 20px;
+    }
+
+    .titleHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      .left {
+        width: 10%;
+      }
+
+      .right {
+        width: 172px;
+      }
+    }
+
+    .bottomContainer {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+
+      .tableOrChart {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.blueTitle {
+  color: #0084ff;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Source Han Sans SC;
+  text-align: center;
+}

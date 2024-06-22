@@ -10,7 +10,7 @@ const ContractManage = () => {
   // 表格实例
   const tableRef = useRef(null);
   // 新增模态框状态
-  const [visibile, setVisibile] = useState<boolean>(true)
+  const [visibile, setVisibile] = useState<boolean>(false)
 
 
 

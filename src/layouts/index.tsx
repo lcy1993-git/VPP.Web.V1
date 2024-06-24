@@ -125,6 +125,11 @@ const Layout = () => {
             controlItemBgHover: 'rgba(0, 84, 255, 0.2)', // 下拉框，手鼠hover背景色
             controlItemBgActive: 'rgba(0, 84, 255, 0.3)', // 控制组件项在激活状态下的背景颜色
           },
+          components: {
+            Collapse: {
+              fontSize: 16
+            }
+          }
         }}
       >
         <MyWorkProvider

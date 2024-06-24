@@ -12,8 +12,6 @@ const ContractManage = () => {
   // 新增模态框状态
   const [visibile, setVisibile] = useState<boolean>(false)
 
-
-
   const contractTableColumns = [
     ...contractColumns,
     {

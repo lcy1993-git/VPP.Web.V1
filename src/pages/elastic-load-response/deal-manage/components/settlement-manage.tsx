@@ -177,7 +177,7 @@ const SettlementManage = () => {
           url="/sysApi/deviceInfo/getDeviceInfoPageList"
           ref={tableRef}
           columns={settlementTableColumns}
-          rowKey="substationCode"
+          rowKey="deviceCode"
           type="checkbox"
           size="middle"
           bordered={true}

@@ -407,12 +407,17 @@
 
       .cardListItem {
         display: flex;
+        display: flex;
         align-items: center;
+        align-items: center;
+        justify-content: center;
         justify-content: center;
         width: 16%;
         min-width: 120px;
         height: 100px;
         padding-left: 10px;
+        padding-left: 10px;
+        overflow: hidden;
         overflow: hidden;
         border: 1px solid;
         border-top-color: #0052ec;
@@ -421,6 +426,7 @@
         border-left-color: #003495;
         border-radius: 6px;
         box-shadow: inset 0 0 6px #14339c;
+
         .listItemIcon {
           display: flex;
           align-items: center;
@@ -496,8 +502,10 @@
     height: 168px;
     overflow: auto;
   }
+
   .modalTable {
     width: 100%;
+
     .button {
       display: flex;
       align-items: center;
@@ -598,6 +606,8 @@
     align-items: center;
     justify-content: flex-end;
     width: 100%;
+    width: 100%;
+    height: 40px;
     height: 40px;
     padding-right: 10%;
   }
@@ -765,5 +775,127 @@
         }
       }
     }
+  }
+}
+
+// 执行跟踪页面
+.tractingPage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+
+  .tractingMenu {
+    width: 300px;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid #01368d;
+
+    .tractingMenuSide {
+      width: 100%;
+      height: 50%;
+      overflow: hidden;
+      .menuBg {
+        width: 100%;
+        height: 40px;
+        color: #0084ff;
+        font-weight: bold;
+        font-size: 20px;
+        font-family: Source Han Sans SC;
+        line-height: 40px;
+        text-align: center;
+        background-image: url('@/assets/image/base/table-header.png');
+        background-size: cover;
+        background-clip: border-box;
+      }
+
+      .menuMain {
+        width: 100%;
+        overflow: auto;
+      }
+    }
+  }
+
+  .tractingMain {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+    border-top: 1px solid #01368d;
+    border-right: 1px solid #01368d;
+    border-bottom: 1px solid #01368d;
+    .tractingWrap {
+      width: 100%;
+      height: 400px;
+      margin: 20px 0;
+      padding: 0 20px;
+      overflow: hidden;
+      border-bottom: 1px solid #01368d;
+
+      .sourceInfoTitle {
+        width: 100%;
+        height: 40px;
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: Source Han Sans SC;
+        line-height: 40px;
+        text-align: center;
+      }
+
+      .wrapHead {
+        display: flex;
+        justify-content: space-between;
+        height: 40px;
+
+        .wrapHeadTitle {
+          flex: 1;
+          color: #ffffff;
+          font-weight: bold;
+          font-size: 14px;
+          font-family: Source Han Sans SC;
+          text-align: center;
+        }
+
+        .wrapHeadSegmented {
+          width: 140px;
+          height: 40px;
+        }
+      }
+    }
+  }
+}
+
+.planChildren {
+  padding-top: 10px;
+  li {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    text-indent: 20px;
+  }
+
+  .borderBottom {
+    border-bottom: 1px solid;
+    border-image: linear-gradient(
+        90deg,
+        rgb(220 144 13 / 0%) 10%,
+        rgb(17, 98, 155) 50%,
+        rgb(226 19 68 / 0%) 90%
+      )
+      2 2 2 2;
+  }
+
+  li::before {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background: #015cc0;
+    border-radius: 50%;
+    content: '';
   }
 }

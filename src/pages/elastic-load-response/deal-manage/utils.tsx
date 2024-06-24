@@ -854,3 +854,390 @@ export const winningPriceOptions = (data: any) => {
     ],
   };
 };
+
+// 合同管理表格Columns
+export const contractColumns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+    align: 'center' as any,
+    render: (_text: any, _record: any, index: number) => {
+      return index + 1;
+    },
+  },
+  {
+    title: '计划编号',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '合同名称',
+    align: 'center' as any,
+    dataIndex: 'index',
+    key: 'index',
+  },
+  {
+    align: 'center' as any,
+    title: '合同类型',
+    dataIndex: 'index',
+    key: 'index',
+    filters: [
+      {
+        text: '需求响应代理合同',
+        value: '1',
+      },
+      {
+        text: '电网结算合同',
+        value: '2',
+      },
+    ],
+    onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+  },
+  {
+    align: 'center' as any,
+    title: '结算方式',
+    dataIndex: 'index',
+    key: 'index',
+    filters: [
+      {
+        text: '收益与考核比例结算',
+        value: '1',
+      },
+      {
+        text: '电网结算',
+        value: '2',
+      },
+    ],
+    onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+  },
+  {
+    title: '签订对象',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+    filters: [
+      {
+        text: '收益与考核比例结算',
+        value: '1',
+      },
+      {
+        text: '电网结算',
+        value: '2',
+      },
+    ],
+    onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+  },
+  {
+    title: '开始时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '结束时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '状态',
+    align: 'center' as any,
+    dataIndex: 'index',
+    key: 'index',
+  },
+];
+
+// 合同管理新增模态框表格
+export const addContractTableColumns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+    align: 'center' as any,
+    render: (_text: any, _record: any, index: number) => {
+      return index + 1;
+    },
+  },
+  {
+    title: '合同编号',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '合同名称',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '合同类型',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '结算方式',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '签订对象',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '开始时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '结束时间',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '操作',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+    width: 180,
+    render: () => {
+      return (
+        <Space>
+          <Button size="small">下载</Button>
+          <Button size="small" danger>
+            删除
+          </Button>
+        </Space>
+      );
+    },
+  },
+];
+
+// 结算管理表格Columns
+export const settlementColumns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+    align: 'center' as any,
+    render: (_text: any, _record: any, index: number) => {
+      return index + 1;
+    },
+  },
+  {
+    title: '计划编号',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '设备名称',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '用户编号',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '计划电量\n(MWh)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '实际电量\n(MWh)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '结算电量\n(MW)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '偏差考核电量\n(MW)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '平均结算电价(元/MWh)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    width: 100,
+    key: 'index',
+  },
+  {
+    title: '结算费用\n(万元)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '分成比例\n(%)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '分成收益\n(万元)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '考核费用\n(万元)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '分摊比例\n(%)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '分摊费用\n(万元)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '流程',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+];
+// 结算管理模态框图options
+export const settlementChartOptions = () => {
+  return {
+    tooltip: {
+      trigger: 'axis',
+      // 图例过多被遮挡，强制超出显示
+      appendToBody: true,
+    },
+    grid: {
+      top: '20%',
+      left: '3%',
+      right: '4%',
+      bottom: '2%',
+      containLabel: true,
+    },
+    color: ['#39ffc5', '#0090ff', '#fb8d44', '#ffea00', '#b37fe9'],
+    legend: {
+      data: [
+        '实际调节电量（kWh）',
+        '有效调节电量（kWh）',
+        '考核电量（kWh）',
+        '结算价格（元/MWh）',
+        '考核价格（元/MWh）',
+      ],
+      textStyle: {
+        color: '#d7eaef',
+      },
+      top: 20,
+    },
+    xAxis: {
+      type: 'category',
+      data: [
+        '00:00',
+        '02:00',
+        '04:00',
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+        '22:00',
+        '24:00',
+      ],
+      // axisLine: {
+      //   show: true,
+      //   lineStyle: {
+      //     color: '#8396ad',
+      //   },
+      // },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'KW',
+      nameTextStyle: {
+        align: 'right',
+      },
+      // splitLine: {
+      //   show: true,
+      //   lineStyle: {
+      //     color: '#16336a',
+      //     width: 1,
+      //   },
+      // },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#8396ad',
+          width: 0.5,
+        },
+      },
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#8396ad',
+        },
+      },
+    },
+    series: [
+      {
+        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
+        type: 'line',
+        name: '实际调节电量（kWh）',
+        smooth: true,
+      },
+      {
+        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
+        type: 'line',
+        name: '有效调节电量（kWh）',
+        smooth: true,
+      },
+      {
+        data: [745, 865, 965, 854, 335, 665, 656, 111, 666, 854, 125, 523],
+        type: 'line',
+        name: '考核电量（kWh）',
+        smooth: true,
+      },
+      {
+        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
+        type: 'line',
+        name: '结算价格（元/MWh）',
+        smooth: true,
+      },
+      {
+        data: [654, 111, 523, 854, 223, 552, 855, 111, 985, 666, 122, 421],
+        type: 'line',
+        name: '考核价格（元/MWh）',
+        smooth: true,
+      },
+    ],
+  };
+};

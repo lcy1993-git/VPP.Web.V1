@@ -158,15 +158,19 @@
     .option {
       width: 100%;
       height: 48px;
-      overflow: hidden;
       color: #ffffff;
       font-weight: 400;
       font-size: 16px;
       font-family: PingFang SC;
       line-height: 48px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
       cursor: pointer;
+
+      .item {
+        padding: 0 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
 
     // 偶数
@@ -307,10 +311,10 @@
 }
 
 .clearingModalBody {
+  height: 650px;
+
   .vppContainer {
-    display: flex;
-    flex-direction: column;
-    height: 350px;
+    height: 330px;
     border-bottom: 1px solid rgba(0, 74, 192, 0.6);
   }
 
@@ -318,6 +322,12 @@
     display: flex;
     flex-direction: row;
     height: 300px;
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
     .line {
       width: 1px;
@@ -879,8 +889,8 @@
   }
 
   .borderBottom {
-    line-height: 30px;
     height: 40px;
+    line-height: 30px;
 
     border-bottom: 1px solid;
     border-image: linear-gradient(
@@ -909,25 +919,24 @@
   width: 100%;
   height: 100%;
 
-
   .controlPageSelect {
     width: 100%;
     height: 50px;
   }
 
   .controlPageMain {
-    width: 100%;
-    height: calc(100% - 50px);
-    border: 1px solid #01348e;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow: hidden;
+    border: 1px solid #01348e;
 
     .controlPageMainTop {
+      display: flex;
       width: 100%;
       height: 320px;
       border-bottom: 1px solid #01348e;
-      display: flex;
 
       .controlMenu {
         width: 280px;
@@ -944,24 +953,24 @@
 
         .controlSideTitle {
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          justify-content: space-between;
           height: 40px;
 
           .wrapHeadTitle {
-            font-family: Source Han Sans SC;
+            flex: 1;
+            color: #ffffff;
             font-weight: bold;
             font-size: 14px;
-            color: #FFFFFF;
-            flex: 1;
+            font-family: Source Han Sans SC;
             text-align: center;
           }
           .wrapHeadSegmented {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 150px;
             height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
           }
         }
 
@@ -974,32 +983,31 @@
     }
 
     .controlPageMainBottom {
-      width: 100%;
       flex: 1;
+      width: 100%;
 
       .tableTitle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         width: 100%;
         height: 50px;
         padding: 0 10px 0 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         .title {
-          font-family: Source Han Sans SC;
+          position: relative;
+          color: #ffffff;
           font-weight: bold;
           font-size: 16px;
-          color: #FFFFFF;
-          position: relative;
+          font-family: Source Han Sans SC;
         }
         .title::before {
-          content: '';
-          width: 2px;
-          height: 16px;
-          background: #fff;
           position: absolute;
           top: 2px;
           left: -10px;
-
+          width: 2px;
+          height: 16px;
+          background: #fff;
+          content: '';
         }
       }
       .tableWrap {
@@ -1011,66 +1019,63 @@
   }
 }
 
-
-
 .cardListItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 260;
   height: 60px;
+  margin: 10px 0;
+  padding-left: 10px;
+  overflow: hidden;
   border: 1px solid;
-  border-radius: 6px;
   border-top-color: #0052ec;
   border-right-color: #003495;
   border-bottom-color: #00297c;
   border-left-color: #003495;
+  border-radius: 6px;
   box-shadow: inset 0 0 6px #14339c;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  padding-left: 10px;
-  margin: 10px 0;
 
   .listItemIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 40px;
     height: 40px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-image: url('@/assets/image/icon/iconBg.png');
-    background-size: contain;
-    background-position: center center;
     background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
 
     i {
+      color: #0191fd;
       font-size: 18px;
       background: -webkit-linear-gradient(#d2e3fa, #0191fd);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      color: #0191fd;
     }
   }
 
   .listItemContent {
-    flex: 1;
-    height: 100%;
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
+    height: 100%;
     padding: 10px 0 10px 10px;
 
     .label {
-      font-size: 16px;
-      font-weight: 400;
       color: #fff;
+      font-weight: 400;
+      font-size: 16px;
       opacity: 0.8;
     }
 
     .value {
-      font-family: DIN Medium;
+      color: #ffffff;
       font-weight: 400;
       font-size: 20px;
-      color: #FFFFFF;
+      font-family: DIN Medium;
     }
   }
 }

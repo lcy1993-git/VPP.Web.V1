@@ -26,7 +26,7 @@ const { RangePicker } = DatePicker;
 const Notice = () => {
   const [form] = Form.useForm();
   // 列表选项
-  const [options, setOptions] = useState<any | null>(null);
+  const [options, setOptions] = useState<any>([]);
   // 被选中的计划
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   // 容量详情升序还是降序
@@ -38,7 +38,18 @@ const Notice = () => {
   // 计划列表
   const { run: fetchAnnouncementList } = useRequest(getAnnouncementList, {
     manual: true,
-    onSuccess: (res: any) => setOptions(res),
+    onSuccess: (res: any) => {
+      setOptions([
+        {
+          title: '目前邀约计划', // 分类标题
+          options: res?.dayAheadInvitationPlan || [], // 该分类下的选项列表
+        },
+        {
+          title: '实时调度计划',
+          options: res?.realTimeDispatchPlan || [],
+        },
+      ]);
+    },
   });
 
   // 根据需求容量排序
@@ -143,23 +154,7 @@ const Notice = () => {
         </Button>
       </div>
       <div className={styles.container}>
-        <OptionList
-          categories={
-            options
-              ? [
-                  {
-                    title: '目前邀约计划', // 分类标题
-                    options: options?.dayAheadInvitationPlan || [], // 该分类下的选项列表
-                  },
-                  {
-                    title: '实时调度计划',
-                    options: options?.realTimeDispatchPlan || [],
-                  },
-                ]
-              : []
-          }
-          setSelectedValue={setSelectedValue}
-        />
+        <OptionList categories={options} setSelectedValue={setSelectedValue} />
         <div className={styles.infoContainer}>
           <div className={styles.planNum}>邀约计划信息：{selectedValue}</div>
           <Form

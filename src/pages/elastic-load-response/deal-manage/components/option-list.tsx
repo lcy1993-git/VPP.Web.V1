@@ -79,7 +79,7 @@ const OptionList = (props: PropsType) => {
                 ].join(' ')}
               >
                 <Tooltip title={item} placement="top">
-                  {item}
+                  <div className={styles.item}> {item}</div>
                 </Tooltip>
               </div>
             ))}

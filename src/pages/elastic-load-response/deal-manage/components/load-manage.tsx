@@ -26,6 +26,7 @@ const LoadManage = () => {
     { timePeriod: '03:00:00', demandCapacity: '1000' },
     { timePeriod: '03:00:00', demandCapacity: '1000' },
   ]);
+  const [selectedValue, setSelectedValue] = useState<string>('');
 
   return (
     <div className={styles.loadManagePage}>
@@ -53,7 +54,18 @@ const LoadManage = () => {
           />
         </div>
         <div className={styles.loadDetail}>
-          {!VPPOrUser && <OptionList options={options} title="厂家列表" width={160} />}
+          {!VPPOrUser && (
+            <OptionList
+              categories={[
+                {
+                  title: '厂家列表', // 分类标题
+                  options: options || [], // 该分类下的选项列表
+                },
+              ]}
+              setSelectedValue={setSelectedValue}
+              width={160}
+            />
+          )}
           <div className={styles.curveOrTable}>
             {curveOrTable ? (
               <CustomCharts options={loadOptions([5, 20, 36, 10, 10])} />

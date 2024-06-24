@@ -1481,7 +1481,7 @@ export const companyTableColumns = [
     align: 'center' as any,
     key: 'index',
   },
-]
+];
 // 执行跟踪 --- 资源实时运行功率图表 options
 export const companyChartOptions = () => {
   return {
@@ -1569,8 +1569,8 @@ export const companyChartOptions = () => {
         smooth: true,
       },
     ],
-  }
-}
+  };
+};
 
 // 交易调控计划管理 --- 图表optionss
 export const responseChartOptions = () => {
@@ -1593,11 +1593,25 @@ export const responseChartOptions = () => {
       textStyle: {
         color: '#d7eaef',
       },
-      top: 0
+      top: 0,
     },
     xAxis: {
       type: 'category',
-      data: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'],
+      data: [
+        '00:00',
+        '02:00',
+        '04:00',
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+        '22:00',
+        '24:00',
+      ],
     },
     yAxis: {
       type: 'value',
@@ -1621,26 +1635,26 @@ export const responseChartOptions = () => {
     },
     series: [
       {
-        data: [110,125,160,182,658,695,457,123,855,120,565,865],
+        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
         type: 'line',
         name: '调节(kW)',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [355,865,965,854,435,665,522,111,666,854,125,523],
+        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
         type: 'line',
         name: '计划(kW)',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [265,865,965,854,223,665,855,111,666,854,125,523],
+        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
         type: 'line',
         name: '基线(kW)',
-        smooth: true
-      }
+        smooth: true,
+      },
     ],
-  }
-}
+  };
+};
 
 // 交易调控计划管理 ---- table columns
 export const responseTableColumns = [
@@ -1668,7 +1682,7 @@ export const responseTableColumns = [
     align: 'center' as any,
     key: 'index',
   },
-]
+];
 
 // 交易调控计划管理 --- 计划分解详情
 export const responseDetalTableColumns = [
@@ -1718,4 +1732,4 @@ export const responseDetalTableColumns = [
     align: 'center' as any,
     key: 'index',
   },
-]
+];

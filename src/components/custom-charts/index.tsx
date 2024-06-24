@@ -19,7 +19,10 @@ interface propsType {
 const CustomCharts = (props: propsType) => {
   const { options, loading, width, height } = props;
   return (
-    <div className={styles.boxWrap} style={{ height: height ? `${height}px` : '100%', width: width ? `${width}px` : '100%' }}>
+    <div
+      className={styles.boxWrap}
+      style={{ height: height ? `${height}px` : '100%', width: width ? `${width}px` : '100%' }}
+    >
       {loading ? (
         <Spin size="large" className={styles.loadingStyle} />
       ) : options ? (
@@ -29,7 +32,10 @@ const CustomCharts = (props: propsType) => {
             notMerge={true}
             lazyUpdate={false}
             theme={'theme_name'}
-            style={{ width: width ? `${width}px` : '100%', height: height ? `${height}px` : '100%' }}
+            style={{
+              width: width ? `${width}px` : '100%',
+              height: height ? `${height}px` : '100%',
+            }}
           />
         </div>
       ) : (

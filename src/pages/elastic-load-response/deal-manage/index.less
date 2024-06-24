@@ -1,3 +1,13 @@
+:global {
+  .ant-collapse-header {
+    background-image: url('@/assets/image/base/table-header.png');
+  }
+
+  .ant-collapse .ant-collapse-content > .ant-collapse-content-box {
+    padding: 5px 16px;
+  }
+}
+
 .dealPage {
   display: flex;
   flex-direction: column;
@@ -44,6 +54,7 @@
   .dealContainer {
     flex: 1;
     margin-top: 15px;
+    overflow: hidden;
   }
 }
 
@@ -51,7 +62,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100% - 16px);
+  height: 100%;
 
   .header {
     display: flex;
@@ -64,12 +75,18 @@
     flex: 1;
     flex-direction: row;
     margin-top: 12px;
+    overflow: hidden;
     border: 1px solid rgba(0, 74, 192, 0.6);
+
+    .optionList {
+      width: 256px;
+      overflow-y: auto;
+    }
 
     .infoContainer {
       display: flex;
-      flex: 1;
       flex-direction: column;
+      width: calc(100% - 296px);
       height: 100%;
       border-left: 1px solid rgba(0, 74, 192, 0.6);
 
@@ -112,6 +129,7 @@
 .list {
   display: flex;
   flex-direction: column;
+  overflow: auto;
   text-align: center;
 
   .listTitle {
@@ -122,11 +140,13 @@
     font-size: 20px;
     font-family: Source Han Sans SC;
     line-height: 44px;
-    background: repeating-linear-gradient(120deg,
-        #01297d,
-        #01297d 18px,
-        #012777 18px,
-        #012777 36px);
+    background: repeating-linear-gradient(
+      120deg,
+      #01297d,
+      #01297d 18px,
+      #012777 18px,
+      #012777 36px
+    );
   }
 
   .listOption {
@@ -137,11 +157,14 @@
     .option {
       width: 100%;
       height: 48px;
+      overflow: hidden;
       color: #ffffff;
       font-weight: 400;
       font-size: 16px;
       font-family: PingFang SC;
       line-height: 48px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       cursor: pointer;
     }
 
@@ -384,12 +407,17 @@
 
       .cardListItem {
         display: flex;
+        display: flex;
         align-items: center;
+        align-items: center;
+        justify-content: center;
         justify-content: center;
         width: 16%;
         min-width: 120px;
         height: 100px;
         padding-left: 10px;
+        padding-left: 10px;
+        overflow: hidden;
         overflow: hidden;
         border: 1px solid;
         border-top-color: #0052ec;
@@ -398,11 +426,6 @@
         border-left-color: #003495;
         border-radius: 6px;
         box-shadow: inset 0 0 6px #14339c;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        padding-left: 10px;
 
         .listItemIcon {
           display: flex;
@@ -579,12 +602,12 @@
   }
 
   .modalChange {
-    height: 40px;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     width: 100%;
+    width: 100%;
+    height: 40px;
     height: 40px;
     padding-right: 10%;
   }
@@ -594,13 +617,174 @@
   }
 }
 
-// 执行跟踪页面
-.tractingPage {
+.controlManagerPage {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
+
+  .container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-top: 15px;
+    border: 1px solid rgba(0, 74, 192, 0.6);
+
+    .topContainer,
+    .bottomContainer {
+      padding: 0 20px;
+    }
+
+    .topContainer {
+      display: flex;
+      flex-direction: row;
+      height: 350px;
+      border-bottom: 1px solid rgba(0, 74, 192, 0.6);
+
+      .planList {
+        width: 320px;
+        padding-top: 15px;
+        padding-right: 20px;
+        overflow: auto;
+        border-right: 1px solid rgba(0, 74, 192, 0.6);
+      }
+
+      .planChart {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding-top: 15px;
+        padding-left: 20px;
+
+        .chart {
+          flex: 1;
+        }
+      }
+    }
+
+    .bottomContainer {
+      flex: 1;
+      padding-top: 20px;
+
+      .searchHeader {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+  }
+}
+
+.collapseItem {
+  width: 100%;
+
+  .list {
+    text-align: start;
+
+    .item {
+      position: relative;
+      padding-left: 25px;
+
+      &::before {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 8px;
+        height: 8px;
+        background: #015cc0;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        content: '';
+      }
+
+      .label,
+      .value {
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Source Han Sans SC;
+      }
+    }
+  }
+
+  .line {
+    width: 100%;
+    height: 1px;
+    margin-top: 5px;
+    background: linear-gradient(
+      90deg,
+      rgba(7, 44, 82, 0.05) 0%,
+      rgba(0, 132, 255, 0.9) 51%,
+      rgba(7, 44, 82, 0.05) 100%
+    );
+  }
+
+  .planCard {
+    width: 100%;
+
+    .cardItem {
+      display: flex;
+      align-items: center;
+      width: 270px;
+      height: 60px;
+      margin-top: 5px;
+      padding-left: 15px;
+      background: rgba(0, 132, 255, 0);
+      border: 1px solid #0054ee;
+      border-radius: 8px;
+      // border-image: linear-gradient(0deg, #00297c, #0054ee) 10 10;
+
+      .cardIcon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        margin-right: 20px;
+        background-image: url('@/assets/image/icon/iconBg.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+
+        i {
+          color: #accce9;
+          font-size: 20px;
+        }
+      }
+
+      .cardContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .label {
+          color: #ffffff;
+          font-weight: 400;
+          font-size: 16px;
+          font-family: PingFang SC;
+          line-height: 23px;
+          opacity: 0.8;
+        }
+
+        .value {
+          color: #ffffff;
+          font-weight: 400;
+          font-size: 21px;
+          font-family: DIN Medium;
+        }
+      }
+    }
+  }
+}
+
+// 执行跟踪页面
+.tractingPage {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 
   .tractingMenu {
     width: 300px;
@@ -615,15 +799,15 @@
       .menuBg {
         width: 100%;
         height: 40px;
-        background-image: url('@/assets/image/base/table-header.png');
-        background-clip: border-box;
-        background-size: cover;
-        font-family: Source Han Sans SC;
+        color: #0084ff;
         font-weight: bold;
         font-size: 20px;
-        color: #0084FF;
+        font-family: Source Han Sans SC;
         line-height: 40px;
         text-align: center;
+        background-image: url('@/assets/image/base/table-header.png');
+        background-size: cover;
+        background-clip: border-box;
       }
 
       .menuMain {
@@ -643,20 +827,20 @@
     .tractingWrap {
       width: 100%;
       height: 400px;
-      padding: 0 20px;
       margin: 20px 0;
+      padding: 0 20px;
       overflow: hidden;
       border-bottom: 1px solid #01368d;
 
       .sourceInfoTitle {
         width: 100%;
         height: 40px;
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 14px;
         font-family: Source Han Sans SC;
-          font-weight: bold;
-          font-size: 14px;
-          color: #FFFFFF;
-          line-height: 40px;
-          text-align: center;
+        line-height: 40px;
+        text-align: center;
       }
 
       .wrapHead {
@@ -664,13 +848,12 @@
         justify-content: space-between;
         height: 40px;
 
-
         .wrapHeadTitle {
-          font-family: Source Han Sans SC;
+          flex: 1;
+          color: #ffffff;
           font-weight: bold;
           font-size: 14px;
-          color: #FFFFFF;
-          flex: 1;
+          font-family: Source Han Sans SC;
           text-align: center;
         }
 
@@ -686,12 +869,12 @@
 .planChildren {
   padding-top: 10px;
   li {
+    position: relative;
     width: 100%;
     height: 30px;
+    font-size: 16px;
     line-height: 30px;
     text-indent: 20px;
-    position: relative;
-    font-size: 16px;
   }
 
   .borderBottom {
@@ -699,18 +882,21 @@
     height: 40px;
 
     border-bottom: 1px solid;
-    border-image: linear-gradient(90deg,
-    rgb(220 144 13 / 0%) 10%,
-    rgb(17, 98, 155) 50%,
-    rgb(226 19 68 / 0%) 90%) 2 2 2 2;
+    border-image: linear-gradient(
+        90deg,
+        rgb(220 144 13 / 0%) 10%,
+        rgb(17, 98, 155) 50%,
+        rgb(226 19 68 / 0%) 90%
+      )
+      2 2 2 2;
   }
 
   li::before {
+    position: absolute;
+    top: 12px;
+    left: 0;
     width: 8px;
     height: 8px;
-    position: absolute;
-    left: 0;
-    top: 12px;
     background: #015cc0;
     border-radius: 50%;
     content: '';

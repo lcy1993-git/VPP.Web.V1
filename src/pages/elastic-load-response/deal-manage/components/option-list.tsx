@@ -1,45 +1,85 @@
-import { useState } from 'react';
+import { Tooltip } from 'antd';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from '../index.less';
 
-interface PropsType {
-  options: any;
+interface CategoryType {
   title: string;
-  width?: number;
-  height?: number;
+  options: string[];
 }
-// 列表选择器
-const OptionList = (props: PropsType) => {
-  const { options, title, width, height } = props;
-  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-  const listWidth = width ? width : '296px';
-  const listHeight = height ? height : '100%';
 
-  // 列表选项背景颜色
-  const handleOptionsItemBg = (index: number) => {
-    if (selectedIndex === index) {
-      // 选中
-      return styles.selectedBg;
-    } else {
-      // 未选中根据奇偶行
-      return index % 2 ? styles.evenBg : styles.oddBg;
+interface PropsType {
+  categories: CategoryType[];
+  setSelectedValue: Dispatch<SetStateAction<any>>;
+  width?: number | string;
+  height?: number | string;
+}
+
+type SelectedOption = {
+  categoryIndex: number | null;
+  optionIndex: number | null;
+};
+
+// 分类选项列表，只能选中一个选项
+const OptionList = (props: PropsType) => {
+  const { categories, width, height, setSelectedValue } = props;
+
+  // 寻找第一个有选项的分类的索引及该分类的第一个选项的索引
+  const findFirstAvailableOption = () => {
+    for (let i = 0; i < categories.length; i++) {
+      if (categories[i].options.length > 0) {
+        return { categoryIndex: i, optionIndex: 0 };
+      }
     }
+    return { categoryIndex: null, optionIndex: null }; // 如果所有分类都没有选项
   };
+
+  const [selectedOption, setSelectedOption] = useState<SelectedOption>(findFirstAvailableOption());
+
+  // 在首次渲染时设置默认选中值
+  useEffect(() => {
+    if (selectedOption.categoryIndex !== null && selectedOption.optionIndex !== null) {
+      const { categoryIndex, optionIndex } = selectedOption;
+      const selectedItem = categories[categoryIndex].options[optionIndex];
+      setSelectedValue(selectedItem);
+    }
+  }, []);
+
+  // 设置选中项分类和index
+  const selectOption = (categoryIndex: number, optionIndex: number, item: string) => {
+    setSelectedOption({ categoryIndex, optionIndex });
+    setSelectedValue(item);
+  };
+
+  const listWidth = width || '296px';
+  const listHeight = height || '100%';
 
   return (
     <div className={styles.list} style={{ width: listWidth, height: listHeight }}>
-      <div className={styles.listTitle}>{title}</div>
-      <div className={styles.listOption}>
-        {/* 循环渲染列表项 */}
-        {options.map((item: any, index: number) => (
-          <div
-            key={index}
-            onClick={() => setSelectedIndex(index)}
-            className={`${styles.option} ${handleOptionsItemBg(index)}`}
-          >
-            {item}
+      {categories.map((category, categoryIndex) => (
+        <div key={categoryIndex}>
+          <div className={styles.listTitle}>{category.title}</div>
+          <div className={styles.listOption}>
+            {category.options.map((item, optionIndex) => (
+              <div
+                key={optionIndex}
+                onClick={() => selectOption(categoryIndex, optionIndex, item)}
+                className={[
+                  styles.option,
+                  selectedOption.categoryIndex === categoryIndex &&
+                  selectedOption.optionIndex === optionIndex
+                    ? styles.selectedBg
+                    : '',
+                  optionIndex % 2 ? styles.evenBg : styles.oddBg,
+                ].join(' ')}
+              >
+                <Tooltip title={item} placement="top">
+                  {item}
+                </Tooltip>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };

@@ -27,8 +27,8 @@ export const demandDetailColumns: any = [
 ];
 
 // 邀约需求容量柱状图
-export const demandCapacityOptions = (data: any) => {
-  if (!data) return false;
+export const demandCapacityOptions = (xAxis: any, data: any) => {
+  if (!data || data.length === 0) return false;
 
   return {
     grid: {
@@ -45,7 +45,7 @@ export const demandCapacityOptions = (data: any) => {
           color: 'rgba(231, 250, 255, 0.6)',
         },
       },
-      data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'],
+      data: xAxis,
       name: '时',
     },
     yAxis: {
@@ -1158,7 +1158,21 @@ export const settlementChartOptions = () => {
     },
     xAxis: {
       type: 'category',
-      data: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'],
+      data: [
+        '00:00',
+        '02:00',
+        '04:00',
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+        '22:00',
+        '24:00',
+      ],
     },
     yAxis: {
       type: 'value',
@@ -1212,8 +1226,60 @@ export const settlementChartOptions = () => {
         smooth: true,
       },
     ],
-  }
-}
+  };
+};
+
+// 计划分解详情
+export const planDetailColumns: any = () => {
+  return [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
+      align: 'center',
+    },
+    {
+      title: '资源商',
+      dataIndex: 'userName',
+      key: 'userName',
+      align: 'center',
+    },
+    {
+      title: '资源商编号',
+      dataIndex: 'invitationPlan',
+      key: 'invitationPlan',
+      align: 'center',
+    },
+    {
+      title: '计划调节里程(MWh)',
+      dataIndex: 'adjustableCapacity',
+      key: 'adjustableCapacity',
+      align: 'center',
+    },
+    {
+      title: '日最大功率(MW)',
+      dataIndex: 'declaredTransactionVolume',
+      key: 'declaredTransactionVolume',
+      align: 'center',
+    },
+    {
+      title: '调节曲线',
+      align: 'center',
+      render: () => (
+        <i className="iconfont" style={{ color: '#0084FF', cursor: 'pointer' }} onClick={() => {}}>
+          &#xe63a;
+        </i>
+      ),
+    },
+    {
+      title: '资源状态',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      align: 'center',
+    },
+  ];
+};
 
 // 执行跟踪--- 实时运行功率图表options
 export const dayPlanChartOptions = () => {
@@ -1236,11 +1302,25 @@ export const dayPlanChartOptions = () => {
       textStyle: {
         color: '#d7eaef',
       },
-      top: 0
+      top: 0,
     },
     xAxis: {
       type: 'category',
-      data: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'],
+      data: [
+        '00:00',
+        '02:00',
+        '04:00',
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+        '22:00',
+        '24:00',
+      ],
     },
     yAxis: {
       type: 'value',
@@ -1264,32 +1344,32 @@ export const dayPlanChartOptions = () => {
     },
     series: [
       {
-        data: [110,125,160,182,658,695,457,123,855,120,565,865],
+        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
         type: 'line',
         name: '邀约计划（kW）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [355,865,965,854,435,665,522,111,666,854,125,523],
+        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
         type: 'line',
         name: '实时（kW）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [745,865,965,854,335,665,656,111,666,854,125,523],
+        data: [745, 865, 965, 854, 335, 665, 656, 111, 666, 854, 125, 523],
         type: 'line',
         name: '邀约调节（kW）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [265,865,965,854,223,665,855,111,666,854,125,523],
+        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
         type: 'line',
         name: '基线（kW）',
-        smooth: true
-      }
+        smooth: true,
+      },
     ],
-  }
-}
+  };
+};
 
 // 执行更正--- 实时运行功率table columns
 export const dayPlanTableColumns = [
@@ -1323,7 +1403,7 @@ export const dayPlanTableColumns = [
     align: 'center' as any,
     key: 'index',
   },
-]
+];
 
 // 执行跟踪 ---- 邀约资源商信息
 export const sourceTableColumns = [
@@ -1367,7 +1447,7 @@ export const sourceTableColumns = [
     align: 'center' as any,
     key: 'index',
   },
-]
+];
 
 // 执行跟踪 --- 资源实时运行功率table columns
 export const companyTableColumns = [
@@ -1423,11 +1503,25 @@ export const companyChartOptions = () => {
       textStyle: {
         color: '#d7eaef',
       },
-      top: 0
+      top: 0,
     },
     xAxis: {
       type: 'category',
-      data: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'],
+      data: [
+        '00:00',
+        '02:00',
+        '04:00',
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+        '22:00',
+        '24:00',
+      ],
     },
     yAxis: {
       type: 'value',
@@ -1451,29 +1545,29 @@ export const companyChartOptions = () => {
     },
     series: [
       {
-        data: [110,125,160,182,658,695,457,123,855,120,565,865],
+        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
         type: 'line',
         name: '邀约计划（kW）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [355,865,965,854,435,665,522,111,666,854,125,523],
+        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
         type: 'line',
         name: '实时（kW）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [745,865,965,854,335,665,656,111,666,854,125,523],
+        data: [745, 865, 965, 854, 335, 665, 656, 111, 666, 854, 125, 523],
         type: 'line',
         name: '邀约调节（kW）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [265,865,965,854,223,665,855,111,666,854,125,523],
+        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
         type: 'line',
         name: '基线（kW）',
-        smooth: true
-      }
+        smooth: true,
+      },
     ],
   }
 }

@@ -15,3 +15,26 @@ export const getAnnouncementDetails = (identificationNum: string) => {
     params: { identificationNum },
   });
 };
+
+// 基线负荷管理-虚拟电厂
+export const getVPPLoadDetails = (date: string) => {
+  return request(`/sysApi/demand/response/baseline/load/vpp`, {
+    method: 'GET',
+    params: { date },
+  });
+};
+
+// 基线负荷管理-代理用户
+export const getUserLoadDetails = (date: string, substationCode: string) => {
+  return request(`/sysApi/demand/response/baseline/load/agent/user`, {
+    method: 'GET',
+    params: { date, substationCode },
+  });
+};
+
+// 用户列表
+export const getUserList = () => {
+  return request(`/sysApi/demand/response/transactionBidding/user`, {
+    method: 'GET',
+  });
+};

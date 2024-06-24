@@ -126,7 +126,7 @@ export const loadOptions = (data: any) => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      data: data?.xaxis,
       axisLine: {
         lineStyle: {
           color: 'rgba(231, 250, 255, 0.6)',
@@ -152,7 +152,7 @@ export const loadOptions = (data: any) => {
     series: [
       {
         name: '基线',
-        data: data,
+        data: data?.valueList,
         type: 'line',
         smooth: true,
       },
@@ -177,8 +177,8 @@ export const loadDetailColumns: any = [
   },
   {
     title: '基线(kW)',
-    dataIndex: 'demandCapacity',
-    key: 'demandCapacity',
+    dataIndex: 'baseline',
+    key: 'baseline',
     align: 'center',
   },
 ];

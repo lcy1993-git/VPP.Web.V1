@@ -1,8 +1,15 @@
 import CustomCharts from '@/components/custom-charts';
 import SegmentedTheme from '@/components/segmented-theme';
+import {
+  getUserList,
+  getUserLoadDetails,
+  getVPPLoadDetails,
+} from '@/services/elastic-load-response/deal-manage';
 import { DownloadOutlined } from '@ant-design/icons';
+import { useRequest } from '@umijs/max';
 import { Button, DatePicker, Table } from 'antd';
-import { useState } from 'react';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
 import styles from '../index.less';
 import { loadDetailColumns, loadOptions } from '../utils';
 import OptionList from './option-list';
@@ -13,26 +20,58 @@ const LoadManage = () => {
   const [VPPOrUser, setVPPOrUser] = useState<boolean>(true);
   // 曲线or表格
   const [curveOrTable, setCurveOrTable] = useState<boolean>(true);
-  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 3', 'Option 3'];
-  const [tableData, setTableData] = useState<any>([
-    { timePeriod: '00:00:00', demandCapacity: '1200' },
-    { timePeriod: '01:00:00', demandCapacity: '1200' },
-    { timePeriod: '02:00:00', demandCapacity: '1200' },
-    { timePeriod: '03:00:00', demandCapacity: '1000' },
-    { timePeriod: '03:00:00', demandCapacity: '1000' },
-    { timePeriod: '03:00:00', demandCapacity: '1000' },
-    { timePeriod: '03:00:00', demandCapacity: '1000' },
-    { timePeriod: '03:00:00', demandCapacity: '1000' },
-    { timePeriod: '03:00:00', demandCapacity: '1000' },
-    { timePeriod: '03:00:00', demandCapacity: '1000' },
-  ]);
+  // 日期
+  const [date, setDate] = useState<any | null>(null);
+  // 列表选项
+  const [options, setOptions] = useState<any>([]);
   const [selectedValue, setSelectedValue] = useState<string>('');
+
+  const transformedData = (data: any) => {
+    return data?.xaxis.map((timePeriod: string, index: number) => ({
+      key: index,
+      timePeriod,
+      baseline: data?.valueList[index],
+    }));
+  };
+
+  // 代理用户厂家列表
+  const { data: userList } = useRequest(getUserList, {
+    manual: false,
+    onSuccess: (res) =>
+      setOptions([
+        {
+          title: '厂家列表',
+          options: res.map((item: any) => item.name),
+        },
+      ]),
+  });
+
+  // 虚拟电厂
+  const { run: fetchVPPLoadDetails, data: VPPLoadDetails } = useRequest(getVPPLoadDetails, {
+    manual: true,
+  });
+
+  // 代理用户
+  const { run: fetchUserLoadDetails, data: userLoadDetails } = useRequest(getUserLoadDetails, {
+    manual: true,
+  });
+
+  useEffect(() => {
+    const dateString = date ? moment(date).format('YYYY-MM-DD') : date;
+    if (VPPOrUser) {
+      fetchVPPLoadDetails(dateString);
+    } else {
+      if (selectedValue) {
+        fetchUserLoadDetails(dateString, selectedValue);
+      }
+    }
+  }, [VPPOrUser, date, selectedValue]);
 
   return (
     <div className={styles.loadManagePage}>
       <div className={styles.header}>
         日期：
-        <DatePicker />
+        <DatePicker onChange={(value) => setDate(value)} />
         <Button style={{ marginLeft: '20px' }}>
           <DownloadOutlined />
           下载
@@ -56,23 +95,19 @@ const LoadManage = () => {
         <div className={styles.loadDetail}>
           {!VPPOrUser && (
             <OptionList
-              categories={[
-                {
-                  title: '厂家列表', // 分类标题
-                  options: options || [], // 该分类下的选项列表
-                },
-              ]}
+              categories={options}
               setSelectedValue={setSelectedValue}
+              value={userList.map((item: any) => item.substationCode) || []}
               width={160}
             />
           )}
           <div className={styles.curveOrTable}>
             {curveOrTable ? (
-              <CustomCharts options={loadOptions([5, 20, 36, 10, 10])} />
+              <CustomCharts options={loadOptions(VPPOrUser ? VPPLoadDetails : userLoadDetails)} />
             ) : (
               <Table
                 columns={loadDetailColumns}
-                dataSource={tableData}
+                dataSource={transformedData(VPPOrUser ? VPPLoadDetails : userLoadDetails)}
                 scroll={{ y: 490 }}
                 pagination={false}
               />

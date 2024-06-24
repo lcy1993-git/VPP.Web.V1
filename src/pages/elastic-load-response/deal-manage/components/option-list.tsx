@@ -10,6 +10,7 @@ interface CategoryType {
 interface PropsType {
   categories: CategoryType[];
   setSelectedValue: Dispatch<SetStateAction<any>>;
+  value?: any;
   width?: number | string;
   height?: number | string;
 }
@@ -21,7 +22,7 @@ type SelectedOption = {
 
 // 分类选项列表，只能选中一个选项
 const OptionList = (props: PropsType) => {
-  const { categories, width, height, setSelectedValue } = props;
+  const { categories, width, height, setSelectedValue, value } = props;
   const [selectedOption, setSelectedOption] = useState<SelectedOption>({
     categoryIndex: null,
     optionIndex: null,
@@ -44,7 +45,7 @@ const OptionList = (props: PropsType) => {
       if (res.categoryIndex !== null && res.optionIndex !== null) {
         const { categoryIndex, optionIndex } = res;
         const selectedItem = categories[categoryIndex].options[optionIndex];
-        setSelectedValue(selectedItem);
+        setSelectedValue(value ? value[optionIndex] : selectedItem);
       }
       setSelectedOption(res);
     }
@@ -53,7 +54,7 @@ const OptionList = (props: PropsType) => {
   // 设置选中项分类和index
   const selectOption = (categoryIndex: number, optionIndex: number, item: string) => {
     setSelectedOption({ categoryIndex, optionIndex });
-    setSelectedValue(item);
+    setSelectedValue(value ? value[optionIndex] : item);
   };
 
   const listWidth = width || '296px';

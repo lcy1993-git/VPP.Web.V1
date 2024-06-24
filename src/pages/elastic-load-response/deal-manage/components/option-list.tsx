@@ -22,6 +22,10 @@ type SelectedOption = {
 // 分类选项列表，只能选中一个选项
 const OptionList = (props: PropsType) => {
   const { categories, width, height, setSelectedValue } = props;
+  const [selectedOption, setSelectedOption] = useState<SelectedOption>({
+    categoryIndex: null,
+    optionIndex: null,
+  });
 
   // 寻找第一个有选项的分类的索引及该分类的第一个选项的索引
   const findFirstAvailableOption = () => {
@@ -33,16 +37,18 @@ const OptionList = (props: PropsType) => {
     return { categoryIndex: null, optionIndex: null }; // 如果所有分类都没有选项
   };
 
-  const [selectedOption, setSelectedOption] = useState<SelectedOption>(findFirstAvailableOption());
-
-  // 在首次渲染时设置默认选中值
+  // 默认选项
   useEffect(() => {
-    if (selectedOption.categoryIndex !== null && selectedOption.optionIndex !== null) {
-      const { categoryIndex, optionIndex } = selectedOption;
-      const selectedItem = categories[categoryIndex].options[optionIndex];
-      setSelectedValue(selectedItem);
+    if (categories && categories.length) {
+      const res = findFirstAvailableOption();
+      if (res.categoryIndex !== null && res.optionIndex !== null) {
+        const { categoryIndex, optionIndex } = res;
+        const selectedItem = categories[categoryIndex].options[optionIndex];
+        setSelectedValue(selectedItem);
+      }
+      setSelectedOption(res);
     }
-  }, []);
+  }, [categories]);
 
   // 设置选中项分类和index
   const selectOption = (categoryIndex: number, optionIndex: number, item: string) => {

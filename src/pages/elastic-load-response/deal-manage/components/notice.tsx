@@ -4,6 +4,7 @@ import {
   getAnnouncementDetails,
   getAnnouncementList,
 } from '@/services/elastic-load-response/deal-manage';
+import { exportExcel } from '@/utils/xlsx';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -14,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
 import { Button, Col, DatePicker, Form, Input, Row, Select, Space, Table } from 'antd';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import styles from '../index.less';
 import { demandCapacityOptions, demandDetailColumns } from '../utils';
@@ -39,23 +41,6 @@ const Notice = () => {
     onSuccess: (res: any) => setOptions(res),
   });
 
-  // 计划列表详情
-  const { run: fetchAnnouncementDetails, data: announcementDetails } = useRequest(
-    getAnnouncementDetails,
-    {
-      manual: true,
-      onSuccess: (res: any) => {
-        form.setFieldsValue(res);
-        const dataSource = res?.xaxis.map((timePeriod: string, index: number) => ({
-          key: index,
-          timePeriod,
-          demandCapacity: res?.capacity[index],
-        }));
-        setTableData(dataSource);
-      },
-    },
-  );
-
   // 根据需求容量排序
   const sortTableDataByDemandCapacity = (tableData: any, ascOrDesc: boolean) => {
     return [...tableData].sort((a, b) => {
@@ -71,24 +56,52 @@ const Notice = () => {
     });
   };
 
+  // 计划列表详情
+  const { run: fetchAnnouncementDetails, data: announcementDetails } = useRequest(
+    getAnnouncementDetails,
+    {
+      manual: true,
+      onSuccess: (res: any) => {
+        form.setFieldsValue(res);
+        const dataSource = res?.xaxis.map((timePeriod: string, index: number) => ({
+          key: index,
+          timePeriod,
+          demandCapacity: res?.capacity[index],
+        }));
+        setTableData(sortTableDataByDemandCapacity(dataSource, ascOrDesc));
+      },
+    },
+  );
+
   // 升序/降序
   useEffect(() => {
     const sortedData = sortTableDataByDemandCapacity(tableData, ascOrDesc);
     setTableData(sortedData);
   }, [ascOrDesc]);
 
-  // 日期变化获取列表
-  const handleRangePickerChange = (date: any, dateStrings: any[]) => {
-    setDate(dateStrings);
-  };
-
-  useEffect(() => {
+  // 查询按钮
+  const handleSearch = () => {
     if (date) {
-      fetchAnnouncementList({ startDate: date[0], endDate: date[1] });
+      fetchAnnouncementList({
+        startDate: moment(date[0]).format('YYYY-MM-DD'),
+        endDate: moment(date[1]).format('YYYY-MM-DD'),
+      });
     } else {
       fetchAnnouncementList({ startDate: '', endDate: '' });
     }
-  }, [date]);
+  };
+
+  // 下载文件
+  const handleDownLoad = () => {
+    const transformedData = tableData.map((item: any, index: number) => {
+      return { 序号: index + 1, 时段: item.timePeriod, '需求容量(MW)': item.demandCapacity };
+    });
+    exportExcel(transformedData, '邀约需求容量');
+  };
+
+  useEffect(() => {
+    fetchAnnouncementList({ startDate: '', endDate: '' });
+  }, []);
 
   useEffect(() => {
     if (selectedValue) {
@@ -106,18 +119,19 @@ const Notice = () => {
             placeholder={['查询开始时间', '查询结束时间']}
             style={{ width: 300 }}
             allowClear
-            onChange={handleRangePickerChange}
+            onChange={(date) => setDate(date)}
+            value={date}
           />
           <Space size={15}>
-            <Button style={{ marginLeft: '40px' }}>
-              <ReloadOutlined onClick={() => setDate(null)} />
+            <Button style={{ marginLeft: '40px' }} onClick={() => setDate(null)}>
+              <ReloadOutlined />
               重置
             </Button>
-            <Button>
+            <Button onClick={handleSearch}>
               <SearchOutlined />
               查询
             </Button>
-            <Button>
+            <Button onClick={handleDownLoad}>
               <DownloadOutlined />
               下载
             </Button>
@@ -129,23 +143,23 @@ const Notice = () => {
         </Button>
       </div>
       <div className={styles.container}>
-        {options && (
-          <div>
-            <OptionList
-              categories={[
-                {
-                  title: '目前邀约计划', // 分类标题
-                  options: options?.dayAheadInvitationPlan || [], // 该分类下的选项列表
-                },
-                {
-                  title: '实时调度计划',
-                  options: options?.realTimeDispatchPlan || [],
-                },
-              ]}
-              setSelectedValue={setSelectedValue}
-            />
-          </div>
-        )}
+        <OptionList
+          categories={
+            options
+              ? [
+                  {
+                    title: '目前邀约计划', // 分类标题
+                    options: options?.dayAheadInvitationPlan || [], // 该分类下的选项列表
+                  },
+                  {
+                    title: '实时调度计划',
+                    options: options?.realTimeDispatchPlan || [],
+                  },
+                ]
+              : []
+          }
+          setSelectedValue={setSelectedValue}
+        />
         <div className={styles.infoContainer}>
           <div className={styles.planNum}>邀约计划信息：{selectedValue}</div>
           <Form

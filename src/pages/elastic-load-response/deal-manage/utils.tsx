@@ -1,6 +1,7 @@
 import ColorCircleScript from '@/components/color-circle-script';
 import { Button, Space } from 'antd';
 import * as echarts from 'echarts';
+import { Dispatch, SetStateAction } from 'react';
 
 // 邀约需求容量详情
 export const demandDetailColumns: any = [
@@ -382,7 +383,218 @@ export const VPPDetailColumns: any = [
 ];
 
 // 申报详情表格-代理用户
-export const userDetailColumns: any = [
+export const userDetailColumns: any = (
+  setCapacityVisible: Dispatch<SetStateAction<any>>,
+  setPriceVisible: Dispatch<SetStateAction<any>>,
+) => {
+  const curveIcon = (isCapacity: boolean) => {
+    return (
+      <i
+        className="iconfont"
+        style={{ color: '#0084FF', cursor: 'pointer' }}
+        onClick={() => {
+          if (isCapacity) {
+            setCapacityVisible(true);
+          } else {
+            setPriceVisible(true);
+          }
+        }}
+      >
+        &#xe63a;
+      </i>
+    );
+  };
+  return [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
+      align: 'center',
+    },
+    {
+      title: '用户名称',
+      dataIndex: 'userName',
+      key: 'userName',
+      align: 'center',
+    },
+    {
+      title: '邀约计划',
+      dataIndex: 'invitationPlan',
+      key: 'invitationPlan',
+      align: 'center',
+    },
+    {
+      title: '可调容量(MW)',
+      dataIndex: 'adjustableCapacity',
+      key: 'adjustableCapacity',
+      align: 'center',
+    },
+    {
+      title: '申报交易量(MWh)',
+      dataIndex: 'declaredTransactionVolume',
+      key: 'declaredTransactionVolume',
+      align: 'center',
+    },
+    {
+      title: '申报容量曲线',
+      align: 'center',
+      render: () => curveIcon(true),
+    },
+    {
+      title: '申报价格曲线',
+      align: 'center',
+      render: () => curveIcon(false),
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      align: 'center',
+    },
+    {
+      title: '操作',
+      align: 'center' as any,
+      render: () => {
+        return (
+          <Space>
+            <Button size="small">编辑</Button>
+            <Button size="small">删除</Button>
+          </Space>
+        );
+      },
+    },
+  ];
+};
+
+// 申报容量曲线
+export const capacityOptions = (data: any) => {
+  if (!data) {
+    return false;
+  }
+
+  return {
+    legend: {
+      textStyle: {
+        color: '#E7FAFF',
+        fontSize: '12px',
+        fontWeight: 400,
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    grid: {
+      top: '15%',
+      left: '1%',
+      right: '4%',
+      bottom: '0%',
+      containLabel: true,
+    },
+    color: ['#FB8D44'],
+    xAxis: {
+      type: 'category',
+      name: '时',
+      boundaryGap: false,
+      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'kW',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#284377',
+          width: 1,
+        },
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    series: [
+      {
+        name: '容量',
+        data: data,
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  };
+};
+
+// 申报价格曲线
+export const priceOptions = (data: any) => {
+  if (!data) {
+    return false;
+  }
+
+  return {
+    legend: {
+      textStyle: {
+        color: '#E7FAFF',
+        fontSize: '12px',
+        fontWeight: 400,
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    grid: {
+      top: '15%',
+      left: '1%',
+      right: '4%',
+      bottom: '0%',
+      containLabel: true,
+    },
+    color: ['#FB8D44'],
+    xAxis: {
+      type: 'category',
+      name: '时',
+      boundaryGap: false,
+      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    yAxis: {
+      type: 'value',
+      name: '元',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#284377',
+          width: 1,
+        },
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    series: [
+      {
+        name: '价格',
+        data: data,
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  };
+};
+
+// 申报容量columns
+export const capacityColumns: any = [
   {
     title: '序号',
     dataIndex: 'index',
@@ -391,59 +603,257 @@ export const userDetailColumns: any = [
     align: 'center',
   },
   {
-    title: '用户名称',
-    dataIndex: 'userName',
-    key: 'userName',
+    title: '时段',
+    dataIndex: 'timePeriod',
+    key: 'timePeriod',
     align: 'center',
   },
   {
-    title: '邀约计划',
-    dataIndex: 'invitationPlan',
-    key: 'invitationPlan',
+    title: '容量(kW)',
+    dataIndex: 'capacity',
+    key: 'capacity',
     align: 'center',
-  },
-  {
-    title: '可调容量(MW)',
-    dataIndex: 'adjustableCapacity',
-    key: 'adjustableCapacity',
-    align: 'center',
-  },
-  {
-    title: '申报交易量(MWh)',
-    dataIndex: 'declaredTransactionVolume',
-    key: 'declaredTransactionVolume',
-    align: 'center',
-  },
-  {
-    title: '申报容量曲线',
-    align: 'center',
-  },
-  {
-    title: '申报价格曲线',
-    align: 'center',
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    key: 'updateTime',
-    align: 'center',
-  },
-  {
-    title: '操作',
-    align: 'center' as any,
-    render: () => {
-      return (
-        <Space>
-          <Button size="small">编辑</Button>
-          <Button size="small">删除</Button>
-        </Space>
-      );
-    },
   },
 ];
 
+// 申报价格columns
+export const priceColumns: any = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
+    align: 'center',
+  },
+  {
+    title: '时段',
+    dataIndex: 'timePeriod',
+    key: 'timePeriod',
+    align: 'center',
+  },
+  {
+    title: '价格(元)',
+    dataIndex: 'price',
+    key: 'price',
+    align: 'center',
+  },
+];
 
+// 出清结果
+export const clearingResultColumns: any = (setClearingVisible: Dispatch<SetStateAction<any>>) => {
+  return [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
+      align: 'center',
+      render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
+    },
+    {
+      title: '邀约计划',
+      dataIndex: 'invitationPlan',
+      key: 'invitationPlan',
+      align: 'center',
+    },
+    {
+      title: '运行日',
+      dataIndex: 'operatingDay',
+      key: 'operatingDay',
+      align: 'center',
+    },
+    {
+      title: '相应类型',
+      dataIndex: '',
+      key: '',
+      align: 'center',
+    },
+    {
+      title: '申报交易量(MWh)',
+      dataIndex: 'declaredTransactionVolume',
+      key: 'declaredTransactionVolume',
+      align: 'center',
+    },
+    {
+      title: '申报均价(元/MWh)',
+      dataIndex: 'declaredAveragePrice',
+      key: 'declaredAveragePrice',
+      align: 'center',
+    },
+    {
+      title: '代理用户数',
+      dataIndex: '',
+      key: '',
+      align: 'center',
+    },
+    {
+      title: '预估收益(元)',
+      dataIndex: 'estimatedRevenue',
+      key: 'estimatedRevenue',
+      align: 'center',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
 
+      key: 'status',
+      render: (text: any) => {
+        const status = ['中标', '未中标'];
+        const statusColors = ['#FFD800', '#01FF73'];
+        return <ColorCircleScript color={statusColors[text]} script={status[text]} />;
+      },
+      align: 'center',
+    },
+    {
+      title: '操作',
+      align: 'center' as any,
+      render: () => {
+        return (
+          <Button size="small" onClick={() => setClearingVisible(true)}>
+            查看明细
+          </Button>
+        );
+      },
+    },
+  ];
+};
+
+// 出清明细-中标功率
+export const winningPowerOptions = (data: any) => {
+  if (!data) {
+    return false;
+  }
+
+  return {
+    legend: {
+      textStyle: {
+        color: '#E7FAFF',
+        fontSize: '12px',
+        fontWeight: 400,
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    grid: {
+      top: '12%',
+      left: '1%',
+      right: '6%',
+      bottom: '4%',
+      containLabel: true,
+    },
+    color: ['#39FFC5', '#FFEA00', '#FB8D44'],
+    xAxis: {
+      type: 'category',
+      name: '时',
+      boundaryGap: false,
+      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'kW',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#284377',
+          width: 1,
+        },
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    series: [
+      {
+        name: '调节',
+        data: data,
+        type: 'line',
+        smooth: true,
+      },
+      {
+        name: '计划',
+        data: data,
+        type: 'line',
+        smooth: true,
+      },
+      {
+        name: '基线',
+        data: data,
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  };
+};
+
+// 出清明细-中标价格
+export const winningPriceOptions = (data: any) => {
+  if (!data) {
+    return false;
+  }
+
+  return {
+    legend: {
+      textStyle: {
+        color: '#E7FAFF',
+        fontSize: '12px',
+        fontWeight: 400,
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    grid: {
+      top: '12%',
+      left: '1%',
+      right: '6%',
+      bottom: '4%',
+      containLabel: true,
+    },
+    color: ['#B37FE9'],
+    xAxis: {
+      type: 'category',
+      name: '时',
+      boundaryGap: false,
+      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'kW',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#284377',
+          width: 1,
+        },
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    series: [
+      {
+        name: '价格',
+        data: data,
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  };
+};
 
 // 合同管理表格Columns
 export const contractColumns = [
@@ -538,8 +948,7 @@ export const contractColumns = [
     dataIndex: 'index',
     key: 'index',
   },
-
-]
+];
 
 // 合同管理新增模态框表格
 export const addContractTableColumns = [
@@ -605,13 +1014,14 @@ export const addContractTableColumns = [
       return (
         <Space>
           <Button size="small">下载</Button>
-          <Button size="small" danger>删除</Button>
+          <Button size="small" danger>
+            删除
+          </Button>
         </Space>
       );
     },
   },
-]
-
+];
 
 // 结算管理表格Columns
 export const settlementColumns = [
@@ -715,8 +1125,8 @@ export const settlementColumns = [
     dataIndex: 'index',
     align: 'center' as any,
     key: 'index',
-  }
-]
+  },
+];
 // 结算管理模态框图options
 export const settlementChartOptions = () => {
   return {
@@ -734,11 +1144,17 @@ export const settlementChartOptions = () => {
     },
     color: ['#39ffc5', '#0090ff', '#fb8d44', '#ffea00', '#b37fe9'],
     legend: {
-      data: ['实际调节电量（kWh）', '有效调节电量（kWh）', '考核电量（kWh）', '结算价格（元/MWh）', '考核价格（元/MWh）'],
+      data: [
+        '实际调节电量（kWh）',
+        '有效调节电量（kWh）',
+        '考核电量（kWh）',
+        '结算价格（元/MWh）',
+        '考核价格（元/MWh）',
+      ],
       textStyle: {
         color: '#d7eaef',
       },
-      top: 20
+      top: 20,
     },
     xAxis: {
       type: 'category',
@@ -766,34 +1182,34 @@ export const settlementChartOptions = () => {
     },
     series: [
       {
-        data: [110,125,160,182,658,695,457,123,855,120,565,865],
+        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
         type: 'line',
         name: '实际调节电量（kWh）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [355,865,965,854,435,665,522,111,666,854,125,523],
+        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
         type: 'line',
         name: '有效调节电量（kWh）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [745,865,965,854,335,665,656,111,666,854,125,523],
+        data: [745, 865, 965, 854, 335, 665, 656, 111, 666, 854, 125, 523],
         type: 'line',
         name: '考核电量（kWh）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [265,865,965,854,223,665,855,111,666,854,125,523],
+        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
         type: 'line',
         name: '结算价格（元/MWh）',
-        smooth: true
+        smooth: true,
       },
       {
-        data: [654,111,523,854,223,552,855,111,985,666,122,421],
+        data: [654, 111, 523, 854, 223, 552, 855, 111, 985, 666, 122, 421],
         type: 'line',
         name: '考核价格（元/MWh）',
-        smooth: true
+        smooth: true,
       },
     ],
   }

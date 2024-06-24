@@ -91,23 +91,6 @@
         padding: 15px;
         border-top: 1px solid rgba(0, 74, 192, 0.6);
 
-        .titleText {
-          position: relative;
-          padding-left: 8px;
-          font-weight: bold;
-          font-size: 16px;
-
-          &::before {
-            position: absolute;
-            top: 10;
-            left: 0;
-            width: 2px;
-            height: 17px;
-            background: #fff;
-            content: '';
-          }
-        }
-
         .bar {
           flex: 1;
         }
@@ -228,6 +211,14 @@
     margin-top: 15px;
     border: 1px solid rgba(0, 74, 192, 0.6);
 
+    .handledContainer {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
     .topContainer {
       border-bottom: 1px solid rgba(0, 74, 192, 0.6);
     }
@@ -272,28 +263,73 @@
   text-align: center;
 }
 
+.titleText {
+  position: relative;
+  height: 20px;
+  padding-left: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 20px;
+    background: #fff;
+    content: '';
+  }
+}
+
+.clearingModalBody {
+  .vppContainer {
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    border-bottom: 1px solid rgba(0, 74, 192, 0.6);
+  }
+
+  .charts {
+    display: flex;
+    flex-direction: row;
+    height: 300px;
+
+    .line {
+      width: 1px;
+      height: 100%;
+      margin: 0 10px;
+      background: linear-gradient(
+        0deg,
+        rgba(7, 44, 82, 0.05) 0%,
+        rgba(0, 132, 255, 0.9) 51%,
+        rgba(7, 44, 82, 0.05) 100%
+      );
+    }
+  }
+}
 
 // 合同管理页面样式
 .contractPage {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
 
   .pageHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
   .pageMain {
     flex: 1;
+    box-sizing: border-box;
     width: 100%;
     padding: 20px;
-    box-sizing: border-box;
     border: 1px solid #01368d;
 
     .tableSearch {
@@ -304,10 +340,10 @@
 
 // 结算管理页面样式
 .settlementPage {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
 
   .settlementPageHead {
     width: 100%;
@@ -316,46 +352,51 @@
 
   .settlementPageMain {
     flex: 1;
+    box-sizing: border-box;
     width: 100%;
     padding: 20px;
     padding-top: 0;
-    box-sizing: border-box;
     border: 1px solid #01368d;
 
     .mainHead {
-      height: 54px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      height: 54px;
 
       .mainHeadTitle {
-        font-family: PingFang SC;
+        color: #ffffff;
         font-weight: bold;
         font-size: 16px;
-        color: #FFFFFF;
+        font-family: PingFang SC;
       }
     }
 
     .cardList {
-      width: 100%;
-      height: 120px;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 120px;
       padding-bottom: 20px;
       border-bottom: 1px solid #01368d;
 
       .cardListItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 16%;
         min-width: 120px;
         height: 100px;
+        padding-left: 10px;
+        overflow: hidden;
         border: 1px solid;
-        border-radius: 6px;
         border-top-color: #0052ec;
         border-right-color: #003495;
         border-bottom-color: #00297c;
         border-left-color: #003495;
+        border-radius: 6px;
         box-shadow: inset 0 0 6px #14339c;
         display: flex;
         justify-content: center;
@@ -364,33 +405,33 @@
         padding-left: 10px;
 
         .listItemIcon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           width: 70px;
           height: 70px;
           background-image: url('@/assets/image/base/cardItem.png');
-          background-size: contain;
-          background-position: center 20px;
           background-repeat: no-repeat;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          background-position: center 20px;
+          background-size: contain;
 
           i {
-            font-size: 32px;
             margin-bottom: 26px;
+            color: #0191fd;
+            font-size: 32px;
             background: -webkit-linear-gradient(#d2e3fa, #0191fd);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            color: #0191fd;
           }
         }
 
         .listItemContent {
-          flex: 1;
-          height: 100%;
           display: flex;
+          flex: 1;
           flex-direction: column;
-          justify-content: center;
           align-items: flex-start;
+          justify-content: center;
+          height: 100%;
           padding-left: 10px;
 
           .column {
@@ -398,18 +439,18 @@
           }
 
           .label {
-            font-size: 16px;
-            font-weight: bold;
             color: #fff;
-            opacity: 0.8;
+            font-weight: bold;
+            font-size: 16px;
             line-height: 26px;
+            opacity: 0.8;
           }
 
           .value {
-            font-family: DIN Medium;
+            color: #ffffff;
             font-weight: 400;
             font-size: 22px;
-            color: #FFFFFF;
+            font-family: DIN Medium;
           }
         }
       }
@@ -420,10 +461,10 @@
       height: calc(100% - 174px);
 
       .tableSearch {
-        width: 100%;
-        height: 70px;
         display: flex;
         align-items: center;
+        width: 100%;
+        height: 70px;
       }
     }
   }
@@ -443,66 +484,66 @@
     width: 100%;
 
     .button {
-      height: 40px;
       display: flex;
-      justify-content: flex-end;
       align-items: center;
+      justify-content: flex-end;
+      height: 40px;
     }
   }
 
   .cardList {
-    width: 100%;
-    height: 120px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 120px;
 
     .cardListItem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 280px;
       height: 100px;
+      margin: 0 20px;
+      padding-left: 10px;
+      overflow: hidden;
       border: 1px solid;
-      border-radius: 6px;
       border-top-color: #0052ec;
       border-right-color: #003495;
       border-bottom-color: #00297c;
       border-left-color: #003495;
+      border-radius: 6px;
       box-shadow: inset 0 0 6px #14339c;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      padding-left: 10px;
-      margin: 0 20px;
 
       .listItemIcon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 70px;
         height: 70px;
         background-image: url('@/assets/image/base/cardItem.png');
-        background-size: contain;
-        background-position: center 20px;
         background-repeat: no-repeat;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        background-position: center 20px;
+        background-size: contain;
 
         i {
-          font-size: 32px;
           margin-bottom: 26px;
+          color: #0191fd;
+          font-size: 32px;
           background: -webkit-linear-gradient(#d2e3fa, #0191fd);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          color: #0191fd;
         }
       }
 
       .listItemContent {
-        flex: 1;
-        height: 100%;
         display: flex;
+        flex: 1;
         flex-direction: column;
-        justify-content: center;
         align-items: flex-start;
+        justify-content: center;
+        height: 100%;
         padding-left: 10px;
 
         .column {
@@ -510,18 +551,18 @@
         }
 
         .label {
-          font-size: 16px;
-          font-weight: bold;
           color: #fff;
-          opacity: 0.8;
+          font-weight: bold;
+          font-size: 16px;
           line-height: 26px;
+          opacity: 0.8;
         }
 
         .value {
-          font-family: DIN Medium;
+          color: #ffffff;
           font-weight: 400;
           font-size: 22px;
-          color: #FFFFFF;
+          font-family: DIN Medium;
         }
       }
     }
@@ -529,20 +570,22 @@
 
   .modalCardTitle {
     height: 50px;
-    line-height: 50px;
-    text-align: center;
-    font-family: Source Han Sans SC;
+    color: #ffffff;
     font-weight: bold;
     font-size: 14px;
-    color: #FFFFFF;
+    font-family: Source Han Sans SC;
+    line-height: 50px;
+    text-align: center;
   }
 
   .modalChange {
     height: 40px;
     width: 100%;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 40px;
     padding-right: 10%;
   }
 

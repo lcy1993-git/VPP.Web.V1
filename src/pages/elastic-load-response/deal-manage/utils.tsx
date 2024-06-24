@@ -27,8 +27,8 @@ export const demandDetailColumns: any = [
 ];
 
 // 邀约需求容量柱状图
-export const demandCapacityOptions = (data: any) => {
-  if (!data) return false;
+export const demandCapacityOptions = (xAxis: any, data: any) => {
+  if (!data || data.length === 0) return false;
 
   return {
     grid: {
@@ -45,7 +45,7 @@ export const demandCapacityOptions = (data: any) => {
           color: 'rgba(231, 250, 255, 0.6)',
         },
       },
-      data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'],
+      data: xAxis,
       name: '时',
     },
     yAxis: {
@@ -1240,4 +1240,56 @@ export const settlementChartOptions = () => {
       },
     ],
   };
+};
+
+// 计划分解详情
+export const planDetailColumns: any = () => {
+  return [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
+      align: 'center',
+    },
+    {
+      title: '资源商',
+      dataIndex: 'userName',
+      key: 'userName',
+      align: 'center',
+    },
+    {
+      title: '资源商编号',
+      dataIndex: 'invitationPlan',
+      key: 'invitationPlan',
+      align: 'center',
+    },
+    {
+      title: '计划调节里程(MWh)',
+      dataIndex: 'adjustableCapacity',
+      key: 'adjustableCapacity',
+      align: 'center',
+    },
+    {
+      title: '日最大功率(MW)',
+      dataIndex: 'declaredTransactionVolume',
+      key: 'declaredTransactionVolume',
+      align: 'center',
+    },
+    {
+      title: '调节曲线',
+      align: 'center',
+      render: () => (
+        <i className="iconfont" style={{ color: '#0084FF', cursor: 'pointer' }} onClick={() => {}}>
+          &#xe63a;
+        </i>
+      ),
+    },
+    {
+      title: '资源状态',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      align: 'center',
+    },
+  ];
 };

@@ -1,3 +1,13 @@
+:global {
+  .ant-collapse-header {
+    background-image: url('@/assets/image/base/table-header.png');
+  }
+
+  .ant-collapse .ant-collapse-content > .ant-collapse-content-box {
+    padding: 5px 16px;
+  }
+}
+
 .dealPage {
   display: flex;
   flex-direction: column;
@@ -44,6 +54,7 @@
   .dealContainer {
     flex: 1;
     margin-top: 15px;
+    overflow: hidden;
   }
 }
 
@@ -51,7 +62,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100% - 16px);
+  height: 100%;
 
   .header {
     display: flex;
@@ -64,12 +75,18 @@
     flex: 1;
     flex-direction: row;
     margin-top: 12px;
+    overflow: hidden;
     border: 1px solid rgba(0, 74, 192, 0.6);
+
+    .optionList {
+      width: 256px;
+      overflow-y: auto;
+    }
 
     .infoContainer {
       display: flex;
-      flex: 1;
       flex-direction: column;
+      width: calc(100% - 296px);
       height: 100%;
       border-left: 1px solid rgba(0, 74, 192, 0.6);
 
@@ -112,6 +129,7 @@
 .list {
   display: flex;
   flex-direction: column;
+  overflow: auto;
   text-align: center;
 
   .listTitle {
@@ -139,11 +157,14 @@
     .option {
       width: 100%;
       height: 48px;
+      overflow: hidden;
       color: #ffffff;
       font-weight: 400;
       font-size: 16px;
       font-family: PingFang SC;
       line-height: 48px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       cursor: pointer;
     }
 
@@ -583,5 +604,166 @@
 
   .modalChartOrTable {
     width: 100%;
+  }
+}
+
+.controlManagerPage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-top: 15px;
+    border: 1px solid rgba(0, 74, 192, 0.6);
+
+    .topContainer,
+    .bottomContainer {
+      padding: 0 20px;
+    }
+
+    .topContainer {
+      display: flex;
+      flex-direction: row;
+      height: 350px;
+      border-bottom: 1px solid rgba(0, 74, 192, 0.6);
+
+      .planList {
+        width: 320px;
+        padding-top: 15px;
+        padding-right: 20px;
+        overflow: auto;
+        border-right: 1px solid rgba(0, 74, 192, 0.6);
+      }
+
+      .planChart {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding-top: 15px;
+        padding-left: 20px;
+
+        .chart {
+          flex: 1;
+        }
+      }
+    }
+
+    .bottomContainer {
+      flex: 1;
+      padding-top: 20px;
+
+      .searchHeader {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+  }
+}
+
+.collapseItem {
+  width: 100%;
+
+  .list {
+    text-align: start;
+
+    .item {
+      position: relative;
+      padding-left: 25px;
+
+      &::before {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 8px;
+        height: 8px;
+        background: #015cc0;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        content: '';
+      }
+
+      .label,
+      .value {
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Source Han Sans SC;
+      }
+    }
+  }
+
+  .line {
+    width: 100%;
+    height: 1px;
+    margin-top: 5px;
+    background: linear-gradient(
+      90deg,
+      rgba(7, 44, 82, 0.05) 0%,
+      rgba(0, 132, 255, 0.9) 51%,
+      rgba(7, 44, 82, 0.05) 100%
+    );
+  }
+
+  .planCard {
+    width: 100%;
+
+    .cardItem {
+      display: flex;
+      align-items: center;
+      width: 270px;
+      height: 60px;
+      margin-top: 5px;
+      padding-left: 15px;
+      background: rgba(0, 132, 255, 0);
+      border: 1px solid #0054ee;
+      border-radius: 8px;
+      // border-image: linear-gradient(0deg, #00297c, #0054ee) 10 10;
+
+      .cardIcon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        margin-right: 20px;
+        background-image: url('@/assets/image/icon/iconBg.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+
+        i {
+          color: #accce9;
+          font-size: 20px;
+        }
+      }
+
+      .cardContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .label {
+          color: #ffffff;
+          font-weight: 400;
+          font-size: 16px;
+          font-family: PingFang SC;
+          line-height: 23px;
+          opacity: 0.8;
+        }
+
+        .value {
+          color: #ffffff;
+          font-weight: 400;
+          font-size: 21px;
+          font-family: DIN Medium;
+        }
+      }
+    }
   }
 }

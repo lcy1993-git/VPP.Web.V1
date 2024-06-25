@@ -38,3 +38,11 @@ export const getUserList = () => {
     method: 'GET',
   });
 };
+
+// 邀约计划
+export const getPlanList = (type: string) => {
+  return request(`/sysApi/demand/response/regulationPlanManagement/list`, {
+    method: 'GET',
+    params: { type },
+  });
+};

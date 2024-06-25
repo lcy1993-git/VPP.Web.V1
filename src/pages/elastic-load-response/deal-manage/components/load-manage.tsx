@@ -5,6 +5,7 @@ import {
   getUserLoadDetails,
   getVPPLoadDetails,
 } from '@/services/elastic-load-response/deal-manage';
+import { exportExcel } from '@/utils/xlsx';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
 import { Button, DatePicker, Table } from 'antd';
@@ -56,6 +57,15 @@ const LoadManage = () => {
     manual: true,
   });
 
+  // 下载文件
+  const handleDownLoad = () => {
+    const tableData = transformedData(VPPOrUser ? VPPLoadDetails : userLoadDetails);
+    const res = tableData.map((item: any, index: number) => {
+      return { 序号: index + 1, 时段: item.timePeriod, '基线(kW)': item.baseline };
+    });
+    exportExcel(res, '基线负荷');
+  };
+
   useEffect(() => {
     const dateString = date ? moment(date).format('YYYY-MM-DD') : date;
     if (VPPOrUser) {
@@ -72,7 +82,7 @@ const LoadManage = () => {
       <div className={styles.header}>
         日期：
         <DatePicker onChange={(value) => setDate(value)} />
-        <Button style={{ marginLeft: '20px' }}>
+        <Button style={{ marginLeft: '20px' }} onClick={handleDownLoad}>
           <DownloadOutlined />
           下载
         </Button>
@@ -98,7 +108,7 @@ const LoadManage = () => {
               categories={options}
               setSelectedValue={setSelectedValue}
               value={userList.map((item: any) => item.substationCode) || []}
-              width={160}
+              width={190}
             />
           )}
           <div className={styles.curveOrTable}>

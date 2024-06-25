@@ -1,5 +1,5 @@
 import ColorCircleScript from '@/components/color-circle-script';
-import { Button, Space } from 'antd';
+import { Badge, Button, Space } from 'antd';
 import * as echarts from 'echarts';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -1282,7 +1282,17 @@ export const planDetailColumns: any = () => {
 };
 
 // 执行跟踪--- 实时运行功率图表options
-export const dayPlanChartOptions = () => {
+export const dayPlanChartOptions = (data: any) => {
+  if (!data) return false;
+
+  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis} = data;
+
+  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return false;
+
+  const xAxisData = xaxis.map((item: string) => {
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
+  })
+
   return {
     tooltip: {
       trigger: 'axis',
@@ -1306,21 +1316,7 @@ export const dayPlanChartOptions = () => {
     },
     xAxis: {
       type: 'category',
-      data: [
-        '00:00',
-        '02:00',
-        '04:00',
-        '06:00',
-        '08:00',
-        '10:00',
-        '12:00',
-        '14:00',
-        '16:00',
-        '18:00',
-        '20:00',
-        '22:00',
-        '24:00',
-      ],
+      data: xAxisData,
     },
     yAxis: {
       type: 'value',
@@ -1344,25 +1340,25 @@ export const dayPlanChartOptions = () => {
     },
     series: [
       {
-        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
+        data: invitationPlanList,
         type: 'line',
         name: '邀约计划（kW）',
         smooth: true,
       },
       {
-        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
+        data: realValueList,
         type: 'line',
         name: '实时（kW）',
         smooth: true,
       },
       {
-        data: [745, 865, 965, 854, 335, 665, 656, 111, 666, 854, 125, 523],
+        data: invitationAdjustmentList,
         type: 'line',
         name: '邀约调节（kW）',
         smooth: true,
       },
       {
-        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
+        data: baselineValueList,
         type: 'line',
         name: '基线（kW）',
         smooth: true,
@@ -1371,39 +1367,61 @@ export const dayPlanChartOptions = () => {
   };
 };
 
-// 执行更正--- 实时运行功率table columns
+// 执行跟踪 --- 实时运行功率table columns
 export const dayPlanTableColumns = [
   {
     title: '时段',
-    dataIndex: 'index',
+    dataIndex: 'dateTime',
     align: 'center' as any,
-    key: 'index',
+    key: 'dateTime',
   },
   {
     title: '邀约计划（kW）',
-    dataIndex: 'belongSubstation',
+    dataIndex: 'invitationAdjustment',
     align: 'center' as any,
-    key: 'belongSubstation',
+    key: 'invitationAdjustment',
   },
   {
     title: '实时（kW）',
-    dataIndex: 'index',
+    dataIndex: 'realTimeValue',
     align: 'center' as any,
-    key: 'index',
+    key: 'realTimeValue',
   },
   {
     title: '邀约调节（kW）',
-    dataIndex: 'index',
+    dataIndex: 'invitationPlan',
     align: 'center' as any,
-    key: 'index',
+    key: 'invitationPlan',
   },
   {
     title: '基线（kW）',
-    dataIndex: 'index',
+    dataIndex: 'baseline',
     align: 'center' as any,
-    key: 'index',
+    key: 'baseline',
   },
 ];
+
+// 执行跟踪 --- 表格数据
+export const dayPlanTableData = (data: any) => {
+
+  if (!data) return [];
+
+  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } = data;
+
+  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return [];
+
+  const tableData = xaxis.map((item: any, index: any) => {
+    return {
+      key: item,
+      baseline: baselineValueList[index],
+      dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
+      invitationPlan: invitationPlanList[index],
+      realTimeValue: realValueList[index],
+      invitationAdjustment: invitationAdjustmentList[index]
+    }
+  })
+  return tableData;
+}
 
 // 执行跟踪 ---- 邀约资源商信息
 export const sourceTableColumns = [
@@ -1419,33 +1437,40 @@ export const sourceTableColumns = [
   },
   {
     title: '资源商',
-    dataIndex: 'index',
+    dataIndex: 'companyName',
     align: 'center' as any,
-    key: 'index',
+    key: 'companyName',
   },
   {
     title: '资源商编号',
-    dataIndex: 'index',
+    dataIndex: 'resourceProviderNum',
     align: 'center' as any,
-    key: 'index',
+    ellipsis: true,
+    key: 'resourceProviderNum',
   },
   {
     title: '计划调节里程（MWh)',
-    dataIndex: 'index',
+    dataIndex: 'planAdjustmentMilestone',
     align: 'center' as any,
-    key: 'index',
+    key: 'planAdjustmentMilestone',
   },
   {
     title: '实际调节里程（MWh)',
-    dataIndex: 'index',
+    dataIndex: 'actualAdjustmentMilestone',
     align: 'center' as any,
-    key: 'index',
+    key: 'actualAdjustmentMilestone',
   },
   {
     title: '状态',
-    dataIndex: 'index',
+    dataIndex: 'onlineNum',
     align: 'center' as any,
-    key: 'index',
+    key: 'onlineNum',
+    render: (text: any) => {
+      return <Space>
+        { text === 0 ? <Badge status="error" /> : <Badge status="success" />}
+        { text === 0 ? <span style={{color: '#dc0303'}}>离线</span> : <span style={{color: '#49aa19'}}>在线</span> }
+      </Space>
+    }
   },
 ];
 
@@ -1453,37 +1478,46 @@ export const sourceTableColumns = [
 export const companyTableColumns = [
   {
     title: '时段',
-    dataIndex: 'index',
+    dataIndex: 'dateTime',
     align: 'center' as any,
-    key: 'index',
+    key: 'dateTime',
   },
   {
     title: '邀约计划（kW）',
-    dataIndex: 'belongSubstation',
+    dataIndex: 'invitationAdjustment',
     align: 'center' as any,
-    key: 'belongSubstation',
+    key: 'invitationAdjustment',
   },
   {
     title: '实时（kW）',
-    dataIndex: 'index',
+    dataIndex: 'realTimeValue',
     align: 'center' as any,
-    key: 'index',
+    key: 'realTimeValue',
   },
   {
     title: '邀约调节（kW）',
-    dataIndex: 'index',
+    dataIndex: 'invitationPlan',
     align: 'center' as any,
-    key: 'index',
+    key: 'invitationPlan',
   },
   {
     title: '基线（kW）',
-    dataIndex: 'index',
+    dataIndex: 'baseline',
     align: 'center' as any,
-    key: 'index',
+    key: 'baseline',
   },
 ];
 // 执行跟踪 --- 资源实时运行功率图表 options
-export const companyChartOptions = () => {
+export const companyChartOptions = (companySourceData: any) => {
+  if (!companySourceData) return false;
+
+  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis} = companySourceData;
+
+  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return false;
+
+  const xAxisData = xaxis.map((item: string) => {
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
+  })
   return {
     tooltip: {
       trigger: 'axis',
@@ -1507,21 +1541,7 @@ export const companyChartOptions = () => {
     },
     xAxis: {
       type: 'category',
-      data: [
-        '00:00',
-        '02:00',
-        '04:00',
-        '06:00',
-        '08:00',
-        '10:00',
-        '12:00',
-        '14:00',
-        '16:00',
-        '18:00',
-        '20:00',
-        '22:00',
-        '24:00',
-      ],
+      data: xAxisData,
     },
     yAxis: {
       type: 'value',
@@ -1545,25 +1565,25 @@ export const companyChartOptions = () => {
     },
     series: [
       {
-        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
+        data: invitationPlanList,
         type: 'line',
         name: '邀约计划（kW）',
         smooth: true,
       },
       {
-        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
+        data: realValueList,
         type: 'line',
         name: '实时（kW）',
         smooth: true,
       },
       {
-        data: [745, 865, 965, 854, 335, 665, 656, 111, 666, 854, 125, 523],
+        data: invitationAdjustmentList,
         type: 'line',
         name: '邀约调节（kW）',
         smooth: true,
       },
       {
-        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
+        data: baselineValueList,
         type: 'line',
         name: '基线（kW）',
         smooth: true,
@@ -1571,6 +1591,27 @@ export const companyChartOptions = () => {
     ],
   };
 };
+
+export const companyTableData = (data: any) => {
+  if (!data) return [];
+
+  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } = data;
+
+  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return [];
+
+  const tableData = xaxis.map((item: any, index: any) => {
+    return {
+      key: item,
+      baseline: baselineValueList[index],
+      dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
+      invitationPlan: invitationPlanList[index],
+      realTimeValue: realValueList[index],
+      invitationAdjustment: invitationAdjustmentList[index]
+    }
+  })
+  return tableData;
+}
+
 
 // 交易调控计划管理 --- 图表optionss
 export const responseChartOptions = () => {

@@ -1,4 +1,5 @@
 import QRCode from 'qrcode';
+import * as XLSX from 'xlsx';
 
 // 二维码地址生成
 export async function getQRCode(data: string, name: any) {
@@ -155,3 +156,13 @@ export const getUnit = (isMw = true) => {
  * 轮询时间间隔
  * */
 export const INTERVALTIME = 1000 * 60 * 1;
+
+
+
+export function createUUid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0,
+          v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+  });
+}

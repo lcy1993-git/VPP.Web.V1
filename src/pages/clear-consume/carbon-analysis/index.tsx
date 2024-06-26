@@ -216,8 +216,7 @@ const CarbonAnalysis = () => {
     if (enterpriseCategory === 1) params.ids = area;
     else if (enterpriseCategory === 2) params.ids = industry;
     if (tableRef && tableRef.current) {
-      //@ts-ignore
-      tableRef.current?.searchByParams(params);
+      (tableRef.current as any)?.searchByParams(params);
     }
   };
 

@@ -94,7 +94,7 @@ const DispatchImplementation = () => {
   });
 
   // 告警等级切换，重新请求表格数据
-  const alarmGradeChange = (value: string) => {
+  const alarmGradeChange = (value: number) => {
     console.log(value, '告警等级')
     if (alarmTableRef && alarmTableRef.current) {
       (alarmTableRef.current as any)?.searchByParams({
@@ -351,7 +351,7 @@ const DispatchImplementation = () => {
                 <div className={styles.planTableHead}>
                   <div className={styles.title}>告警信息</div>
                   <Select
-                    defaultValue="全部"
+                    defaultValue={0}
                     style={{ width: 120 }}
                     options={[
                       { value: 0, label: '全部' },

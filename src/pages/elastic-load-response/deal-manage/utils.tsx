@@ -2,6 +2,8 @@ import ColorCircleScript from '@/components/color-circle-script';
 import { Badge, Button, Space } from 'antd';
 import * as echarts from 'echarts';
 import { Dispatch, SetStateAction } from 'react';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; // 引入中文语言包
 
 // 邀约需求容量详情
 export const demandDetailColumns: any = [
@@ -869,21 +871,21 @@ export const contractColumns = [
   },
   {
     title: '计划编号',
-    dataIndex: 'index',
+    dataIndex: 'id',
     align: 'center' as any,
-    key: 'index',
+    key: 'id',
   },
   {
     title: '合同名称',
     align: 'center' as any,
-    dataIndex: 'index',
-    key: 'index',
+    dataIndex: 'contractName',
+    key: 'contractName',
   },
   {
     align: 'center' as any,
     title: '合同类型',
-    dataIndex: 'index',
-    key: 'index',
+    dataIndex: 'contractType',
+    key: 'contractType',
     filters: [
       {
         text: '需求响应代理合同',
@@ -895,12 +897,15 @@ export const contractColumns = [
       },
     ],
     onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+    render: (text: any) => {
+      return Number(text) === 1 ? '电网结算合同' : '需求响应代理合同'
+    }
   },
   {
     align: 'center' as any,
     title: '结算方式',
-    dataIndex: 'index',
-    key: 'index',
+    dataIndex: 'settlementMethod',
+    key: 'settlementMethod',
     filters: [
       {
         text: '收益与考核比例结算',
@@ -912,46 +917,55 @@ export const contractColumns = [
       },
     ],
     onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+    render: (text: any) => {
+      return Number(text) === 1 ? '电网结算' : '收益与考核比例结算'
+    }
   },
   {
     title: '签订对象',
-    dataIndex: 'index',
+    dataIndex: 'contractingParty',
     align: 'center' as any,
-    key: 'index',
-    filters: [
-      {
-        text: '收益与考核比例结算',
-        value: '1',
-      },
-      {
-        text: '电网结算',
-        value: '2',
-      },
-    ],
-    onFilter: (value: any, record: any) => record.address.startsWith(value as string),
+    key: 'contractingParty',
+    // filters: [
+    //   {
+    //     text: '收益与考核比例结算',
+    //     value: '1',
+    //   },
+    //   {
+    //     text: '电网结算',
+    //     value: '2',
+    //   },
+    // ],
+    // onFilter: (value: any, record: any) => record.address.startsWith(value as string),
   },
   {
     title: '开始时间',
-    dataIndex: 'index',
+    dataIndex: 'startTime',
     align: 'center' as any,
-    key: 'index',
+    key: 'startTime',
   },
   {
     title: '结束时间',
-    dataIndex: 'index',
+    dataIndex: 'endTime',
     align: 'center' as any,
-    key: 'index',
+    key: 'endTime',
   },
   {
     title: '状态',
     align: 'center' as any,
-    dataIndex: 'index',
-    key: 'index',
+    dataIndex: 'status',
+    key: 'status',
+    render: (text: any) => {
+      return <Space>
+        { Number(text) === 1 ? <Badge status="success" /> : <Badge status="error" />}
+        { Number(text) === 1 ? <span style={{color: '#49aa19'}}>有效</span> : <span style={{color: '#dc0303'}}>到期</span> }
+      </Space>
+    }
   },
 ];
 
 // 合同管理新增模态框表格
-export const addContractTableColumns = [
+export const addTableColumns = [
   {
     title: '序号',
     dataIndex: 'index',
@@ -964,63 +978,59 @@ export const addContractTableColumns = [
   },
   {
     title: '合同编号',
-    dataIndex: 'index',
+    dataIndex: 'contractNum',
     align: 'center' as any,
-    key: 'index',
+    key: 'contractNum',
   },
   {
     title: '合同名称',
-    dataIndex: 'index',
+    dataIndex: 'contractName',
     align: 'center' as any,
-    key: 'index',
+    key: 'contractName',
   },
   {
     title: '合同类型',
-    dataIndex: 'index',
+    dataIndex: 'contractType',
     align: 'center' as any,
-    key: 'index',
+    key: 'contractType',
+    render: (text: number) => {
+      return text === 0 ? <span>需求响应代理合同</span> : <span>电网结算合同</span>
+    }
   },
   {
     title: '结算方式',
-    dataIndex: 'index',
+    dataIndex: 'settlementMethod',
     align: 'center' as any,
-    key: 'index',
+    key: 'settlementMethod',
+    render: (text: number) => {
+      return text === 0 ? <span>收益与考核比例结算</span> : <span>电网结算</span>
+    }
   },
   {
     title: '签订对象',
-    dataIndex: 'index',
+    dataIndex: 'contractingParty',
     align: 'center' as any,
-    key: 'index',
+    key: 'contractingParty',
   },
   {
     title: '开始时间',
-    dataIndex: 'index',
+    dataIndex: 'startTime',
     align: 'center' as any,
-    key: 'index',
+    key: 'startTime',
+    render: (text: any) => {
+      return <span>{dayjs(text).format('YYYY-MM-DD')}</span>
+    }
   },
   {
     title: '结束时间',
-    dataIndex: 'index',
+    dataIndex: 'endTime',
     align: 'center' as any,
-    key: 'index',
+    key: 'endTime',
+    render: (text: any) => {
+      return <span>{dayjs(text).format('YYYY-MM-DD')}</span>
+    }
   },
-  {
-    title: '操作',
-    dataIndex: 'index',
-    align: 'center' as any,
-    key: 'index',
-    width: 180,
-    render: () => {
-      return (
-        <Space>
-          <Button size="small">下载</Button>
-          <Button size="small" danger>
-            删除
-          </Button>
-        </Space>
-      );
-    },
-  },
+
 ];
 
 // 结算管理表格Columns

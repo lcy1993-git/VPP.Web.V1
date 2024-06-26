@@ -41,3 +41,31 @@ export const getModalDetail = () => {
     method: 'GET',
   });
 };
+
+
+// 合同管理 -- 删除合同
+export const deleteContract = (contractId: string) => {
+  return request(`/sysApi/demand/response/contractManagement/del`, {
+    method: 'GET',
+    params: {
+      contractId
+    }
+  });
+};
+
+// 合同管理 --- 上传合同
+export const fileUpload = (params: any) => {
+  return request(`/sysApi/file/upload/getUrl`, {
+    method: 'POST',
+    data: params,
+    ContentType: 'multipart/form-data',
+  });
+};
+
+// 合同管理 --- 新增合同
+export const addContractPost = (params: any) => {
+  return request(`/sysApi/demand/response/contractManagement/add`, {
+    method: 'POST',
+    data: params
+  });
+};

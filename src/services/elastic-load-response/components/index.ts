@@ -69,3 +69,34 @@ export const addContractPost = (params: any) => {
     data: params
   });
 };
+
+
+// 调控计划管理 ---- 邀约计划类型列表
+export const getInvitePlanList = (type: number) => {
+  return request(`/sysApi/demand/response/regulationPlanManagement/list`, {
+    method: 'GET',
+    params: {
+      type: type
+    }
+  });
+};
+
+// 调控计划管理-邀约响应计划
+export const getInviteResponsePlanData = (id: string) => {
+  return request(`/sysApi/demand/response/regulationPlanManagement/curve`, {
+    method: 'GET',
+    params: {
+      identificationNum: id
+    }
+  });
+};
+
+// 调控计划管理-邀约响应计划
+export const getInvitePlanCurve = (id: string) => {
+  return request(`/sysApi/demand/response/regulationPlanManagement/planDecompositionDetails/curve`, {
+    method: 'GET',
+    params: {
+      planDecompositionDetailsId: id
+    }
+  });
+};

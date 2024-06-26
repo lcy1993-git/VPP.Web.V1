@@ -4,6 +4,7 @@ import * as echarts from 'echarts';
 import { Dispatch, SetStateAction } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
+import { LineChartOutlined } from '@ant-design/icons';
 
 // 邀约需求容量详情
 export const demandDetailColumns: any = [
@@ -1677,7 +1678,18 @@ export const companyTableData = (data: any) => {
 
 
 // 交易调控计划管理 --- 图表optionss
-export const responseChartOptions = () => {
+export const responseChartOptions = (responsePlanData: any) => {
+  if (!responsePlanData) return false;
+
+  const {baselineValueList, planValueList, regulateValueList, xaxis} = responsePlanData;
+
+  if (!baselineValueList && !planValueList && !regulateValueList && !xaxis) return false;
+
+  const xAxisData = xaxis.map((item: string) => {
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
+  })
+
+
   return {
     tooltip: {
       trigger: 'axis',
@@ -1701,21 +1713,7 @@ export const responseChartOptions = () => {
     },
     xAxis: {
       type: 'category',
-      data: [
-        '00:00',
-        '02:00',
-        '04:00',
-        '06:00',
-        '08:00',
-        '10:00',
-        '12:00',
-        '14:00',
-        '16:00',
-        '18:00',
-        '20:00',
-        '22:00',
-        '24:00',
-      ],
+      data: xAxisData,
     },
     yAxis: {
       type: 'value',
@@ -1739,19 +1737,19 @@ export const responseChartOptions = () => {
     },
     series: [
       {
-        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
+        data: regulateValueList,
         type: 'line',
         name: '调节(kW)',
         smooth: true,
       },
       {
-        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
+        data: planValueList,
         type: 'line',
         name: '计划(kW)',
         smooth: true,
       },
       {
-        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
+        data: baselineValueList,
         type: 'line',
         name: '基线(kW)',
         smooth: true,
@@ -1760,36 +1758,61 @@ export const responseChartOptions = () => {
   };
 };
 
+// export const planDetailChartOptions =
+
+
+
+// 交易调控计划管理 --- 表格数据
+export const responsePlanTableData = (data: any) => {
+  if (!data) return [];
+
+  const {baselineValueList, planValueList, regulateValueList, xaxis} = data;
+
+  if (!baselineValueList && !planValueList && !regulateValueList && !xaxis) return [];
+
+  const tableData = xaxis.map((item: any, index: any) => {
+    return {
+      key: item,
+      baselineValueList: baselineValueList[index],
+      dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
+      planValueList: planValueList[index],
+      regulateValueList: regulateValueList[index],
+    }
+  })
+  return tableData;
+}
+
+
 // 交易调控计划管理 ---- table columns
 export const responseTableColumns = [
   {
     title: '时段',
-    dataIndex: 'index',
+    dataIndex: 'dateTime',
     align: 'center' as any,
-    key: 'index',
+    key: 'dateTime',
   },
   {
     title: '调节（kW）',
-    dataIndex: 'belongSubstation',
+    dataIndex: 'regulateValueList',
     align: 'center' as any,
-    key: 'belongSubstation',
+    key: 'regulateValueList',
   },
   {
     title: '计划（kW）',
-    dataIndex: 'index',
+    dataIndex: 'planValueList',
     align: 'center' as any,
-    key: 'index',
+    key: 'planValueList',
   },
   {
     title: '基线（kW）',
-    dataIndex: 'index',
+    dataIndex: 'baselineValueList',
     align: 'center' as any,
-    key: 'index',
+    key: 'baselineValueList',
   },
 ];
 
 // 交易调控计划管理 --- 计划分解详情
-export const responseDetalTableColumns = [
+export const responseDetalColumns = [
   {
     title: '序号',
     dataIndex: 'index',
@@ -1802,38 +1825,27 @@ export const responseDetalTableColumns = [
   },
   {
     title: '资源商',
-    dataIndex: 'index',
+    dataIndex: 'companyName',
     align: 'center' as any,
-    key: 'index',
+    key: 'companyName',
   },
   {
     title: '资源商编号',
-    dataIndex: 'belongSubstation',
+    dataIndex: 'resourceProviderNum',
     align: 'center' as any,
-    key: 'belongSubstation',
+    ellipsis: true,
+    key: 'resourceProviderNum',
   },
   {
     title: '计划调节里程(MWh)',
-    dataIndex: 'index',
+    dataIndex: 'planAdjustmentMilestone',
     align: 'center' as any,
-    key: 'index',
+    key: 'planAdjustmentMilestone',
   },
   {
     title: '日最大功率(MW)',
-    dataIndex: 'index',
+    dataIndex: 'dailyMaximumPower',
     align: 'center' as any,
-    key: 'index',
-  },
-  {
-    title: '调节曲线',
-    dataIndex: 'index',
-    align: 'center' as any,
-    key: 'index',
-  },
-  {
-    title: '资源状态',
-    dataIndex: 'index',
-    align: 'center' as any,
-    key: 'index',
-  },
+    key: 'dailyMaximumPower',
+  }
 ];

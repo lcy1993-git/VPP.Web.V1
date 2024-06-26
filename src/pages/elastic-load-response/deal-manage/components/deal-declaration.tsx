@@ -2,108 +2,139 @@ import CustomCharts from '@/components/custom-charts';
 import GeneralTable from '@/components/general-table';
 import SegmentedTheme from '@/components/segmented-theme';
 import {
+  getAncillaryChart,
+  getUserDetail,
+  getVPPCurve,
+} from '@/services/elastic-load-response/deal-manage';
+import {
   FileTextOutlined,
   PlusCircleOutlined,
   ReloadOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Input, Select, Space, Table } from 'antd';
-import { useState } from 'react';
+import { useRequest } from '@umijs/max';
+import { Button, Input, Select, Space, Table, message } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 import styles from '../index.less';
 import {
   VPPDetailColumns,
-  capacityColumns,
-  capacityOptions,
   clearingResultColumns,
   declarationInfoColumns,
   declarationOptions,
-  priceColumns,
-  priceOptions,
+  supportColumns,
+  supportOptions,
   userDetailColumns,
 } from '../utils';
+import AddDeclarationModal from './add-declaration-modal';
 import ClearingModal from './clearing-modal';
 import DeclarationDetailModal from './declaration-detail-modal';
+import DeleteModal from './deleteModal';
+
 // 交易申报
 const DealDeclaration = () => {
-  // 曲线or表格
+  // 申报信息表格
+  const tableRef = useRef(null);
+  // 查询input值
+  const [inputValue, setInputValue] = useState<string>('');
+  // 删除/撤销/申报弹框
+  const [open, setOpen] = useState<boolean>(false);
+  // 删除/撤销/申报弹框类型
+  const [modalType, setModalType] = useState<'delete' | 'cancel' | 'declare' | 'userDelete'>(
+    'delete',
+  );
+  // 删除/撤销/申报弹框类型id
+  const [modalId, setModalId] = useState<any>([]);
+  // 申报详情-曲线or表格
   const [curveOrTable, setCurveOrTable] = useState<boolean>(true);
-  // 虚拟电厂or代理用户
+  // 申报详情-虚拟电厂or代理用户
   const [VPPOrUser, setVPPOrUser] = useState<boolean>(true);
-  // 申报信息
-  const infoTableData = [
-    {
-      index: 1,
-      invitationPlan: '计划A',
-      operatingDay: '2023-07-05',
-      adjustableCapacity: 500,
-      declaredTransactionVolume: 3000,
-      declaredAveragePrice: 0.56,
-      estimatedRevenue: 1680,
-      status: 0,
-      updateTime: '2023-07-04 10:20:00',
-    },
-    {
-      index: 2,
-      invitationPlan: '计划B',
-      operatingDay: '2023-07-09',
-      adjustableCapacity: 450,
-      declaredTransactionVolume: 2800,
-      declaredAveragePrice: 0.59,
-      estimatedRevenue: 1652,
-      status: 0,
-      updateTime: '2023-07-03 14:30:00',
-    },
-    {
-      index: 3,
-      invitationPlan: '计划C',
-      operatingDay: '2023-07-12',
-      adjustableCapacity: 600,
-      declaredTransactionVolume: 4000,
-      declaredAveragePrice: 0.61,
-      estimatedRevenue: 2440,
-      status: 1,
-      updateTime: '2023-07-02 09:15:00',
-    },
-    {
-      index: 4,
-      invitationPlan: '计划C',
-      operatingDay: '2023-07-12',
-      adjustableCapacity: 600,
-      declaredTransactionVolume: 4000,
-      declaredAveragePrice: 0.61,
-      estimatedRevenue: 2440,
-      status: 1,
-      updateTime: '2023-07-02 09:15:00',
-    },
-  ];
-  // 申报详情-虚拟电厂
-  const [VPPDetailData, setVPPDetailData] = useState<any>([
-    { timePeriod: '00:00:00', demandCapacity: '1200', adjust: 0, plan: 1000 },
-    { timePeriod: '01:00:00', demandCapacity: '1200', adjust: 0, plan: 1000 },
-    { timePeriod: '02:00:00', demandCapacity: '1200', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-    { timePeriod: '03:00:00', demandCapacity: '1000', adjust: 0, plan: 1000 },
-  ]);
-  // 申报容量弹框
-  const [capacityVisible, setCapacityVisible] = useState<boolean>(false);
-  // 申报容量曲线or表格
-  const [capacityCurveOrTable, setCapacityCurveOrTable] = useState<boolean>(true);
-  // 申报价格弹框
-  const [priceVisible, setPriceVisible] = useState<boolean>(false);
-  // 申报价格曲线or表格
-  const [priceCurveOrTable, setPriceCurveOrTable] = useState<boolean>(true);
-  // 交易类别
-  const [detailType, setDetailType] = useState<any>(0);
-  // 出清明细弹框
+  // 申报详情-查看计划id
+  const [identificationNum, setIdentificationNum] = useState<string | null>(null);
+  // 申报详情-代理用户容量/价格弹框
+  const [userModalOpen, setUserModalOpen] = useState<boolean>(false);
+  // 申报详情-代理用户数据(type,code,id)
+  const [userModalInfo, setUserModalInfo] = useState<any>(null);
+  // 交易类别(公告中/已出请)
+  const [dealType, setDealType] = useState<number>(0);
+  // 申报类别(需求响应/辅助服务)
+  const [declarationType, setDeclarationType] = useState<number>(0);
+  // 辅助服务-曲线or表格
+  const [supportCurveOrTable, setSupportCurveOrTable] = useState<boolean>(true);
+  // 已出清明细弹框
   const [clearingVisible, setClearingVisible] = useState<boolean>(false);
+  // 已出请明细查看id
+  const [clearingId, setClearingId] = useState<string>('');
+  // 新增申报弹框
+  const [addDeclarationOpen, setAddDeclarationOpen] = useState<boolean>(false);
+  // 表格 checkbox 被选中
+  const [tableSelectRows, setTableSelectRows] = useState<any>([]);
+
+  // 申报详情-虚拟电厂
+  const { run: fetchVPPCurve, data: VPPCurve } = useRequest(getVPPCurve, {
+    manual: true,
+  });
+
+  // 申报详情-代理用户
+  const { run: fetchUserDetail, data: userDetail } = useRequest(getUserDetail, {
+    manual: true,
+  });
+
+  // 辅助服务
+  const { run: fetchAncillaryChart, data: ancillaryChart } = useRequest(getAncillaryChart, {
+    manual: true,
+  });
+
+  // 筛选公告中-申报信息-表格数据
+  const searchTableData = () => {
+    if (declarationType === 0) {
+      // @ts-ignore
+      tableRef?.current?.searchByParams({
+        identificationNum: inputValue,
+      });
+    } else {
+      fetchAncillaryChart(inputValue);
+    }
+  };
+
+  const refresh = () => {
+    if (modalType === 'userDelete') {
+      if (identificationNum) fetchUserDetail(identificationNum);
+    } else {
+      if (tableRef && tableRef.current) {
+        //@ts-ignore
+        tableRef.current.refresh();
+      }
+    }
+  };
+
+  // 申报按钮
+  const handleDeclare = () => {
+    if (tableSelectRows && tableSelectRows.length > 0) {
+      setModalType('declare');
+      setOpen(true);
+      setModalId(tableSelectRows.map((item: any) => item.identificationNum));
+    } else {
+      message.warning('请选择数据后进行操作！');
+    }
+  };
+
+  // 点击申报信息行请求虚拟电厂/代理用户
+  useEffect(() => {
+    if (identificationNum) {
+      if (VPPOrUser) {
+        fetchVPPCurve(identificationNum);
+      } else {
+        fetchUserDetail(identificationNum);
+      }
+    }
+  }, [identificationNum, VPPOrUser]);
+
+  useEffect(() => {
+    setInputValue('');
+    if (declarationType === 1) {
+      fetchAncillaryChart();
+    }
+  }, [declarationType]);
 
   return (
     <>
@@ -117,169 +148,221 @@ const DealDeclaration = () => {
               ]}
               defaultValue={0}
               style={{ width: 200 }}
+              onChange={(value) => setDeclarationType(value)}
             />
-            <Select
-              options={[
-                { label: '公告中', value: 0 },
-                { label: '已出清', value: 1 },
-              ]}
-              defaultValue={0}
+            {declarationType === 0 && (
+              <Select
+                options={[
+                  { label: '公告中', value: 0 },
+                  { label: '已出清', value: 1 },
+                ]}
+                value={dealType}
+                style={{ width: 200 }}
+                onChange={(value) => setDealType(value)}
+              />
+            )}
+            <Input
+              placeholder="请输入邀约计划"
               style={{ width: 200 }}
-              onChange={(value) => setDetailType(value)}
+              onChange={(e: any) => setInputValue(e.target.value)}
+              value={inputValue}
             />
-            <Input placeholder="请输入邀约计划" style={{ width: 200 }} />
           </Space>
           <Space size={15} className={styles.right}>
-            <Button style={{ marginLeft: '40px' }}>
+            <Button style={{ marginLeft: '40px' }} onClick={() => setInputValue('')}>
               <ReloadOutlined />
               重置
             </Button>
-            <Button>
+            <Button onClick={searchTableData}>
               <SearchOutlined />
               查询
             </Button>
           </Space>
         </div>
         <div className={styles.container}>
-          {detailType === 0 ? (
-            <>
-              <div className={styles.topContainer}>
-                <div className={styles.titleHeader}>
-                  <div className={styles.left} />
-                  <span className={styles.blueTitle}>申报信息</span>
-                  <Space>
-                    <Button>
-                      <PlusCircleOutlined />
-                      新增
-                    </Button>
-                    <Button>
-                      <FileTextOutlined />
-                      申报
-                    </Button>
-                  </Space>
+          {declarationType === 0 ? (
+            dealType === 0 ? (
+              <>
+                <div className={styles.topContainer}>
+                  <div className={styles.titleHeader}>
+                    <div className={styles.left} />
+                    <span className={styles.blueTitle}>申报信息</span>
+                    <Space>
+                      <Button onClick={() => setAddDeclarationOpen(true)}>
+                        <PlusCircleOutlined />
+                        新增
+                      </Button>
+                      <Button onClick={handleDeclare}>
+                        <FileTextOutlined />
+                        申报
+                      </Button>
+                    </Space>
+                  </div>
+                  <GeneralTable
+                    url="/api/demand/response/transactionBidding/demandResponse/list"
+                    ref={tableRef}
+                    columns={declarationInfoColumns(setModalType, setOpen, setModalId)}
+                    rowKey="identificationNum"
+                    size="middle"
+                    type="checkbox"
+                    bordered={false}
+                    requestType="get"
+                    scroll={{ y: 200 }}
+                    onRow={(record) => {
+                      return {
+                        onClick: () => setIdentificationNum(record.identificationNum), // 点击行
+                      };
+                    }}
+                    getCheckData={(data) => setTableSelectRows(data)}
+                    hasPage
+                  />
                 </div>
+                <div className={styles.bottomContainer}>
+                  <div className={styles.titleHeader}>
+                    <div className={styles.left}>
+                      <SegmentedTheme
+                        options={['虚拟电厂', '代理用户']}
+                        getSelectedValue={(value) => {
+                          const res = value === '虚拟电厂';
+                          if (!res) setCurveOrTable(true);
+                          setVPPOrUser(res);
+                        }}
+                      />
+                    </div>
+                    <span className={styles.blueTitle}>申报详情</span>
+                    <div className={styles.right}>
+                      {identificationNum && VPPOrUser && (
+                        <SegmentedTheme
+                          options={[
+                            {
+                              label: '曲线',
+                              value: '曲线',
+                              icon: <i className="iconfont">&#xe63a;</i>,
+                            },
+                            {
+                              label: '表格',
+                              value: '表格',
+                              icon: <i className="iconfont">&#xe639;</i>,
+                            },
+                          ]}
+                          getSelectedValue={(value) => setCurveOrTable(value === '曲线')}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className={styles.tableOrChart}>
+                    {identificationNum &&
+                      (VPPOrUser ? (
+                        curveOrTable ? (
+                          <CustomCharts options={declarationOptions(VPPCurve)} />
+                        ) : (
+                          <Table
+                            columns={VPPDetailColumns}
+                            dataSource={VPPCurve?.xaxis.map(
+                              (timePeriod: string, index: number) => ({
+                                key: index,
+                                timePeriod,
+                                plan: VPPCurve?.planValueList[index],
+                                adjust: VPPCurve?.regulateValueList[index],
+                                baseline: VPPCurve?.baselineValueList[index],
+                              }),
+                            )}
+                            rowKey="id"
+                            size="middle"
+                            bordered={false}
+                            scroll={{ y: 170 }}
+                            pagination={false}
+                          />
+                        )
+                      ) : (
+                        <GeneralTable
+                          columns={userDetailColumns(
+                            setUserModalOpen,
+                            setUserModalInfo,
+                            setModalType,
+                            setOpen,
+                            setModalId,
+                          )}
+                          dataSource={userDetail}
+                          rowKey="identificationNum"
+                          size="middle"
+                          type="checkbox"
+                          bordered={false}
+                          scroll={{ y: 170 }}
+                          hasPage={false}
+                        />
+                      ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className={styles.handledContainer}>
+                <span className={styles.blueTitle}>申报信息</span>
                 <GeneralTable
-                  // url="/api/financial/report/listTemplateByGov"
-                  // ref={tableRef}
-                  columns={declarationInfoColumns}
-                  dataSource={infoTableData}
-                  rowKey="id"
+                  url="/api/demand/response/transactionBidding/settled"
+                  columns={clearingResultColumns(setClearingVisible, setClearingId)}
+                  rowKey="identificationNum"
                   size="middle"
                   type="checkbox"
                   bordered={false}
                   requestType="get"
                   scroll={{ y: 200 }}
-                  // getCheckData={(data) => setTableSelectRows(data)}
+                  style={{ paddingTop: '15px', width: '100%' }}
                   hasPage
-                  // filterParams={{ date: dayjs(new Date()).format('YYYY-MM-DD'), type: 0, unit: 'day' }}
                 />
               </div>
-              <div className={styles.bottomContainer}>
-                <div className={styles.titleHeader}>
-                  <div className={styles.left}>
-                    <SegmentedTheme
-                      options={['虚拟电厂', '代理用户']}
-                      getSelectedValue={(value) => {
-                        const res = value === '虚拟电厂';
-                        if (!res) setCurveOrTable(true);
-                        setVPPOrUser(res);
-                      }}
-                    />
-                  </div>
-                  <span className={styles.blueTitle}>申报详情</span>
-                  <div className={styles.right}>
-                    {VPPOrUser && (
-                      <SegmentedTheme
-                        options={[
-                          {
-                            label: '曲线',
-                            value: '曲线',
-                            icon: <i className="iconfont">&#xe63a;</i>,
-                          },
-                          {
-                            label: '表格',
-                            value: '表格',
-                            icon: <i className="iconfont">&#xe639;</i>,
-                          },
-                        ]}
-                        getSelectedValue={(value) => setCurveOrTable(value === '曲线')}
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className={styles.tableOrChart}>
-                  {VPPOrUser &&
-                    (curveOrTable ? (
-                      <CustomCharts options={declarationOptions([5, 20, 36, 10, 10])} />
-                    ) : (
-                      <GeneralTable
-                        columns={VPPDetailColumns}
-                        dataSource={VPPDetailData}
-                        rowKey="id"
-                        size="middle"
-                        hideSelect
-                        bordered={false}
-                        scroll={{ y: 170 }}
-                        hasPage={false}
-                      />
-                    ))}
-                  {!VPPOrUser && (
-                    <GeneralTable
-                      columns={userDetailColumns(setCapacityVisible, setPriceVisible)}
-                      dataSource={VPPDetailData}
-                      rowKey="id"
-                      size="middle"
-                      type="checkbox"
-                      bordered={false}
-                      scroll={{ y: 170 }}
-                      hasPage={false}
-                    />
-                  )}
-                </div>
-              </div>
-            </>
+            )
           ) : (
-            <div className={styles.handledContainer}>
-              <span className={styles.blueTitle}>申报信息</span>
-              <Table
-                columns={clearingResultColumns(setClearingVisible)}
-                dataSource={[{}]}
-                rowKey="id"
-                size="middle"
-                bordered={false}
-                style={{ paddingTop: '15px', width: '100%' }}
+            <div className={styles.handledContainer} style={{ alignItems: 'end' }}>
+              <SegmentedTheme
+                options={[
+                  { label: '曲线', value: '曲线', icon: <i className="iconfont">&#xe63a;</i> },
+                  { label: '表格', value: '表格', icon: <i className="iconfont">&#xe639;</i> },
+                ]}
+                getSelectedValue={(value) => setSupportCurveOrTable(value === '曲线')}
               />
+              {supportCurveOrTable ? (
+                <CustomCharts options={supportOptions(ancillaryChart)} />
+              ) : (
+                <Table
+                  columns={supportColumns}
+                  dataSource={ancillaryChart?.xaxis.map((timePeriod: string, index: number) => ({
+                    key: index,
+                    timePeriod,
+                    down: ancillaryChart?.downwardList[index],
+                    up: ancillaryChart?.upwardList[index],
+                  }))}
+                  scroll={{ y: 490 }}
+                  pagination={false}
+                  style={{ paddingTop: '15px' }}
+                />
+              )}
             </div>
           )}
         </div>
       </div>
+      {/* 代理用户--申报详情容量/价格曲线弹框 */}
       <DeclarationDetailModal
-        visible={capacityVisible}
-        setVisible={setCapacityVisible}
-        options={capacityOptions([5, 20, 36, 10, 10])}
-        setCurveOrTable={setCapacityCurveOrTable}
-        curveOrTable={capacityCurveOrTable}
-        columns={capacityColumns}
-        dataSource={[
-          { timePeriod: '00:00:00', capacity: '1200' },
-          { timePeriod: '01:00:00', capacity: '1200' },
-        ]}
-        title="申报容量"
+        open={userModalOpen}
+        setOpen={setUserModalOpen}
+        info={userModalInfo}
       />
-      <DeclarationDetailModal
-        visible={priceVisible}
-        setVisible={setPriceVisible}
-        options={priceOptions([5, 20, 36, 10, 10])}
-        setCurveOrTable={setPriceCurveOrTable}
-        curveOrTable={priceCurveOrTable}
-        columns={priceColumns}
-        dataSource={[
-          { timePeriod: '00:00:00', price: '1200' },
-          { timePeriod: '01:00:00', price: '1200' },
-        ]}
-        title="申报价格"
+      {/* 已出请-详情弹框 */}
+      <ClearingModal
+        visible={clearingVisible}
+        setVisible={setClearingVisible}
+        clearingId={clearingId}
       />
-      <ClearingModal visible={clearingVisible} setVisible={setClearingVisible} />
+      {/* 需求响应-公告中-申报/删除/撤销弹框 */}
+      <DeleteModal
+        open={open}
+        setModalOpen={setOpen}
+        modalType={modalType}
+        ids={modalId}
+        refresh={refresh}
+      />
+      {/* 新增申报 */}
+      <AddDeclarationModal open={addDeclarationOpen} setModalOpen={setAddDeclarationOpen} />
     </>
   );
 };

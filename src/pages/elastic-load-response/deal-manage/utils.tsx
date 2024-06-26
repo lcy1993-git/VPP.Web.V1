@@ -26,6 +26,41 @@ export const demandDetailColumns: any = [
   },
 ];
 
+// 出清明细
+export const clearingDetailColumns: any = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
+    align: 'center',
+  },
+  {
+    title: '中标主体',
+    dataIndex: 'winningBidder',
+    key: 'winningBidder',
+    align: 'center',
+  },
+  {
+    title: '中标时段',
+    dataIndex: 'winningBidPeriod',
+    key: 'winningBidPeriod',
+    align: 'center',
+  },
+  {
+    title: '中标容量(MW)',
+    dataIndex: 'winningBidCapacity',
+    key: 'winningBidCapacity',
+    align: 'center',
+  },
+  {
+    title: '中标价格(MW)',
+    dataIndex: 'winningBidPrice',
+    key: 'winningBidPrice',
+    align: 'center',
+  },
+];
+
 // 邀约需求容量柱状图
 export const demandCapacityOptions = (xAxis: any, data: any) => {
   if (!data || data.length === 0) return false;
@@ -184,87 +219,117 @@ export const loadDetailColumns: any = [
 ];
 
 // 申报信息
-export const declarationInfoColumns: any = [
-  {
-    title: '序号',
-    dataIndex: 'index',
-    key: 'index',
-    align: 'center',
-    width: 60,
-    render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
-  },
-  {
-    title: '邀约计划',
-    dataIndex: 'invitationPlan',
-    key: 'invitationPlan',
-    align: 'center',
-  },
-  {
-    title: '运行日',
-    dataIndex: 'operatingDay',
-    key: 'operatingDay',
-    align: 'center',
-  },
-  {
-    title: '可调容量(MW)',
-    dataIndex: 'adjustableCapacity',
-    key: 'adjustableCapacity',
-    align: 'center',
-    width: 140,
-  },
-  {
-    title: '申报交易量(MWh)',
-    dataIndex: 'declaredTransactionVolume',
-    key: 'declaredTransactionVolume',
-    width: 140,
-    align: 'center',
-  },
-  {
-    title: '申报均价(元/MWh)',
-    dataIndex: 'declaredAveragePrice',
-    key: 'declaredAveragePrice',
-    width: 150,
-    align: 'center',
-  },
-  {
-    title: '预估收益(元)',
-    dataIndex: 'estimatedRevenue',
-    key: 'estimatedRevenue',
-    width: 150,
-    align: 'center',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    width: 120,
-    key: 'status',
-    render: (text: any) => {
-      const status = ['编制中', '已申报'];
-      const statusColors = ['#FFD800', '#01FF73'];
-      return <ColorCircleScript color={statusColors[text]} script={status[text]} />;
+export const declarationInfoColumns: any = (
+  setModalType: Dispatch<SetStateAction<any>>,
+  setOpen: Dispatch<SetStateAction<any>>,
+  setModalId: Dispatch<SetStateAction<any>>,
+) => {
+  return [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
+      align: 'center',
+      width: 60,
+      render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
     },
-    align: 'center',
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    key: 'updateTime',
-    align: 'center',
-  },
-  {
-    title: '操作',
-    align: 'center' as any,
-    render: () => {
-      return (
-        <Space>
-          <Button size="small">申报</Button>
-          <Button size="small">删除</Button>
-          <Button size="small">撤销</Button>
-        </Space>
-      );
+    {
+      title: '邀约计划',
+      dataIndex: 'identificationNum',
+      key: 'identificationNum',
+      align: 'center',
     },
-  },
-];
+    {
+      title: '运行日',
+      dataIndex: 'runningDay',
+      key: 'runningDay',
+      align: 'center',
+    },
+    {
+      title: '可调容量(MW)',
+      dataIndex: 'dispatchCapacity',
+      key: 'dispatchCapacity',
+      align: 'center',
+    },
+    {
+      title: '申报交易量(MWh)',
+      dataIndex: 'declaredTradingVolume',
+      key: 'declaredTradingVolume',
+      align: 'center',
+    },
+    {
+      title: '申报均价(元/MWh)',
+      dataIndex: 'declaredAveragePrice',
+      key: 'declaredAveragePrice',
+      align: 'center',
+    },
+    {
+      title: '预估收益(元)',
+      dataIndex: 'estimatedRevenue',
+      key: 'estimatedRevenue',
+      align: 'center',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      width: 120,
+      key: 'status',
+      render: (text: any) => {
+        const status: any = { 1: '编制中', 2: '已申报' };
+        const statusColors: any = { 1: '#FFD800', 2: '#01FF73' };
+        return <ColorCircleScript color={statusColors[text]} script={status[text]} />;
+      },
+      align: 'center',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      align: 'center',
+    },
+    {
+      title: '操作',
+      align: 'center' as any,
+      render: (text: any) => {
+        return text.status === 1 ? (
+          <Space>
+            <Button
+              size="small"
+              onClick={() => {
+                setModalType('declare');
+                setOpen(true);
+                setModalId([text.identificationNum]);
+              }}
+            >
+              申报
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setModalId([text.identificationNum]);
+                setModalType('delete');
+                setOpen(true);
+              }}
+            >
+              删除
+            </Button>
+          </Space>
+        ) : (
+          <Button
+            size="small"
+            onClick={() => {
+              setModalId([text.identificationNum]);
+              setModalType('cancel');
+              setOpen(true);
+            }}
+          >
+            撤销
+          </Button>
+        );
+      },
+    },
+  ];
+};
 
 // 申报详情图表-虚拟电厂
 export const declarationOptions = (data: any) => {
@@ -295,7 +360,7 @@ export const declarationOptions = (data: any) => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      data: data?.xaxis,
       axisLine: {
         lineStyle: {
           color: 'rgba(231, 250, 255, 0.6)',
@@ -321,19 +386,19 @@ export const declarationOptions = (data: any) => {
     series: [
       {
         name: '调节',
-        data: data,
+        data: data?.regulateValueList,
         type: 'line',
         smooth: true,
       },
       {
         name: '计划',
-        data: data,
+        data: data?.planValueList,
         type: 'line',
         smooth: true,
       },
       {
         name: '基线',
-        data: data,
+        data: data?.baselineValueList,
         type: 'line',
         smooth: true,
       },
@@ -374,8 +439,8 @@ export const VPPDetailColumns: any = [
   },
   {
     title: '基线(kW)',
-    dataIndex: 'demandCapacity',
-    key: 'demandCapacity',
+    dataIndex: 'baseline',
+    key: 'baseline',
     align: 'center',
     sorter: (a: any, b: any) => a.demandCapacity - b.demandCapacity,
     sortDirections: ['descend', 'ascend'],
@@ -384,26 +449,33 @@ export const VPPDetailColumns: any = [
 
 // 申报详情表格-代理用户
 export const userDetailColumns: any = (
-  setCapacityVisible: Dispatch<SetStateAction<any>>,
-  setPriceVisible: Dispatch<SetStateAction<any>>,
+  setUserModalOpen: Dispatch<SetStateAction<any>>,
+  setInfo: Dispatch<SetStateAction<any>>,
+  setModalType: Dispatch<SetStateAction<any>>,
+  setOpen: Dispatch<SetStateAction<any>>,
+  setModalId: Dispatch<SetStateAction<any>>,
 ) => {
-  const curveIcon = (isCapacity: boolean) => {
+  // 曲线icon
+  const curveIcon = (record: any, isCapacity: boolean) => {
     return (
       <i
         className="iconfont"
         style={{ color: '#0084FF', cursor: 'pointer' }}
         onClick={() => {
-          if (isCapacity) {
-            setCapacityVisible(true);
-          } else {
-            setPriceVisible(true);
-          }
+          setUserModalOpen(true);
+          const info: any = {
+            substationCode: record.substationCode,
+            identificationNum: record.identificationNum,
+          };
+          info.type = isCapacity ? 1 : 2;
+          setInfo(info);
         }}
       >
         &#xe63a;
       </i>
     );
   };
+
   return [
     {
       title: '序号',
@@ -414,37 +486,37 @@ export const userDetailColumns: any = (
     },
     {
       title: '用户名称',
-      dataIndex: 'userName',
-      key: 'userName',
+      dataIndex: 'substationName',
+      key: 'substationName',
       align: 'center',
     },
     {
       title: '邀约计划',
-      dataIndex: 'invitationPlan',
-      key: 'invitationPlan',
+      dataIndex: 'identificationNum',
+      key: 'identificationNum',
       align: 'center',
     },
     {
       title: '可调容量(MW)',
-      dataIndex: 'adjustableCapacity',
-      key: 'adjustableCapacity',
+      dataIndex: 'dispatchCapacity',
+      key: 'dispatchCapacity',
       align: 'center',
     },
     {
       title: '申报交易量(MWh)',
-      dataIndex: 'declaredTransactionVolume',
-      key: 'declaredTransactionVolume',
+      dataIndex: 'declaredTradingVolume',
+      key: 'declaredTradingVolume',
       align: 'center',
     },
     {
       title: '申报容量曲线',
       align: 'center',
-      render: () => curveIcon(true),
+      render: (record: any) => curveIcon(record, true),
     },
     {
       title: '申报价格曲线',
       align: 'center',
-      render: () => curveIcon(false),
+      render: (record: any) => curveIcon(record, false),
     },
     {
       title: '更新时间',
@@ -455,11 +527,20 @@ export const userDetailColumns: any = (
     {
       title: '操作',
       align: 'center' as any,
-      render: () => {
+      render: (text: any) => {
         return (
           <Space>
             <Button size="small">编辑</Button>
-            <Button size="small">删除</Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setModalId([text.identificationNum]);
+                setModalType('userDelete');
+                setOpen(true);
+              }}
+            >
+              删除
+            </Button>
           </Space>
         );
       },
@@ -496,7 +577,7 @@ export const capacityOptions = (data: any) => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      data: data?.xaxis,
       axisLine: {
         lineStyle: {
           color: 'rgba(231, 250, 255, 0.6)',
@@ -522,7 +603,7 @@ export const capacityOptions = (data: any) => {
     series: [
       {
         name: '容量',
-        data: data,
+        data: data?.valueList,
         type: 'line',
         smooth: true,
       },
@@ -559,7 +640,7 @@ export const priceOptions = (data: any) => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      data: data?.xaxis,
       axisLine: {
         lineStyle: {
           color: 'rgba(231, 250, 255, 0.6)',
@@ -585,7 +666,7 @@ export const priceOptions = (data: any) => {
     series: [
       {
         name: '价格',
-        data: data,
+        data: data?.valueList,
         type: 'line',
         smooth: true,
       },
@@ -594,53 +675,35 @@ export const priceOptions = (data: any) => {
 };
 
 // 申报容量columns
-export const capacityColumns: any = [
-  {
-    title: '序号',
-    dataIndex: 'index',
-    key: 'index',
-    render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
-    align: 'center',
-  },
-  {
-    title: '时段',
-    dataIndex: 'timePeriod',
-    key: 'timePeriod',
-    align: 'center',
-  },
-  {
-    title: '容量(kW)',
-    dataIndex: 'capacity',
-    key: 'capacity',
-    align: 'center',
-  },
-];
-
-// 申报价格columns
-export const priceColumns: any = [
-  {
-    title: '序号',
-    dataIndex: 'index',
-    key: 'index',
-    render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
-    align: 'center',
-  },
-  {
-    title: '时段',
-    dataIndex: 'timePeriod',
-    key: 'timePeriod',
-    align: 'center',
-  },
-  {
-    title: '价格(元)',
-    dataIndex: 'price',
-    key: 'price',
-    align: 'center',
-  },
-];
+export const capacityColumns: any = (isCapacity: boolean) => {
+  return [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_: any, __: any, index: number) => index + 1, // 自动计算序号
+      align: 'center',
+    },
+    {
+      title: '时段',
+      dataIndex: 'timePeriod',
+      key: 'timePeriod',
+      align: 'center',
+    },
+    {
+      title: isCapacity ? '容量(kW)' : '价格(元)',
+      dataIndex: 'value',
+      key: 'value',
+      align: 'center',
+    },
+  ];
+};
 
 // 出清结果
-export const clearingResultColumns: any = (setClearingVisible: Dispatch<SetStateAction<any>>) => {
+export const clearingResultColumns: any = (
+  setClearingVisible: Dispatch<SetStateAction<any>>,
+  setClearingId: Dispatch<SetStateAction<any>>,
+) => {
   return [
     {
       title: '序号',
@@ -651,8 +714,8 @@ export const clearingResultColumns: any = (setClearingVisible: Dispatch<SetState
     },
     {
       title: '邀约计划',
-      dataIndex: 'invitationPlan',
-      key: 'invitationPlan',
+      dataIndex: 'identificationNum',
+      key: 'identificationNum',
       align: 'center',
     },
     {
@@ -663,14 +726,18 @@ export const clearingResultColumns: any = (setClearingVisible: Dispatch<SetState
     },
     {
       title: '相应类型',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'responseType',
+      key: 'responseType',
       align: 'center',
+      render: (text: any) => {
+        const res = ['削峰响应', '填谷响应'];
+        return res[text];
+      },
     },
     {
       title: '申报交易量(MWh)',
-      dataIndex: 'declaredTransactionVolume',
-      key: 'declaredTransactionVolume',
+      dataIndex: 'declaredTradingVolume',
+      key: 'declaredTradingVolume',
       align: 'center',
     },
     {
@@ -681,24 +748,23 @@ export const clearingResultColumns: any = (setClearingVisible: Dispatch<SetState
     },
     {
       title: '代理用户数',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'participatingUsers',
+      key: 'participatingUsers',
       align: 'center',
     },
     {
       title: '预估收益(元)',
-      dataIndex: 'estimatedRevenue',
-      key: 'estimatedRevenue',
+      dataIndex: 'estimatedEarnings',
+      key: 'estimatedEarnings',
       align: 'center',
     },
     {
       title: '状态',
       dataIndex: 'status',
-
       key: 'status',
       render: (text: any) => {
-        const status = ['中标', '未中标'];
-        const statusColors = ['#FFD800', '#01FF73'];
+        const status = ['未中标', '中标'];
+        const statusColors = ['#01FF73', '#FFD800'];
         return <ColorCircleScript color={statusColors[text]} script={status[text]} />;
       },
       align: 'center',
@@ -706,9 +772,15 @@ export const clearingResultColumns: any = (setClearingVisible: Dispatch<SetState
     {
       title: '操作',
       align: 'center' as any,
-      render: () => {
+      render: (record: any) => {
         return (
-          <Button size="small" onClick={() => setClearingVisible(true)}>
+          <Button
+            size="small"
+            onClick={() => {
+              setClearingVisible(true);
+              setClearingId(record.identificationNum);
+            }}
+          >
             查看明细
           </Button>
         );
@@ -746,7 +818,7 @@ export const winningPowerOptions = (data: any) => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      data: data?.xaxis,
       axisLine: {
         lineStyle: {
           color: 'rgba(231, 250, 255, 0.6)',
@@ -772,19 +844,19 @@ export const winningPowerOptions = (data: any) => {
     series: [
       {
         name: '调节',
-        data: data,
+        data: data?.regulateValueList,
         type: 'line',
         smooth: true,
       },
       {
         name: '计划',
-        data: data,
+        data: data?.planValueList,
         type: 'line',
         smooth: true,
       },
       {
         name: '基线',
-        data: data,
+        data: data?.baselineValueList,
         type: 'line',
         smooth: true,
       },
@@ -821,7 +893,7 @@ export const winningPriceOptions = (data: any) => {
       type: 'category',
       name: '时',
       boundaryGap: false,
-      data: ['00:00', '00:00', '00:00', '00:00', '00:00'],
+      data: data?.xaxis,
       axisLine: {
         lineStyle: {
           color: 'rgba(231, 250, 255, 0.6)',
@@ -847,7 +919,7 @@ export const winningPriceOptions = (data: any) => {
     series: [
       {
         name: '价格',
-        data: data,
+        data: data?.valueList,
         type: 'line',
         smooth: true,
       },
@@ -1728,6 +1800,151 @@ export const responseDetalTableColumns = [
   },
   {
     title: '资源状态',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+];
+
+// 辅助服务
+export const supportOptions = (data: any) => {
+  if (!data) {
+    return false;
+  }
+
+  return {
+    legend: {
+      textStyle: {
+        color: '#E7FAFF',
+        fontSize: '12px',
+        fontWeight: 400,
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    grid: {
+      top: '8%',
+      left: '4%',
+      right: '4%',
+      bottom: '4%',
+      containLabel: true,
+    },
+    color: ['#D70303', '#2C88B6'],
+    xAxis: {
+      type: 'category',
+      name: '时',
+      boundaryGap: false,
+      data: data?.xaxis,
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'kW',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#284377',
+          width: 1,
+        },
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    series: [
+      {
+        name: '上调',
+        data: data?.upwardList,
+        type: 'line',
+        smooth: true,
+      },
+      {
+        name: '下调',
+        data: data?.downwardList,
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  };
+};
+
+// 辅助服务
+export const supportColumns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+    align: 'center' as any,
+    render: (_text: any, _record: any, index: number) => {
+      return index + 1;
+    },
+  },
+  {
+    title: '中标时段',
+    dataIndex: 'timePeriod',
+    align: 'center' as any,
+    key: 'timePeriod',
+  },
+  {
+    title: '上调(kW)',
+    dataIndex: 'up',
+    align: 'center' as any,
+    key: 'up',
+  },
+  {
+    title: '下调(kW)',
+    dataIndex: 'down',
+    align: 'center' as any,
+    key: 'down',
+  },
+];
+
+// 新增交易申报
+export const addDeclarationColumns = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'index',
+    width: 60,
+    align: 'center' as any,
+    render: (_text: any, _record: any, index: number) => {
+      return index + 1;
+    },
+  },
+  {
+    title: '响应时段起点',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '响应时段终点',
+    dataIndex: 'belongSubstation',
+    align: 'center' as any,
+    key: 'belongSubstation',
+  },
+  {
+    title: '基线负荷(MW)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '申报容量(MW)',
+    dataIndex: 'index',
+    align: 'center' as any,
+    key: 'index',
+  },
+  {
+    title: '申报价格(元/MWh)',
     dataIndex: 'index',
     align: 'center' as any,
     key: 'index',

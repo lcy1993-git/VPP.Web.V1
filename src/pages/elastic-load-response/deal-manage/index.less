@@ -8,6 +8,16 @@
   }
 }
 
+.addDeclarationModal {
+  .header {
+    :global {
+      .ant-form-item {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
 .dealPage {
   display: flex;
   flex-direction: column;
@@ -248,6 +258,7 @@
     }
 
     .topContainer {
+      height: 355px;
       border-bottom: 1px solid rgba(0, 74, 192, 0.6);
     }
 
@@ -1076,6 +1087,42 @@
       font-weight: 400;
       font-size: 20px;
       font-family: DIN Medium;
+    }
+  }
+}
+
+.deleteModal {
+  .header {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    margin-top: 30px;
+    padding-left: 30px;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: PingFang SC;
+  }
+
+  .modalFooter {
+    margin-top: 50px;
+    text-align: center;
+  }
+}
+
+.addDeclarationModal {
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+
+  .bottomContainer {
+    flex: 1;
+    padding-top: 20px;
+    border-top: 1px solid #004ac0;
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
   }
 }

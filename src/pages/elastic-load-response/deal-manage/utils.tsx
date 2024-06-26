@@ -1037,98 +1037,108 @@ export const settlementColumns = [
   },
   {
     title: '计划编号',
-    dataIndex: 'index',
+    dataIndex: 'identificationNum',
     align: 'center' as any,
-    key: 'index',
-  },
-  {
-    title: '设备名称',
-    dataIndex: 'index',
-    align: 'center' as any,
-    key: 'index',
+    ellipsis: true,
+    key: 'identificationNum',
   },
   {
     title: '用户编号',
-    dataIndex: 'index',
+    dataIndex: 'userId',
     align: 'center' as any,
-    key: 'index',
+    ellipsis: true,
+    key: 'userId',
   },
   {
     title: '计划电量\n(MWh)',
-    dataIndex: 'index',
+    dataIndex: 'scheduledElectricity',
     align: 'center' as any,
-    key: 'index',
+    key: 'scheduledElectricity',
   },
   {
     title: '实际电量\n(MWh)',
-    dataIndex: 'index',
+    dataIndex: 'actualAdjustedElectricity',
     align: 'center' as any,
-    key: 'index',
+    key: 'actualAdjustedElectricity',
   },
   {
     title: '结算电量\n(MW)',
-    dataIndex: 'index',
+    dataIndex: 'settlementElectricity',
     align: 'center' as any,
-    key: 'index',
+    key: 'settlementElectricity',
   },
   {
     title: '偏差考核电量\n(MW)',
-    dataIndex: 'index',
+    dataIndex: 'deviationSettlementElectricity',
     align: 'center' as any,
-    key: 'index',
+    key: 'deviationSettlementElectricity',
   },
   {
     title: '平均结算电价(元/MWh)',
-    dataIndex: 'index',
+    dataIndex: 'averageSettlementElectricity',
     align: 'center' as any,
     width: 100,
-    key: 'index',
+    key: 'averageSettlementElectricity',
   },
   {
     title: '结算费用\n(万元)',
-    dataIndex: 'index',
+    dataIndex: 'settlementFee',
     align: 'center' as any,
-    key: 'index',
+    key: 'settlementFee',
   },
   {
     title: '分成比例\n(%)',
-    dataIndex: 'index',
+    dataIndex: 'splitRatio',
     align: 'center' as any,
-    key: 'index',
+    key: 'splitRatio',
   },
   {
     title: '分成收益\n(万元)',
-    dataIndex: 'index',
+    dataIndex: 'sharedProfits',
     align: 'center' as any,
-    key: 'index',
+    key: 'sharedProfits',
   },
   {
     title: '考核费用\n(万元)',
-    dataIndex: 'index',
+    dataIndex: 'assessmentFees',
     align: 'center' as any,
-    key: 'index',
+    key: 'assessmentFees',
   },
   {
     title: '分摊比例\n(%)',
-    dataIndex: 'index',
+    dataIndex: 'apportionmentRatio',
     align: 'center' as any,
-    key: 'index',
+    key: 'apportionmentRatio',
   },
   {
     title: '分摊费用\n(万元)',
-    dataIndex: 'index',
+    dataIndex: 'apportionedCosts',
     align: 'center' as any,
-    key: 'index',
+    key: 'apportionedCosts',
   },
   {
     title: '流程',
-    dataIndex: 'index',
+    dataIndex: 'isConfirm',
     align: 'center' as any,
-    key: 'index',
+    key: 'isConfirm',
+    render: (text: any) => {
+      return text === Number(1) ? '已确认' : '未确认'
+    }
   },
 ];
 // 结算管理模态框图options
-export const settlementChartOptions = () => {
+export const settlementChartOptions = (modalDetailData: any) => {
+
+  if (!modalDetailData) return false;
+
+  const {settlementPrice, reviewPrice, evaluatedElectricity, effectiveAdjustedElectricity, actualAdjustedElectricity, xaxis} = modalDetailData;
+
+  if (!settlementPrice && !reviewPrice && !evaluatedElectricity && !effectiveAdjustedElectricity && !actualAdjustedElectricity && !xaxis) return false;
+
+  const xAxisData = xaxis.map((item: string) => {
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
+  })
+
   return {
     tooltip: {
       trigger: 'axis',
@@ -1158,21 +1168,7 @@ export const settlementChartOptions = () => {
     },
     xAxis: {
       type: 'category',
-      data: [
-        '00:00',
-        '02:00',
-        '04:00',
-        '06:00',
-        '08:00',
-        '10:00',
-        '12:00',
-        '14:00',
-        '16:00',
-        '18:00',
-        '20:00',
-        '22:00',
-        '24:00',
-      ],
+      data: xAxisData,
     },
     yAxis: {
       type: 'value',
@@ -1196,31 +1192,31 @@ export const settlementChartOptions = () => {
     },
     series: [
       {
-        data: [110, 125, 160, 182, 658, 695, 457, 123, 855, 120, 565, 865],
+        data: actualAdjustedElectricity,
         type: 'line',
         name: '实际调节电量（kWh）',
         smooth: true,
       },
       {
-        data: [355, 865, 965, 854, 435, 665, 522, 111, 666, 854, 125, 523],
+        data: effectiveAdjustedElectricity,
         type: 'line',
         name: '有效调节电量（kWh）',
         smooth: true,
       },
       {
-        data: [745, 865, 965, 854, 335, 665, 656, 111, 666, 854, 125, 523],
+        data: evaluatedElectricity,
         type: 'line',
         name: '考核电量（kWh）',
         smooth: true,
       },
       {
-        data: [265, 865, 965, 854, 223, 665, 855, 111, 666, 854, 125, 523],
+        data: settlementPrice,
         type: 'line',
         name: '结算价格（元/MWh）',
         smooth: true,
       },
       {
-        data: [654, 111, 523, 854, 223, 552, 855, 111, 985, 666, 122, 421],
+        data: reviewPrice,
         type: 'line',
         name: '考核价格（元/MWh）',
         smooth: true,
@@ -1228,6 +1224,63 @@ export const settlementChartOptions = () => {
     ],
   };
 };
+// 结算管理模态框---电量统计columns
+export const electricityTableColumns = [
+  {
+    title: '时段',
+    dataIndex: 'dateTime',
+    align: 'center' as any,
+    key: 'dateTime',
+  },
+  {
+    title: '实际调节电量（kWh）',
+    dataIndex: 'actualAdjustedElectricity',
+    align: 'center' as any,
+    key: 'actualAdjustedElectricity',
+  },
+  {
+    title: '有效调节电量（kWh）',
+    dataIndex: 'effectiveAdjustedElectricity',
+    align: 'center' as any,
+    key: 'effectiveAdjustedElectricity',
+  },
+  {
+    title: '考核电量（kWh）',
+    dataIndex: 'evaluatedElectricity',
+    align: 'center' as any,
+    key: 'evaluatedElectricity',
+  },
+  {
+    title: '结算价格（元/MWh）',
+    dataIndex: 'settlementPrice',
+    align: 'center' as any,
+    key: 'settlementPrice',
+  },
+  {
+    title: '考核价格（元/MWh）',
+    dataIndex: 'reviewPrice',
+    align: 'center' as any,
+    key: 'reviewPrice',
+  },
+]
+// 结算管理模态框---电量统计表格数据
+export const electricityTableData = (data: any) => {
+  if (!data) return [];
+  const {settlementPrice, reviewPrice, evaluatedElectricity, effectiveAdjustedElectricity, actualAdjustedElectricity, xaxis} = data;
+  if (!settlementPrice && !reviewPrice && !evaluatedElectricity && !effectiveAdjustedElectricity && !actualAdjustedElectricity && !xaxis) return [];
+  const tableData = xaxis.map((item: any, index: any) => {
+    return {
+      key: item,
+      actualAdjustedElectricity: actualAdjustedElectricity[index],
+      dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
+      effectiveAdjustedElectricity: effectiveAdjustedElectricity[index],
+      evaluatedElectricity: evaluatedElectricity[index],
+      reviewPrice: reviewPrice[index],
+      settlementPrice: settlementPrice[index]
+    }
+  })
+  return tableData;
+}
 
 // 计划分解详情
 export const planDetailColumns: any = () => {

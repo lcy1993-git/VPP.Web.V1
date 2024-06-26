@@ -1,4 +1,5 @@
 import QRCode from 'qrcode';
+import * as XLSX from 'xlsx';
 
 // 二维码地址生成
 export async function getQRCode(data: string, name: any) {
@@ -155,3 +156,4 @@ export const getUnit = (isMw = true) => {
  * 轮询时间间隔
  * */
 export const INTERVALTIME = 1000 * 60 * 1;
+

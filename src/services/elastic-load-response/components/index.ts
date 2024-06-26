@@ -26,3 +26,18 @@ export const getCompanyCurve = (id: string) => {
     }
   });
 };
+
+// 结算管理-市场清算结果
+export const getSettlementResult = (params: {date: string, type: 'day' | 'month'}) => {
+  return request(`/sysApi/demand/response/settlementManagement/market`, {
+    method: 'GET',
+    params: params
+  });
+};
+
+// 结算管理-modal数据
+export const getModalDetail = () => {
+  return request(`/sysApi/demand/response/settlementManagement/statistical`, {
+    method: 'GET',
+  });
+};

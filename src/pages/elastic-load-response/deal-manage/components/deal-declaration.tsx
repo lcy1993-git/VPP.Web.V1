@@ -140,6 +140,20 @@ const DealDeclaration = () => {
     }
   }, [declarationType]);
 
+  useEffect(() => {
+    if (dealType === 1) {
+      if (clearingTableRef && clearingTableRef.current) {
+        //@ts-ignore
+        clearingTableRef.current.refresh();
+      }
+    } else {
+      if (tableRef && tableRef.current) {
+        //@ts-ignore
+        tableRef.current.refresh();
+      }
+    }
+  }, [dealType]);
+
   return (
     <>
       <div className={styles.dealDeclarationPage}>

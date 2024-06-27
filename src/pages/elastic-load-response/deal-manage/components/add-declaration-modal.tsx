@@ -1,35 +1,45 @@
 import {
   getIdentificationNum,
   getPlanInfo,
-  getUserCapacity,
   getUserList,
-  getUserTableData,
 } from '@/services/elastic-load-response/deal-manage';
 import { PlusOutlined } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
-import { Button, Col, Collapse, Form, Input, Modal, Row, Select, Table } from 'antd';
+import { Button, Col, Collapse, Form, Input, Modal, Row, Select, message } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from '../index.less';
-import { addDeclarationColumns } from '../utils';
-import InitLabel from './label';
+import { default as Label } from './label';
 
 interface PropsType {
   open: boolean;
+  modalInfo: any;
   setModalOpen: Dispatch<SetStateAction<boolean>>; // 修改派单模态框状态
 }
 
 const AddDeclarationModal = (props: PropsType) => {
-  const { open, setModalOpen } = props;
+  const { open, setModalOpen, modalInfo } = props;
   // 邀约计划
   const [form] = Form.useForm();
   // 计划
   const identificationNum = Form.useWatch('identificationNum', form);
-  const [curve, setCurve] = useState<boolean>(false);
+  // 是否保存
+  const [save, setSave] = useState<boolean>(false);
 
   // 邀约计划option
   const { data: planOptions } = useRequest(getIdentificationNum, {
     manual: false,
+    onSuccess: (res) => form.setFieldValue('identificationNum', res[0]),
   });
+
+  useEffect(() => {
+    if (modalInfo?.isEdit) {
+      form.setFieldValue('identificationNum', modalInfo?.identificationNum);
+    }
+  }, [modalInfo]);
+
+  const [items, setItems] = useState<any>([]);
+  const [activeKey, setActiveKey] = useState<any>([]);
+  const [renderCount, setRenderCount] = useState<number>(0);
 
   // 获取计划信息
   const { run: fetchPlanInfo } = useRequest(getPlanInfo, {
@@ -37,163 +47,54 @@ const AddDeclarationModal = (props: PropsType) => {
     onSuccess: (res) => form.setFieldsValue(res),
   });
 
-  // 获取可调容量
-  const { run: fetchUserCapacity } = useRequest(getUserCapacity, {
-    manual: true,
-  });
-
-  // 获取表格数据
-  const { run: fetchUserTableData } = useRequest(getUserTableData, {
-    manual: true,
-  });
-
-  const [itemsData, setItemsData] = useState<any>([]);
-  const [items, setItems] = useState<any>([]);
-
-  // 初始化label
-  // const InitLabel = (data: any, key: string) => {
-  //   return (
-  //     <div className={styles.header}>
-  //       <Row>
-  //         用户：
-  //         <Select
-  //           style={{ width: 220 }}
-  //           options={data}
-  //           fieldNames={{ label: 'name', value: 'substationCode' }}
-  //           onChange={(value) => {
-  //             fetchUserCapacity(value).then((res) => {
-  //               setItemsData((prevItems: any) =>
-  //                 prevItems.map((item: any) =>
-  //                   item.key === key ? { ...item, capacity: res } : item,
-  //                 ),
-  //               );
-  //               // item.capacity = res;
-  //             });
-  //             fetchUserTableData(identificationNum, value).then((res) => {
-  //               // item.dataSource = res;
-  //               setItemsData((prevItems: any) =>
-  //                 prevItems.map((item: any) =>
-  //                   item.key === key ? { ...item, dataSource: res } : item,
-  //                 ),
-  //               );
-  //             });
-  //             // setItems((prevItems: any) =>
-  //             //   prevItems.map((item: any) =>
-  //             //     item.key === key
-  //             //       ? { ...prevItems, dataSource: item.dataSource, capacity: item.capacity }
-  //             //       : item,
-  //             //   ),
-  //             // );
-  //           }}
-  //         />
-  //         容量：
-  //         <Input style={{ width: 220 }} disabled value={itemsData[key]?.capacity} />
-  //       </Row>
-  //       <Button>
-  //         <LineChartOutlined />
-  //         曲线
-  //       </Button>
-  //     </div>
-  //   );
-  // };
-
-  // 初始化children
-  const initChildren = (key: string) => {
-    return (
-      <Table
-        dataSource={itemsData[key]?.dataSource}
-        columns={addDeclarationColumns}
-        pagination={false}
-        size="small"
-      />
-    );
-  };
-
-  const basicItemData = { capacity: '', dataSource: [] };
-
-  // 用户列表
-  const { data: userList } = useRequest(getUserList, {
-    manual: false,
-    onSuccess: (res) => {
-      setItems([
-        {
-          key: '1',
-          label: <InitLabel setCurve={setCurve} data={res} />,
-          children: initChildren('1'),
-        },
-      ]);
-    },
-  });
+  useEffect(() => {
+    if (identificationNum) {
+      fetchPlanInfo(identificationNum);
+      getUserList(identificationNum).then((res) => {
+        setSave(false);
+        setRenderCount(renderCount + 1);
+        setActiveKey(`1-${renderCount}`);
+        setItems([
+          {
+            key: `1-${renderCount}`,
+            children: (
+              <Label
+                data={res.data}
+                identificationNum={identificationNum}
+                setSave={setSave}
+                modalInfo={modalInfo}
+                save={save}
+              />
+            ),
+          },
+        ]);
+      });
+    }
+  }, [identificationNum]);
 
   // 新增新的面板
   const addItem = () => {
-    const newKey = items.length + 1;
-    const newData = { ...basicItemData, key: newKey };
-    const newItem = {
-      key: newKey,
-      label: <InitLabel data={userList} setCurve={setCurve} />,
-      children: initChildren(newKey), // 或者其他动态生成的children内容
-    };
-    setItems([...items, newItem]);
-    setItemsData([...itemsData, newData]);
+    if (!save) return message.info('请对上一条数据进行保存');
+    getUserList(identificationNum).then((res) => {
+      const newKey = items.length + 1;
+      const saveValue = false;
+      setActiveKey(newKey);
+      setSave(saveValue);
+      const newItem = {
+        key: newKey,
+        children: (
+          <Label
+            data={res.data}
+            setSave={setSave}
+            save={saveValue}
+            modalInfo={modalInfo}
+            identificationNum={identificationNum}
+          />
+        ), // 或者其他动态生成的children内容
+      };
+      setItems([...items, newItem]);
+    });
   };
-
-  useEffect(() => {
-    setItems(items);
-  }, [itemsData]);
-
-  // useEffect(() => {
-  //   if (identificationNum && userList) {
-  //     setItems([
-  //       {
-  //         key: '1',
-  //         label: InitLabel(userList, '1'),
-  //         children: initChildren('1'),
-  //       },
-  //     ]);
-  //     setItemsData([{ ...basicItemData, key: '1' }]);
-  //   }
-  // }, [identificationNum, userList]);
-
-  // useEffect(() => {
-  //   if (substationCode && identificationNum) {
-  //     fetchUserTableData(identificationNum, substationCode);
-  //   }
-  // }, [identificationNum, substationCode]);
-
-  // const items: CollapseProps['items'] = [
-  //   {
-  //     key: '1',
-  //     label: (
-  //       <div className={styles.header}>
-  //         <Form autoComplete="off" form={userForm}>
-  //           <Row>
-  //             <Form.Item
-  //               label="用户"
-  //               name="substationCode"
-  //               rules={[{ required: true, message: '请选择用户' }]}
-  //             >
-  //               <Select
-  //                 style={{ width: 220 }}
-  //                 options={userList}
-  //                 fieldNames={{ label: 'name', value: 'substationCode' }}
-  //                 onChange={(value) => fetchUserCapacity(value)}
-  //               />
-  //             </Form.Item>
-  //             <Form.Item label="可调容量(MW)" name="capacity" style={{ marginLeft: '40px' }}>
-  //               <Input style={{ width: 220 }} disabled />
-  //             </Form.Item>
-  //           </Row>
-  //         </Form>
-  //         <Button>
-  //           <LineChartOutlined />
-  //           曲线
-  //         </Button>
-  //       </div>
-  //     ),
-  //     children: renderItemText(),
-  //   },
-  // ];
 
   return (
     <Modal
@@ -220,7 +121,7 @@ const AddDeclarationModal = (props: PropsType) => {
                     label: item,
                     value: item,
                   }))}
-                  onChange={(value) => fetchPlanInfo(value)}
+                  disabled={modalInfo?.isEdit}
                 />
               </Form.Item>
             </Col>
@@ -266,15 +167,19 @@ const AddDeclarationModal = (props: PropsType) => {
           </Row>
         </Form>
         <div className={styles.bottomContainer}>
-          {curve ? (
-            <>1</>
-          ) : (
-            <>
-              <Collapse accordion items={items} defaultActiveKey={['1']} collapsible="icon" />
-              <Button onClick={addItem}>
-                <PlusOutlined />
-              </Button>
-            </>
+          <div style={{ height: '400px', overflowY: 'auto' }}>
+            <Collapse
+              accordion
+              items={items}
+              collapsible="icon"
+              activeKey={activeKey}
+              onChange={(value) => setActiveKey(value)}
+            />
+          </div>
+          {!modalInfo?.isEdit && (
+            <Button onClick={addItem}>
+              <PlusOutlined />
+            </Button>
           )}
         </div>
       </div>

@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
 import { Button, Col, DatePicker, Form, Input, Row, Select, Space, Table } from 'antd';
+import dayjs from 'dayjs';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import styles from '../index.less';
@@ -24,6 +25,7 @@ const { RangePicker } = DatePicker;
 
 // 交易公告披露
 const Notice = () => {
+  const currentDate: any = [dayjs(), dayjs()];
   const [form] = Form.useForm();
   // 列表选项
   const [options, setOptions] = useState<any>([]);
@@ -33,7 +35,7 @@ const Notice = () => {
   const [ascOrDesc, setAscOrDesc] = useState<boolean>(true);
   const [tableData, setTableData] = useState<any>([]);
   // 日期
-  const [date, setDate] = useState<any | null>(null);
+  const [date, setDate] = useState<any>(currentDate);
 
   // 计划列表
   const { run: fetchAnnouncementList } = useRequest(getAnnouncementList, {
@@ -92,14 +94,10 @@ const Notice = () => {
 
   // 查询按钮
   const handleSearch = () => {
-    if (date) {
-      fetchAnnouncementList({
-        startDate: moment(date[0]).format('YYYY-MM-DD'),
-        endDate: moment(date[1]).format('YYYY-MM-DD'),
-      });
-    } else {
-      fetchAnnouncementList({ startDate: '', endDate: '' });
-    }
+    fetchAnnouncementList({
+      startDate: moment(date[0]).format('YYYY-MM-DD'),
+      endDate: moment(date[1]).format('YYYY-MM-DD'),
+    });
   };
 
   // 下载文件
@@ -111,7 +109,10 @@ const Notice = () => {
   };
 
   useEffect(() => {
-    fetchAnnouncementList({ startDate: '', endDate: '' });
+    fetchAnnouncementList({
+      startDate: moment(currentDate[0]).format('YYYY-MM-DD'),
+      endDate: moment(currentDate[1]).format('YYYY-MM-DD'),
+    });
   }, []);
 
   useEffect(() => {
@@ -129,7 +130,7 @@ const Notice = () => {
             format="YYYY-MM-DD"
             placeholder={['查询开始时间', '查询结束时间']}
             style={{ width: 300 }}
-            allowClear
+            allowClear={false}
             onChange={(date) => setDate(date)}
             value={date}
           />

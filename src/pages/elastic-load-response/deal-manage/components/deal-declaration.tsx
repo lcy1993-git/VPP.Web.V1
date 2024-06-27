@@ -34,6 +34,8 @@ import DeleteModal from './deleteModal';
 const DealDeclaration = () => {
   // 申报信息表格
   const tableRef = useRef(null);
+  // 已出请
+  const clearingTableRef = useRef(null);
   // 查询input值
   const [inputValue, setInputValue] = useState<string>('');
   // 删除/撤销/申报弹框
@@ -66,6 +68,8 @@ const DealDeclaration = () => {
   const [clearingId, setClearingId] = useState<string>('');
   // 新增申报弹框
   const [addDeclarationOpen, setAddDeclarationOpen] = useState<boolean>(false);
+  // 新增申报弹框类型
+  const [addDeclarationInfo, setAddDeclarationInfo] = useState<any>({});
   // 表格 checkbox 被选中
   const [tableSelectRows, setTableSelectRows] = useState<any>([]);
 
@@ -136,6 +140,20 @@ const DealDeclaration = () => {
     }
   }, [declarationType]);
 
+  useEffect(() => {
+    if (dealType === 1) {
+      if (clearingTableRef && clearingTableRef.current) {
+        //@ts-ignore
+        clearingTableRef.current.refresh();
+      }
+    } else {
+      if (tableRef && tableRef.current) {
+        //@ts-ignore
+        tableRef.current.refresh();
+      }
+    }
+  }, [dealType]);
+
   return (
     <>
       <div className={styles.dealDeclarationPage}>
@@ -188,7 +206,12 @@ const DealDeclaration = () => {
                     <div className={styles.left} />
                     <span className={styles.blueTitle}>申报信息</span>
                     <Space>
-                      <Button onClick={() => setAddDeclarationOpen(true)}>
+                      <Button
+                        onClick={() => {
+                          setAddDeclarationOpen(true);
+                          setAddDeclarationInfo({ isEdit: false });
+                        }}
+                      >
                         <PlusCircleOutlined />
                         新增
                       </Button>
@@ -275,21 +298,22 @@ const DealDeclaration = () => {
                           />
                         )
                       ) : (
-                        <GeneralTable
+                        <Table
                           columns={userDetailColumns(
                             setUserModalOpen,
                             setUserModalInfo,
                             setModalType,
                             setOpen,
                             setModalId,
+                            setAddDeclarationOpen,
+                            setAddDeclarationInfo,
                           )}
                           dataSource={userDetail}
-                          rowKey="identificationNum"
+                          // rowKey="agentId"
                           size="middle"
-                          type="checkbox"
-                          bordered={false}
+                          bordered
                           scroll={{ y: 170 }}
-                          hasPage={false}
+                          pagination={false}
                         />
                       ))}
                   </div>
@@ -299,6 +323,7 @@ const DealDeclaration = () => {
               <div className={styles.handledContainer}>
                 <span className={styles.blueTitle}>申报信息</span>
                 <GeneralTable
+                  ref={clearingTableRef}
                   url="/api/demand/response/transactionBidding/settled"
                   columns={clearingResultColumns(setClearingVisible, setClearingId)}
                   rowKey="identificationNum"
@@ -362,7 +387,11 @@ const DealDeclaration = () => {
         refresh={refresh}
       />
       {/* 新增申报 */}
-      <AddDeclarationModal open={addDeclarationOpen} setModalOpen={setAddDeclarationOpen} />
+      <AddDeclarationModal
+        open={addDeclarationOpen}
+        setModalOpen={setAddDeclarationOpen}
+        modalInfo={addDeclarationInfo}
+      />
     </>
   );
 };

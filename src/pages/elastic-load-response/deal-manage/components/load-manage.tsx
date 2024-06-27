@@ -9,6 +9,7 @@ import { exportExcel } from '@/utils/xlsx';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
 import { Button, DatePicker, Table } from 'antd';
+import dayjs from 'dayjs';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import styles from '../index.less';
@@ -22,7 +23,7 @@ const LoadManage = () => {
   // 曲线or表格
   const [curveOrTable, setCurveOrTable] = useState<boolean>(true);
   // 日期
-  const [date, setDate] = useState<any | null>(null);
+  const [date, setDate] = useState<any>(dayjs());
   // 列表选项
   const [options, setOptions] = useState<any>([]);
   const [selectedValue, setSelectedValue] = useState<string>('');
@@ -81,7 +82,7 @@ const LoadManage = () => {
     <div className={styles.loadManagePage}>
       <div className={styles.header}>
         日期：
-        <DatePicker onChange={(value) => setDate(value)} />
+        <DatePicker onChange={(value) => setDate(value)} value={date} allowClear={false} />
         <Button style={{ marginLeft: '20px' }} onClick={handleDownLoad}>
           <DownloadOutlined />
           下载

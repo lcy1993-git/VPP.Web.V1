@@ -79,9 +79,9 @@ const OptionList = (props: PropsType) => {
                   optionIndex % 2 ? styles.evenBg : styles.oddBg,
                 ].join(' ')}
               >
-                <Tooltip title={item} placement="top">
+                {/* <Tooltip title={item} placement="top"> */}
                   <div className={styles.item}> {item}</div>
-                </Tooltip>
+                {/* </Tooltip> */}
               </div>
             ))}
           </div>

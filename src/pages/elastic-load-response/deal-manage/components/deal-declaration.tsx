@@ -329,7 +329,7 @@ const DealDeclaration = () => {
                   rowKey="identificationNum"
                   size="middle"
                   type="checkbox"
-                  bordered={false}
+                  bordered={true}
                   requestType="get"
                   scroll={{ y: 200 }}
                   style={{ paddingTop: '15px', width: '100%' }}
@@ -357,6 +357,7 @@ const DealDeclaration = () => {
                     down: ancillaryChart?.downwardList[index],
                     up: ancillaryChart?.upwardList[index],
                   }))}
+                  bordered
                   scroll={{ y: 490 }}
                   pagination={false}
                   style={{ paddingTop: '15px' }}

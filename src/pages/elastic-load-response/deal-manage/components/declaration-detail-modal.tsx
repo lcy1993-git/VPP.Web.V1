@@ -55,7 +55,7 @@ const DeclarationDetailModal = (props: PropsType) => {
 
   const handleCancel = () => {
     setOpen(false);
-    // setCurveOrTable(true);
+    setCurveOrTable(true);
   };
 
   return (
@@ -65,6 +65,7 @@ const DeclarationDetailModal = (props: PropsType) => {
       width={1000}
       open={open}
       footer={false}
+      destroyOnClose
       onCancel={handleCancel}
     >
       <div style={{ textAlign: 'end' }}>
@@ -84,7 +85,7 @@ const DeclarationDetailModal = (props: PropsType) => {
           dataSource={modalInfo?.dataSource}
           rowKey="index"
           size="middle"
-          bordered={false}
+          bordered={true}
           scroll={{ y: 340 }}
           pagination={false}
           style={{ height: '380px', paddingTop: '15px' }}

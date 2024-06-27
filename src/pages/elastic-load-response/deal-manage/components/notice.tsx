@@ -20,6 +20,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import styles from '../index.less';
 import { demandCapacityOptions, demandDetailColumns } from '../utils';
+import AddDeclarationModal from './add-declaration-modal';
 import OptionList from './option-list';
 const { RangePicker } = DatePicker;
 
@@ -36,7 +37,10 @@ const Notice = () => {
   const [tableData, setTableData] = useState<any>([]);
   // 日期
   const [date, setDate] = useState<any>(currentDate);
-
+  // 新增申报弹框
+  const [addDeclarationOpen, setAddDeclarationOpen] = useState<boolean>(false);
+  // 新增申报弹框类型
+  const [addDeclarationInfo, setAddDeclarationInfo] = useState<any>({});
   // 计划列表
   const { run: fetchAnnouncementList } = useRequest(getAnnouncementList, {
     manual: true,
@@ -122,126 +126,144 @@ const Notice = () => {
   }, [selectedValue]);
 
   return (
-    <div className={styles.noticePage}>
-      <div className={styles.header}>
-        <div className={styles.left}>
-          时间：
-          <RangePicker
-            format="YYYY-MM-DD"
-            placeholder={['查询开始时间', '查询结束时间']}
-            style={{ width: 300 }}
-            allowClear={false}
-            onChange={(date) => setDate(date)}
-            value={date}
-          />
-          <Space size={15}>
-            <Button style={{ marginLeft: '40px' }} onClick={() => setDate(null)}>
-              <ReloadOutlined />
-              重置
-            </Button>
-            <Button onClick={handleSearch}>
-              <SearchOutlined />
-              查询
-            </Button>
-            <Button onClick={handleDownLoad}>
-              <DownloadOutlined />
-              下载
-            </Button>
-          </Space>
-        </div>
-        <Button>
-          <FileTextOutlined />
-          申报
-        </Button>
-      </div>
-      <div className={styles.container}>
-        <OptionList categories={options} setSelectedValue={setSelectedValue} />
-        <div className={styles.infoContainer}>
-          <div className={styles.planNum}>邀约计划信息：{selectedValue}</div>
-          <Form
-            autoComplete="off"
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 12 }}
-            style={{ paddingTop: '15px', height: '115px' }}
-            form={form}
+    <>
+      {' '}
+      <div className={styles.noticePage}>
+        <div className={styles.header}>
+          <div className={styles.left}>
+            时间：
+            <RangePicker
+              format="YYYY-MM-DD"
+              placeholder={['查询开始时间', '查询结束时间']}
+              style={{ width: 300 }}
+              allowClear={false}
+              onChange={(date) => setDate(date)}
+              value={date}
+            />
+            <Space size={15}>
+              <Button style={{ marginLeft: '40px' }} onClick={() => setDate(null)}>
+                <ReloadOutlined />
+                重置
+              </Button>
+              <Button onClick={handleSearch}>
+                <SearchOutlined />
+                查询
+              </Button>
+              <Button onClick={handleDownLoad}>
+                <DownloadOutlined />
+                下载
+              </Button>
+            </Space>
+          </div>
+          <Button
+            onClick={() => {
+              setAddDeclarationOpen(true);
+              setAddDeclarationInfo({
+                isEdit: false,
+                // identificationNum: text.identificationNum,
+                // substationCode: text.substationCode,
+              });
+            }}
           >
-            <Row gutter={24}>
-              <Col span={7}>
-                <Form.Item label="运行日" name="operatingDay">
-                  <Input style={{ width: 240 }} disabled />
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item label="响应类型" name="responseType">
-                  <Select
-                    style={{ width: 240 }}
-                    disabled
-                    options={[
-                      { label: '削峰响应', value: 0 },
-                      { label: '填谷响应', value: 1 },
-                    ]}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item label="需求时段" name="demandPeriod">
-                  <Input style={{ width: 240 }} disabled />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={7}>
-                <Form.Item label="需求地区" name="demandArea">
-                  <Input style={{ width: 240 }} disabled />
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item label="申报价格上限" name="maximumBidPrice">
-                  <Input style={{ width: 240 }} disabled />
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item label="申报价格下限" name="minimumBidPrice">
-                  <Input style={{ width: 240 }} disabled />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-          <div className={styles.demandCapacity}>
-            <span className={styles.titleText}>邀约需求容量</span>
-            <div className={styles.bar}>
-              <div className={styles.blueTitle}>邀约需求容量柱状图</div>
-              <CustomCharts
-                options={demandCapacityOptions(
-                  announcementDetails?.xaxis,
-                  announcementDetails?.capacity,
-                )}
-              />
-            </div>
-            <div className={styles.table}>
-              <div className={styles.header}>
-                <div />
-                <div className={styles.blueTitle}>邀约需求容量详情</div>
-                <SegmentedTheme
-                  options={[
-                    { value: 'asc', icon: <ArrowUpOutlined /> },
-                    { value: 'desc', icon: <ArrowDownOutlined /> },
-                  ]}
-                  getSelectedValue={(value) => setAscOrDesc(value === 'asc')}
+            <FileTextOutlined />
+            申报
+          </Button>
+        </div>
+        <div className={styles.container}>
+          <OptionList categories={options} setSelectedValue={setSelectedValue} />
+          <div className={styles.infoContainer}>
+            <div className={styles.planNum}>邀约计划信息：{selectedValue}</div>
+            <Form
+              autoComplete="off"
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 12 }}
+              style={{ paddingTop: '15px', height: '115px' }}
+              form={form}
+            >
+              <Row gutter={24}>
+                <Col span={7}>
+                  <Form.Item label="运行日" name="operatingDay">
+                    <Input style={{ width: 240 }} disabled />
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                  <Form.Item label="响应类型" name="responseType">
+                    <Select
+                      style={{ width: 240 }}
+                      disabled
+                      options={[
+                        { label: '削峰响应', value: 0 },
+                        { label: '填谷响应', value: 1 },
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                  <Form.Item label="需求时段" name="demandPeriod">
+                    <Input style={{ width: 240 }} disabled />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={24}>
+                <Col span={7}>
+                  <Form.Item label="需求地区" name="demandArea">
+                    <Input style={{ width: 240 }} disabled />
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                  <Form.Item label="申报价格上限" name="maximumBidPrice">
+                    <Input style={{ width: 240 }} disabled />
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                  <Form.Item label="申报价格下限" name="minimumBidPrice">
+                    <Input style={{ width: 240 }} disabled />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+            <div className={styles.demandCapacity}>
+              <span className={styles.titleText}>邀约需求容量</span>
+              <div className={styles.bar}>
+                <div className={styles.blueTitle}>邀约需求容量柱状图</div>
+                <CustomCharts
+                  options={demandCapacityOptions(
+                    announcementDetails?.xaxis,
+                    announcementDetails?.capacity,
+                  )}
                 />
               </div>
-              <Table
-                columns={demandDetailColumns}
-                dataSource={tableData}
-                scroll={{ y: 155 }}
-                pagination={false}
-                size="middle"
-              />
+              <div className={styles.table}>
+                <div className={styles.header}>
+                  <div />
+                  <div className={styles.blueTitle}>邀约需求容量详情</div>
+                  <SegmentedTheme
+                    options={[
+                      { value: 'asc', icon: <ArrowUpOutlined /> },
+                      { value: 'desc', icon: <ArrowDownOutlined /> },
+                    ]}
+                    getSelectedValue={(value) => setAscOrDesc(value === 'asc')}
+                  />
+                </div>
+                <Table
+                  columns={demandDetailColumns}
+                  dataSource={tableData}
+                  scroll={{ y: 155 }}
+                  pagination={false}
+                  size="middle"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div>{' '}
+      {/* 新增申报 */}
+      <AddDeclarationModal
+        open={addDeclarationOpen}
+        setModalOpen={setAddDeclarationOpen}
+        modalInfo={addDeclarationInfo}
+      />
+    </>
   );
 };
 

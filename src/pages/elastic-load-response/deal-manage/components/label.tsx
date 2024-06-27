@@ -159,7 +159,7 @@ const InitLabel = (props: any) => {
     <>
       <div className={styles.header}>
         <Row>
-          用户：
+          <span style={{ height: '32px', lineHeight: '32px' }}>用户：</span>
           <Select
             style={{ width: 220 }}
             options={data}
@@ -168,7 +168,7 @@ const InitLabel = (props: any) => {
             value={substationCode}
             disabled={disabled || modalInfo?.isEdit}
           />
-          容量：
+          <span style={{ height: '32px', lineHeight: '32px', marginLeft: '20px' }}>容量：</span>
           <Input style={{ width: 220 }} disabled value={capacity} />
         </Row>
         <Space>

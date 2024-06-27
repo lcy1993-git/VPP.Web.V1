@@ -69,7 +69,15 @@ export const addContractPost = (params: any) => {
     data: params
   });
 };
-
+// 合同详情
+export const setContractDetail = (contractId: string) => {
+  return request(`/sysApi/demand/response/contractManagement/details`, {
+    method: 'GET',
+    params: {
+      contractId
+    }
+  });
+};
 
 // 调控计划管理 ---- 邀约计划类型列表
 export const getInvitePlanList = (type: number) => {

@@ -166,3 +166,12 @@ export function createUUid() {
       return v.toString(16);
   });
 }
+
+export function downLoadPdfOrDocx (url: string) {
+  const eleLink = document.createElement('a');
+    eleLink.style.display = 'none';
+    eleLink.href = url;
+    document.body.appendChild(eleLink);
+    eleLink.click();
+    document.body.removeChild(eleLink);
+}

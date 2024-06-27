@@ -1912,7 +1912,24 @@ export const responseChartOptions = (responsePlanData: any) => {
   };
 };
 
-// export const planDetailChartOptions =
+export const responseTableData = (data: any) => {
+  if (!data) return [];
+  const {baselineValueList, planValueList, regulateValueList, xaxis} = data;
+
+  if (!baselineValueList && !planValueList && !regulateValueList && !xaxis) return [];
+
+  const tableData = xaxis.map((item: any, index: any) => {
+    return {
+      key: item,
+      baselineValueList: baselineValueList[index],
+      dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
+      planValueList: planValueList[index],
+      regulateValueList: regulateValueList[index],
+    }
+  })
+  return tableData;
+}
+
 
 // 交易调控计划管理 --- 表格数据
 export const responsePlanTableData = (data: any) => {

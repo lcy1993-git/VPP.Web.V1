@@ -231,6 +231,9 @@ const withGeneralTable =
       foldTable: () => {
         setExpandedRowKeys([]);
       },
+      getTableRequestData: () => {
+        return tableData
+      }
     }));
 
     //获取选中项目和id

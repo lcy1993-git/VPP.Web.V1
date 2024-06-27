@@ -11,16 +11,18 @@ import {
   UpOutlined,
 } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { Button, Collapse, Input, Modal, Select, Space } from 'antd';
+import { Button, Collapse, Input, Modal, Select, Space, Spin } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import styles from '../index.less';
-import { responseChartOptions, responseDetalColumns, responsePlanTableData, responseTableColumns } from '../utils';
+import { responseChartOptions, responseDetalColumns, responsePlanTableData, responseTableColumns, responseTableData } from '../utils';
 
 const DealControlManager = () => {
   // 详情模态框状态
   const [visibile, setVisibile] = useState<boolean>(false)
   // 邀约响应计划
   const [responseChartOrTable, setResponseChartOrTable] = useState<'line' | 'table'>('line');
+  // 模态框图表和表格切换
+  const [modalChartOrTable, setModalChartOrTable] = useState<'line' | 'table'>('line');
   // 邀约响应计划表格实例
   const responseTableRef = useRef(null);
   // 计划类型
@@ -45,10 +47,14 @@ const DealControlManager = () => {
       align: 'center' as any,
       key: 'planDecompositionDetailsId',
       render: (text: string) => {
-        return <LineChartOutlined onClick={() => {
-          setVisibile(true)
-          showDetail(text)
-        }} />
+        return <Button
+          size="small"
+          icon={ <LineChartOutlined size={40} /> }
+          onClick={async () => {
+            setVisibile(true)
+            await fetchInvitePlanCurve(text);
+          }}
+        />
       }
     },
     {
@@ -144,7 +150,6 @@ const DealControlManager = () => {
     onSuccess: (result) => {
       const { code, data } = result;
       if (code === 200 && data) {
-        console.log(result, '1111')
         setPlanDetailData(data);
       }
     }
@@ -168,10 +173,6 @@ const DealControlManager = () => {
     });
   }
 
-  const showDetail = (id: string) => {
-
-    fetchInvitePlanCurve(id);
-  }
 
   useEffect(() => {
     fetchInvitePlanList(planType)
@@ -204,6 +205,7 @@ const DealControlManager = () => {
       <div className={styles.controlPageMain}>
         <div className={styles.controlPageMainTop}>
           <div className={styles.controlMenu}>
+            <Spin spinning={invitePlanListLoading}>
             <Collapse
               bordered={false}
               expandIconPosition="end"
@@ -213,6 +215,7 @@ const DealControlManager = () => {
               items={collapseItems}
               expandIcon={(e) => (e.isActive ? <UpOutlined /> : <DownOutlined />)}
             />
+            </Spin>
           </div>
           <div className={styles.controlSide}>
             <div className={styles.controlSideTitle}>
@@ -233,7 +236,7 @@ const DealControlManager = () => {
               {responseChartOrTable === 'line' ? (
                 <CustomCharts
                   options={responseChartOptions(responsePlanData)}
-                  loading={false}
+                  loading={inviteResponsePlanLoading}
                   height={280}
                   width={window.innerWidth - 574}
                 />
@@ -243,6 +246,7 @@ const DealControlManager = () => {
                   rowKey="id"
                   size="middle"
                   hideSelect
+                  loading={inviteResponsePlanLoading}
                   bordered={true}
                   columns={responseTableColumns}
                   scroll={{ y: 180 }}
@@ -281,7 +285,6 @@ const DealControlManager = () => {
               hideSelect={true}
               size="middle"
               bordered={true}
-              getCheckData={(data) => { }}
               requestType="get"
               scroll={{
                 y: window.innerHeight - 720,
@@ -300,15 +303,39 @@ const DealControlManager = () => {
         destroyOnClose
         onCancel={() => {
           setVisibile(false)
+          setModalChartOrTable('line')
         }}
       >
         <div className={styles.modalMain} style={{ height: 500 }}>
-          <CustomCharts
+          <div className={styles.modalMainHead}>
+            <SegmentedTheme
+              defaultValue="line"
+              options={[
+                { label: '曲线', value: 'line', icon: <LineChartOutlined /> },
+                { label: '表格', value: 'table', icon: <InsertRowAboveOutlined /> },
+              ]}
+              getSelectedValue={(value: any) => setModalChartOrTable(value)}
+            />
+          </div>
+          {
+            modalChartOrTable === 'line' ? <CustomCharts
             options={responseChartOptions(planDetailData)}
             height={450}
             loading={invitePlanCurveLoading}
             width={window.innerWidth * 0.68}
-          />
+          /> : <GeneralTable
+                dataSource={responseTableData(planDetailData)}
+                rowKey="id"
+                size="middle"
+                hideSelect
+                loading={inviteResponsePlanLoading}
+                bordered={true}
+                columns={responseTableColumns}
+                scroll={{ y: 400 }}
+                hasPage={false}
+              />
+          }
+
         </div>
       </Modal>
     </div>

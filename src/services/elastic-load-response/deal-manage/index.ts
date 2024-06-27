@@ -33,9 +33,10 @@ export const getUserLoadDetails = (date: string, substationCode: string) => {
 };
 
 // 用户列表
-export const getUserList = () => {
+export const getUserList = (identificationNum?: string) => {
   return request(`/sysApi/demand/response/transactionBidding/user`, {
     method: 'GET',
+    params: { identificationNum },
   });
 };
 
@@ -155,5 +156,21 @@ export const getAncillaryChart = (identificationNum?: string) => {
   return request(`/sysApi/demand/response/transactionBidding/ancillary/curve`, {
     method: 'GET',
     params: { identificationNum },
+  });
+};
+
+// 可调节
+export const getAdjustable = (substationCode: string) => {
+  return request(`/sysApi/demand/response/transactionBidding/adjustable/capability`, {
+    method: 'GET',
+    params: { substationCode },
+  });
+};
+
+// 新增申报
+export const addDeclaration = (data: any) => {
+  return request(`/sysApi/demand/response/transactionBidding/agent/user/details/add`, {
+    method: 'POST',
+    data,
   });
 };

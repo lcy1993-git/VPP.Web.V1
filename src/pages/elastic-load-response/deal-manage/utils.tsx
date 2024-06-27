@@ -1,10 +1,9 @@
 import ColorCircleScript from '@/components/color-circle-script';
 import { Badge, Button, Space } from 'antd';
-import * as echarts from 'echarts';
-import { Dispatch, SetStateAction } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
-import { LineChartOutlined } from '@ant-design/icons';
+import * as echarts from 'echarts';
+import { Dispatch, SetStateAction } from 'react';
 
 // 邀约需求容量详情
 export const demandDetailColumns: any = [
@@ -457,6 +456,8 @@ export const userDetailColumns: any = (
   setModalType: Dispatch<SetStateAction<any>>,
   setOpen: Dispatch<SetStateAction<any>>,
   setModalId: Dispatch<SetStateAction<any>>,
+  setAddDeclarationOpen: Dispatch<SetStateAction<any>>,
+  setAddDeclarationInfo: Dispatch<SetStateAction<any>>,
 ) => {
   // 曲线icon
   const curveIcon = (record: any, isCapacity: boolean) => {
@@ -533,7 +534,19 @@ export const userDetailColumns: any = (
       render: (text: any) => {
         return (
           <Space>
-            <Button size="small">编辑</Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setAddDeclarationOpen(true);
+                setAddDeclarationInfo({
+                  isEdit: true,
+                  identificationNum: text.identificationNum,
+                  substationCode: text.substationCode,
+                });
+              }}
+            >
+              编辑
+            </Button>
             <Button
               size="small"
               onClick={() => {
@@ -971,8 +984,8 @@ export const contractColumns = [
     ],
     onFilter: (value: any, record: any) => record.address.startsWith(value as string),
     render: (text: any) => {
-      return Number(text) === 1 ? '电网结算合同' : '需求响应代理合同'
-    }
+      return Number(text) === 1 ? '电网结算合同' : '需求响应代理合同';
+    },
   },
   {
     align: 'center' as any,
@@ -991,8 +1004,8 @@ export const contractColumns = [
     ],
     onFilter: (value: any, record: any) => record.address.startsWith(value as string),
     render: (text: any) => {
-      return Number(text) === 1 ? '电网结算' : '收益与考核比例结算'
-    }
+      return Number(text) === 1 ? '电网结算' : '收益与考核比例结算';
+    },
   },
   {
     title: '签订对象',
@@ -1029,11 +1042,17 @@ export const contractColumns = [
     dataIndex: 'status',
     key: 'status',
     render: (text: any) => {
-      return <Space>
-        { Number(text) === 1 ? <Badge status="success" /> : <Badge status="error" />}
-        { Number(text) === 1 ? <span style={{color: '#49aa19'}}>有效</span> : <span style={{color: '#dc0303'}}>到期</span> }
-      </Space>
-    }
+      return (
+        <Space>
+          {Number(text) === 1 ? <Badge status="success" /> : <Badge status="error" />}
+          {Number(text) === 1 ? (
+            <span style={{ color: '#49aa19' }}>有效</span>
+          ) : (
+            <span style={{ color: '#dc0303' }}>到期</span>
+          )}
+        </Space>
+      );
+    },
   },
 ];
 
@@ -1067,8 +1086,8 @@ export const addTableColumns = [
     align: 'center' as any,
     key: 'contractType',
     render: (text: number) => {
-      return text === 0 ? <span>需求响应代理合同</span> : <span>电网结算合同</span>
-    }
+      return text === 0 ? <span>需求响应代理合同</span> : <span>电网结算合同</span>;
+    },
   },
   {
     title: '结算方式',
@@ -1076,8 +1095,8 @@ export const addTableColumns = [
     align: 'center' as any,
     key: 'settlementMethod',
     render: (text: number) => {
-      return text === 0 ? <span>收益与考核比例结算</span> : <span>电网结算</span>
-    }
+      return text === 0 ? <span>收益与考核比例结算</span> : <span>电网结算</span>;
+    },
   },
   {
     title: '签订对象',
@@ -1091,8 +1110,8 @@ export const addTableColumns = [
     align: 'center' as any,
     key: 'startTime',
     render: (text: any) => {
-      return <span>{dayjs(text).format('YYYY-MM-DD')}</span>
-    }
+      return <span>{dayjs(text).format('YYYY-MM-DD')}</span>;
+    },
   },
   {
     title: '结束时间',
@@ -1100,10 +1119,9 @@ export const addTableColumns = [
     align: 'center' as any,
     key: 'endTime',
     render: (text: any) => {
-      return <span>{dayjs(text).format('YYYY-MM-DD')}</span>
-    }
+      return <span>{dayjs(text).format('YYYY-MM-DD')}</span>;
+    },
   },
-
 ];
 
 // 结算管理表格Columns
@@ -1205,22 +1223,36 @@ export const settlementColumns = [
     align: 'center' as any,
     key: 'isConfirm',
     render: (text: any) => {
-      return text === Number(1) ? '已确认' : '未确认'
-    }
+      return text === Number(1) ? '已确认' : '未确认';
+    },
   },
 ];
 // 结算管理模态框图options
 export const settlementChartOptions = (modalDetailData: any) => {
-
   if (!modalDetailData) return false;
 
-  const {settlementPrice, reviewPrice, evaluatedElectricity, effectiveAdjustedElectricity, actualAdjustedElectricity, xaxis} = modalDetailData;
+  const {
+    settlementPrice,
+    reviewPrice,
+    evaluatedElectricity,
+    effectiveAdjustedElectricity,
+    actualAdjustedElectricity,
+    xaxis,
+  } = modalDetailData;
 
-  if (!settlementPrice && !reviewPrice && !evaluatedElectricity && !effectiveAdjustedElectricity && !actualAdjustedElectricity && !xaxis) return false;
+  if (
+    !settlementPrice &&
+    !reviewPrice &&
+    !evaluatedElectricity &&
+    !effectiveAdjustedElectricity &&
+    !actualAdjustedElectricity &&
+    !xaxis
+  )
+    return false;
 
   const xAxisData = xaxis.map((item: string) => {
-    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
-  })
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1];
+  });
 
   return {
     tooltip: {
@@ -1345,12 +1377,27 @@ export const electricityTableColumns = [
     align: 'center' as any,
     key: 'reviewPrice',
   },
-]
+];
 // 结算管理模态框---电量统计表格数据
 export const electricityTableData = (data: any) => {
   if (!data) return [];
-  const {settlementPrice, reviewPrice, evaluatedElectricity, effectiveAdjustedElectricity, actualAdjustedElectricity, xaxis} = data;
-  if (!settlementPrice && !reviewPrice && !evaluatedElectricity && !effectiveAdjustedElectricity && !actualAdjustedElectricity && !xaxis) return [];
+  const {
+    settlementPrice,
+    reviewPrice,
+    evaluatedElectricity,
+    effectiveAdjustedElectricity,
+    actualAdjustedElectricity,
+    xaxis,
+  } = data;
+  if (
+    !settlementPrice &&
+    !reviewPrice &&
+    !evaluatedElectricity &&
+    !effectiveAdjustedElectricity &&
+    !actualAdjustedElectricity &&
+    !xaxis
+  )
+    return [];
   const tableData = xaxis.map((item: any, index: any) => {
     return {
       key: item,
@@ -1359,11 +1406,11 @@ export const electricityTableData = (data: any) => {
       effectiveAdjustedElectricity: effectiveAdjustedElectricity[index],
       evaluatedElectricity: evaluatedElectricity[index],
       reviewPrice: reviewPrice[index],
-      settlementPrice: settlementPrice[index]
-    }
-  })
+      settlementPrice: settlementPrice[index],
+    };
+  });
   return tableData;
-}
+};
 
 // 计划分解详情
 export const planDetailColumns: any = () => {
@@ -1421,13 +1468,21 @@ export const planDetailColumns: any = () => {
 export const dayPlanChartOptions = (data: any) => {
   if (!data) return false;
 
-  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis} = data;
+  const { baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } =
+    data;
 
-  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return false;
+  if (
+    !baselineValueList &&
+    !invitationAdjustmentList &&
+    !invitationPlanList &&
+    !realValueList &&
+    !xaxis
+  )
+    return false;
 
   const xAxisData = xaxis.map((item: string) => {
-    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
-  })
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1];
+  });
 
   return {
     tooltip: {
@@ -1539,12 +1594,19 @@ export const dayPlanTableColumns = [
 
 // 执行跟踪 --- 表格数据
 export const dayPlanTableData = (data: any) => {
-
   if (!data) return [];
 
-  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } = data;
+  const { baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } =
+    data;
 
-  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return [];
+  if (
+    !baselineValueList &&
+    !invitationAdjustmentList &&
+    !invitationPlanList &&
+    !realValueList &&
+    !xaxis
+  )
+    return [];
 
   const tableData = xaxis.map((item: any, index: any) => {
     return {
@@ -1553,11 +1615,11 @@ export const dayPlanTableData = (data: any) => {
       dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
       invitationPlan: invitationPlanList[index],
       realTimeValue: realValueList[index],
-      invitationAdjustment: invitationAdjustmentList[index]
-    }
-  })
+      invitationAdjustment: invitationAdjustmentList[index],
+    };
+  });
   return tableData;
-}
+};
 
 // 执行跟踪 ---- 邀约资源商信息
 export const sourceTableColumns = [
@@ -1602,11 +1664,17 @@ export const sourceTableColumns = [
     align: 'center' as any,
     key: 'onlineNum',
     render: (text: any) => {
-      return <Space>
-        { text === 0 ? <Badge status="error" /> : <Badge status="success" />}
-        { text === 0 ? <span style={{color: '#dc0303'}}>离线</span> : <span style={{color: '#49aa19'}}>在线</span> }
-      </Space>
-    }
+      return (
+        <Space>
+          {text === 0 ? <Badge status="error" /> : <Badge status="success" />}
+          {text === 0 ? (
+            <span style={{ color: '#dc0303' }}>离线</span>
+          ) : (
+            <span style={{ color: '#49aa19' }}>在线</span>
+          )}
+        </Space>
+      );
+    },
   },
 ];
 
@@ -1647,13 +1715,21 @@ export const companyTableColumns = [
 export const companyChartOptions = (companySourceData: any) => {
   if (!companySourceData) return false;
 
-  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis} = companySourceData;
+  const { baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } =
+    companySourceData;
 
-  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return false;
+  if (
+    !baselineValueList &&
+    !invitationAdjustmentList &&
+    !invitationPlanList &&
+    !realValueList &&
+    !xaxis
+  )
+    return false;
 
   const xAxisData = xaxis.map((item: string) => {
-    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
-  })
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1];
+  });
   return {
     tooltip: {
       trigger: 'axis',
@@ -1731,9 +1807,17 @@ export const companyChartOptions = (companySourceData: any) => {
 export const companyTableData = (data: any) => {
   if (!data) return [];
 
-  const {baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } = data;
+  const { baselineValueList, invitationAdjustmentList, invitationPlanList, realValueList, xaxis } =
+    data;
 
-  if (!baselineValueList && !invitationAdjustmentList && !invitationPlanList && !realValueList && !xaxis) return [];
+  if (
+    !baselineValueList &&
+    !invitationAdjustmentList &&
+    !invitationPlanList &&
+    !realValueList &&
+    !xaxis
+  )
+    return [];
 
   const tableData = xaxis.map((item: any, index: any) => {
     return {
@@ -1742,25 +1826,23 @@ export const companyTableData = (data: any) => {
       dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
       invitationPlan: invitationPlanList[index],
       realTimeValue: realValueList[index],
-      invitationAdjustment: invitationAdjustmentList[index]
-    }
-  })
+      invitationAdjustment: invitationAdjustmentList[index],
+    };
+  });
   return tableData;
-}
-
+};
 
 // 交易调控计划管理 --- 图表optionss
 export const responseChartOptions = (responsePlanData: any) => {
   if (!responsePlanData) return false;
 
-  const {baselineValueList, planValueList, regulateValueList, xaxis} = responsePlanData;
+  const { baselineValueList, planValueList, regulateValueList, xaxis } = responsePlanData;
 
   if (!baselineValueList && !planValueList && !regulateValueList && !xaxis) return false;
 
   const xAxisData = xaxis.map((item: string) => {
-    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
-  })
-
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1];
+  });
 
   return {
     tooltip: {
@@ -1832,13 +1914,11 @@ export const responseChartOptions = (responsePlanData: any) => {
 
 // export const planDetailChartOptions =
 
-
-
 // 交易调控计划管理 --- 表格数据
 export const responsePlanTableData = (data: any) => {
   if (!data) return [];
 
-  const {baselineValueList, planValueList, regulateValueList, xaxis} = data;
+  const { baselineValueList, planValueList, regulateValueList, xaxis } = data;
 
   if (!baselineValueList && !planValueList && !regulateValueList && !xaxis) return [];
 
@@ -1849,11 +1929,10 @@ export const responsePlanTableData = (data: any) => {
       dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
       planValueList: planValueList[index],
       regulateValueList: regulateValueList[index],
-    }
-  })
+    };
+  });
   return tableData;
-}
-
+};
 
 // 交易调控计划管理 ---- table columns
 export const responseTableColumns = [
@@ -1919,7 +1998,7 @@ export const responseDetalColumns = [
     dataIndex: 'dailyMaximumPower',
     align: 'center' as any,
     key: 'dailyMaximumPower',
-  }
+  },
 ];
 
 // 辅助服务
@@ -2023,8 +2102,95 @@ export const supportColumns = [
   },
 ];
 
-// 新增交易申报
-export const addDeclarationColumns = [
+// 可调节
+export const adjustableOptions = (data: any) => {
+  if (!data) {
+    return false;
+  }
+
+  return {
+    legend: {
+      textStyle: {
+        color: '#E7FAFF',
+        fontSize: '12px',
+        fontWeight: 400,
+      },
+    },
+    tooltip: {
+      trigger: 'axis',
+    },
+    grid: {
+      top: '14%',
+      left: '4%',
+      right: '4%',
+      bottom: '18%',
+      containLabel: true,
+    },
+    color: ['#39FFC5', '#0090FF', '#B37FE9', '#FB8D44', '#FFEA00'],
+    xAxis: {
+      type: 'category',
+      name: '时',
+      boundaryGap: false,
+      data: data?.xaxis,
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'kW',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#284377',
+          width: 1,
+        },
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(231, 250, 255, 0.6)',
+        },
+      },
+    },
+    series: [
+      {
+        name: '发电预测',
+        data: data?.powerGenerationForecastingList,
+        type: 'line',
+        smooth: true,
+      },
+      {
+        name: '负荷预测',
+        data: data?.loadForecastingList,
+        type: 'line',
+        smooth: true,
+      },
+      {
+        name: '储能放电计划',
+        data: data?.energyStorageDischargePredictionList,
+        type: 'line',
+        smooth: true,
+      },
+      {
+        name: '基线负荷',
+        data: data?.baselineLoadList,
+        type: 'line',
+        smooth: true,
+      },
+      {
+        name: '可调节容量',
+        data: data?.adjustableCapacityList,
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  };
+};
+
+// 可调节
+export const adjustableColumns = [
   {
     title: '序号',
     dataIndex: 'index',
@@ -2036,33 +2202,39 @@ export const addDeclarationColumns = [
     },
   },
   {
-    title: '响应时段起点',
-    dataIndex: 'index',
+    title: '时段',
+    dataIndex: 'timePeriod',
     align: 'center' as any,
-    key: 'index',
+    key: 'timePeriod',
   },
   {
-    title: '响应时段终点',
-    dataIndex: 'belongSubstation',
+    title: '发电预测(kW)',
+    dataIndex: 'powerGenerationForecasting',
     align: 'center' as any,
-    key: 'belongSubstation',
+    key: 'powerGenerationForecasting',
   },
   {
-    title: '基线负荷(MW)',
-    dataIndex: 'index',
+    title: '负荷预测(kW)',
+    dataIndex: 'loadForecasting',
     align: 'center' as any,
-    key: 'index',
+    key: 'loadForecasting',
   },
   {
-    title: '申报容量(MW)',
-    dataIndex: 'index',
+    title: '储能放电计划(kW)',
+    dataIndex: 'energyStorageDischargePrediction',
     align: 'center' as any,
-    key: 'index',
+    key: 'energyStorageDischargePrediction',
   },
   {
-    title: '申报价格(元/MWh)',
-    dataIndex: 'index',
+    title: '基线负荷(kW)',
+    dataIndex: 'baselineLoad',
     align: 'center' as any,
-    key: 'index',
+    key: 'baselineLoad',
+  },
+  {
+    title: '可调节容量(kW)',
+    dataIndex: 'adjustableCapacity',
+    align: 'center' as any,
+    key: 'adjustableCapacity',
   },
 ];

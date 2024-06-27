@@ -45,7 +45,7 @@ const SettlementManage = () => {
       key: 'index',
       width: 80,
       render: () => {
-        return <Button size="small" loading={modalDetailLoading} onClick={() => {
+        return <Button size="small" onClick={() => {
           setVisibile(true)
           fetchModalDetail()
         }}>详情</Button>

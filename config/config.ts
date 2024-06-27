@@ -67,6 +67,9 @@ export default defineConfig({
   headScripts: [
     // 解决首次加载时白屏的问题
     { src: '/scripts/loading.js', async: true },
+    // {src: 'https://unpkg.com/tiff.js@1.0.0/tiff.min.js'}
+    {src: '/scripts/tiff.js', async: true}
+
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],

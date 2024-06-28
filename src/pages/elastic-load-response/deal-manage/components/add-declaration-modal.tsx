@@ -82,6 +82,7 @@ const AddDeclarationModal = (props: PropsType) => {
       setSave(saveValue);
       const newItem = {
         key: newKey,
+
         children: (
           <Label
             data={res.data}

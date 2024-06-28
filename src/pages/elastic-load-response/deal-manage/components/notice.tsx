@@ -23,7 +23,6 @@ import { demandCapacityOptions, demandDetailColumns } from '../utils';
 import AddDeclarationModal from './add-declaration-modal';
 import OptionList from './option-list';
 const { RangePicker } = DatePicker;
-
 // 交易公告披露
 const Notice = () => {
   const currentDate: any = [dayjs(), dayjs()];
@@ -109,7 +108,20 @@ const Notice = () => {
     const transformedData = tableData.map((item: any, index: number) => {
       return { 序号: index + 1, 时段: item.timePeriod, '需求容量(MW)': item.demandCapacity };
     });
-    exportExcel(transformedData, '邀约需求容量');
+    const staticInfoRows = [
+      [`邀约计划信息：${selectedValue}`],
+      [
+        `运行日:${announcementDetails?.operatingDay}`,
+        `响应类型:${announcementDetails?.responseType === 0 ? '削峰响应' : '填谷响应'}`,
+        `需求时段:${announcementDetails?.demandPeriod}`,
+      ],
+      [
+        `需求地区:${announcementDetails?.demandArea}`,
+        `申报价格上限:${announcementDetails?.maximumBidPrice}`,
+        `申报价格下限:${announcementDetails?.minimumBidPrice}`,
+      ],
+    ];
+    exportExcel(transformedData, '邀约需求容量', staticInfoRows);
   };
 
   useEffect(() => {
@@ -127,7 +139,6 @@ const Notice = () => {
 
   return (
     <>
-      {' '}
       <div className={styles.noticePage}>
         <div className={styles.header}>
           <div className={styles.left}>
@@ -251,6 +262,7 @@ const Notice = () => {
                   scroll={{ y: 155 }}
                   pagination={false}
                   size="middle"
+                  bordered
                 />
               </div>
             </div>

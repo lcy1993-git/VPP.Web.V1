@@ -120,6 +120,7 @@ const LoadManage = () => {
                 columns={loadDetailColumns}
                 dataSource={transformedData(VPPOrUser ? VPPLoadDetails : userLoadDetails)}
                 scroll={{ y: 490 }}
+                bordered
                 pagination={false}
               />
             )}

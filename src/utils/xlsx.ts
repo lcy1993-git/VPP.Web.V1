@@ -59,11 +59,18 @@ function openDownloadDialog(blob: any, fileName: any) {
   aLink.dispatchEvent(event);
 }
 
-export const exportExcel = (data: any[], title: string) => {
-  /* create a new blank workbook */
+// staticInfoRows可在数据数组前添加其他行信息
+export const exportExcel = (data: any[], title: string, staticInfoRows: any[] = []) => {
+  let sheetDataFromJson = XLSX.utils.json_to_sheet(data, { header: [] });
+  // 合并静态信息行和动态数据到一个新的数组
+  let combinedData = staticInfoRows.concat(
+    XLSX.utils.sheet_to_json(sheetDataFromJson, { header: 1 }),
+  );
+  // 使用合并后的数据创建一个新的工作表
+  let combinedSheet = XLSX.utils.aoa_to_sheet(combinedData);
   let wb = XLSX.utils.book_new();
-  let sheet1 = XLSX.utils.json_to_sheet(data);
-  XLSX.utils.book_append_sheet(wb, sheet1, title);
+  // 将合并后的工作表添加到工作簿
+  XLSX.utils.book_append_sheet(wb, combinedSheet, title);
   const workbookBlob = workbook2blob(wb);
   openDownloadDialog(workbookBlob, `${title}.xlsx`);
 };

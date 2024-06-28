@@ -1,5 +1,5 @@
 import { ConfigProvider, Segmented } from 'antd';
-import { useState } from 'react';
+import { Ref, forwardRef, useImperativeHandle, useState } from 'react';
 
 interface Props {
   getSelectedValue?: (value: string) => void | undefined;
@@ -9,7 +9,7 @@ interface Props {
   defaultValue?: string;
 }
 
-const SegmentedTheme = (props: Props) => {
+const SegmentedTheme = (props: Props, ref: Ref<any>) => {
   // @ts-ignore
   const [value, setValue] = useState();
   // 获取选中值
@@ -21,6 +21,13 @@ const SegmentedTheme = (props: Props) => {
       getSelectedValue(value);
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    /** 重置选中项 */
+    reset: (selectedValue: any) => {
+      setValue(selectedValue);
+    },
+  }));
 
   return (
     <ConfigProvider
@@ -43,4 +50,4 @@ const SegmentedTheme = (props: Props) => {
     </ConfigProvider>
   );
 };
-export default SegmentedTheme;
+export default forwardRef(SegmentedTheme);

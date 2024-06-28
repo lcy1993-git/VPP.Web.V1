@@ -23,7 +23,7 @@ import {
 import { useRequest } from '@umijs/max';
 import { Select } from 'antd';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './index.less';
 import {
   chargeOverviewChart,
@@ -38,6 +38,8 @@ import {
 } from './utils';
 
 const DcsEnergyMonitor = () => {
+  // 表格实例
+  const segRef = useRef<HTMLDivElement>(null);
   // 当天
   const DATE = dayjs(`${new Date()}`).format('YYYY-MM-DD');
   // 分布式能源总览查询类型（默认光伏）
@@ -296,6 +298,12 @@ const DcsEnergyMonitor = () => {
       }
     });
     setEssType('PCS');
+    // 重置选中
+    if (segRef && segRef.current) {
+      //@ts-ignore
+      segRef.current.reset('全部');
+    }
+    setRunStatus('全部');
   }, [enterpriseOverviewType]);
 
   return (
@@ -416,6 +424,7 @@ const DcsEnergyMonitor = () => {
                       ? ['全部', '直流充电桩', '交流充电桩']
                       : ['全部', '运行', '非运行']
                   }
+                  ref={segRef}
                   getSelectedValue={(value) => setRunStatus(value)}
                 />
               </div>

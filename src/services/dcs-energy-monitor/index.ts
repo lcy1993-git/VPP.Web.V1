@@ -95,6 +95,6 @@ export const getChargePileOverview = (type: string, substationCode: string) => {
 export const getPCSOverview = (status: string, substationCode: string) => {
   return request(`/api/distributed/monitor/pcs/overview`, {
     method: 'get',
-    params: { status: status === '全部' ? null : status === '运行' ? 2 : 1, substationCode },
+    params: { status: status === '全部' ? null : status === '运行' ? 1 : 0, substationCode },
   });
 };

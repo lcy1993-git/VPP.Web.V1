@@ -25,7 +25,7 @@ interface ThreeMapInfo {
 }
 
 const ThreeMap = (props: ThreeMapInfo) => {
-  const { isHeatmap = false, data, left = 0, top = 0, refeshThreeMap } = props;    
+  const { isHeatmap = false, data, left = 0, top = 0, refeshThreeMap } = props;
 
   const chart_dom: any = useRef(null);
   const heat_dom: any = useRef(null);
@@ -355,46 +355,27 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // viewCamera.current.look
   };
 
-   const addMark_ = (x, y) => {
-    const position = new THREE.Vector3(x, 5.4, -y);
-
-    // 创建一个点位图片
-    const textureLoader = new THREE.TextureLoader();
-    const spriteTexture = textureLoader.load(Mark1); // 替换为实际的图片路径
-    const spriteMaterial = new THREE.SpriteMaterial({ map: spriteTexture });
-    const sprite = new THREE.Sprite(spriteMaterial);
-    sprite.position.copy(position); // 设置图片位置
-
-    sprite.scale.set(1, 1, 1); // 设置图片大小
-    sprite.rotation.x = Math.PI * 1.5;
-    // 设置平移
-    // const translation = new THREE.Vector3(0, -3, 0); // 平移向量
-    // sprite.position.add(translation); // 平移点位
-    viewScene.current.add(sprite);
-    // viewCamera.current.look
-  };
-
 
   const onWindowResize = () => {
     if (chart_dom.current) {
-        // 自适应页面
-    const designDraftWidth = 1920;
-    const designDraftHeight = 919;
-    if (
-      document.documentElement.offsetWidth < designDraftWidth
-    ) {
-      scaleWidth.current = document.documentElement.clientWidth / designDraftWidth;
-    } else {
-      scaleWidth.current = 1;
-    }
+      // 自适应页面
+      const designDraftWidth = 1920;
+      const designDraftHeight = 919;
+      if (
+        document.documentElement.offsetWidth < designDraftWidth
+      ) {
+        scaleWidth.current = document.documentElement.clientWidth / designDraftWidth;
+      } else {
+        scaleWidth.current = 1;
+      }
 
-    if (
-      document.documentElement.offsetHeight < designDraftHeight
-    ) {
-      scaleHeight.current = document.documentElement.clientHeight / designDraftHeight;
-    } else {
-      scaleHeight.current = 1;
-    }
+      if (
+        document.documentElement.offsetHeight < designDraftHeight
+      ) {
+        scaleHeight.current = document.documentElement.clientHeight / designDraftHeight;
+      } else {
+        scaleHeight.current = 1;
+      }
 
       viewCamera.current.aspect = chart_dom.current.clientWidth * scaleWidth.current / chart_dom.current.clientHeight * scaleHeight.current;
       viewCamera.current.updateProjectionMatrix();
@@ -412,10 +393,8 @@ const ThreeMap = (props: ThreeMapInfo) => {
           heatmap.current = null;
           texture.current = null;
           geometry.current = null;
-          material.current = null; 
+          material.current = null;
           mesh.current = null;
-          console.log(containrtWidth + ':' + containrtHeight, 1111);
-          console.log(scaleWidth.current + ':' +  scaleHeight.current, 33333);
 
           initMap(containrtWidth, containrtHeight);
         }
@@ -499,7 +478,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
         transparent: true,
       });
       mesh.current = new THREE.Mesh(geometry.current, material.current);
-      mesh.current.name = 'heatmap';      
+      mesh.current.name = 'heatmap';
       viewScene.current?.add(mesh.current);
     }
   };
@@ -514,34 +493,30 @@ const ThreeMap = (props: ThreeMapInfo) => {
     }
   };
 
-  const onMouseClick = (event:any) => {     
+  const onMouseClick = (event: any) => {
     closePoup(dialogRef.current);
     const mouse = new THREE.Vector2();
     const raycaster = new THREE.Raycaster();
     // 将鼠标点击位置的屏幕坐标转换成NDC坐标
-    console.log(chart_dom.current?.offsetWidth, 5555);
-    console.log(chart_dom.current?.offsetHeight, 66666);
-    mouse.x =  ((event.clientX - left * scaleWidth.current - 20 * scaleWidth.current) / scaleWidth.current / chart_dom.current?.offsetWidth) * 2 - 1;
+    mouse.x = ((event.clientX - left * scaleWidth.current - 20 * scaleWidth.current) / scaleWidth.current / chart_dom.current?.offsetWidth) * 2 - 1;
     mouse.y = -((event.clientY - top * scaleHeight.current - 95 * scaleHeight.current - 10 * scaleHeight.current) / scaleHeight.current / chart_dom.current?.offsetHeight) * 2 + 1;
 
     // addMark_(mouse.x,  mouse.y)
 
     // 设置射线的起点和方向
     raycaster.setFromCamera(mouse, viewCamera.current);
-    
+
 
     // 计算射线与场景中所有物体的相交点
     let intersects = raycaster.intersectObjects(viewScene.current.children, true);
-    
+
 
     // 遍历相交点，处理相交的物体
-  
+
 
     if (intersects.length > 0) {
       const point = intersects.find((item: any) => item.object.name === 'mark');
       if (point) {
-        console.log(point.object.data);
-        
         creat3DPoup(
           dialogRef.current,
           chart_dom.current,
@@ -555,7 +530,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     }
   }
 
-  
+
   const handleMouseEnter = () => {
     // 鼠标移入时的处理逻辑
     if (dialogRef.current) {
@@ -611,35 +586,33 @@ const ThreeMap = (props: ThreeMapInfo) => {
   //   };
   // }, []);
 
- 
+
 
   useEffect(() => {
     if (chart_dom?.current && left && top) {
       // 自适应页面
-    const designDraftWidth = 1920;
-    const designDraftHeight = 919;
-    if (
-      document.documentElement.offsetWidth < designDraftWidth
-    ) {
-      scaleWidth.current = document.documentElement.clientWidth / designDraftWidth;
-    } else {
-      scaleWidth.current = 1;
-    }
+      const designDraftWidth = 1920;
+      const designDraftHeight = 919;
+      if (
+        document.documentElement.offsetWidth < designDraftWidth
+      ) {
+        scaleWidth.current = document.documentElement.clientWidth / designDraftWidth;
+      } else {
+        scaleWidth.current = 1;
+      }
 
-    if (
-      document.documentElement.offsetHeight < designDraftHeight
-    ) {
-      scaleHeight.current = document.documentElement.clientHeight / designDraftHeight;
-    } else {
-      scaleHeight.current = 1;
-    }
-      
+      if (
+        document.documentElement.offsetHeight < designDraftHeight
+      ) {
+        scaleHeight.current = document.documentElement.clientHeight / designDraftHeight;
+      } else {
+        scaleHeight.current = 1;
+      }
+
       const containrtWidth = chart_dom.current?.offsetWidth;
       const containrtHeight = chart_dom.current?.offsetHeight;
-      console.log(containrtWidth + ':' + containrtHeight, 22222);
-      console.log(scaleWidth.current + ':' +  scaleHeight.current, 4444);
       initMap(containrtWidth, containrtHeight);
-      if (viewScene.current) closePoup(dialogRef.current); 
+      if (viewScene.current) closePoup(dialogRef.current);
     }
     return () => {
       window.removeEventListener('resize', onWindowResize);
@@ -668,12 +641,12 @@ const ThreeMap = (props: ThreeMapInfo) => {
 
       {isHeatmap && <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>}
       <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}>
-      <div
-        ref={dialogRef}
-        style={{ display: 'none' }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      ></div>
+        <div
+          ref={dialogRef}
+          style={{ display: 'none' }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        ></div>
 
       </div>
     </>

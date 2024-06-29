@@ -13,7 +13,7 @@ import {
 } from '@/services/big-screen';
 import { history } from '@umijs/max';
 import { useRequest } from 'ahooks';
-import { ConfigProvider, DatePicker, Space, Tooltip } from 'antd';
+import { ConfigProvider, DatePicker, Space, Spin, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import { useEffect, useRef, useState } from 'react';
@@ -111,7 +111,7 @@ const BulletinBoard = () => {
   });
 
   // 热力图数据
-  const { data: substationData, run: fetchHeatDatas } = useRequest(getBoardSubstationData, {
+  const { data: substationData, run: fetchHeatDatas, loading: healthLoading } = useRequest(getBoardSubstationData, {
     manual: true,
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
@@ -392,11 +392,12 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
+              { healthLoading ? <Spin size="large" className={styles.spinStyle} /> : 
               <ThreeMap
                 isHeatmap={true}
                 data={substationData?.data}
                 refeshThreeMap={refeshThreeMap}
-              />
+              /> }
             </div>
           </div>
           {/* right */}

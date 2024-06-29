@@ -66,8 +66,16 @@ const HeatMap = (props: HeatMapInfo) => {
             source: new VectorSource({
               features: features, // 将要素添加到矢量源中
             }),
-            blur: 15, // 模糊程度，可调整
+            blur: 6, // 模糊程度，可调整
             radius: 8, // 半径，可调整
+            weight: function(feature) {
+              // 获取点位的权重，这里假设值存储在属性 'value' 中              
+              const weight = parseFloat(feature.get('carbonTotal')) / 100 < 0.3 ? 0.3 : parseFloat(feature.get('carbonTotal')) / 90;
+              // const weight = feature.get('carbonTotal');
+              console.log('Weight value:', weight);
+              return weight;
+            },
+            gradient: ['#00f', '#0ff', '#0f0', '#ff0', '#f00'] // 自定义颜色梯度
           });
           if (map.current) map.current.addLayer(heatMapLayer.current);
         }

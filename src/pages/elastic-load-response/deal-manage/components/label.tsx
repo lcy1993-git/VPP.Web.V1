@@ -109,22 +109,32 @@ const InitLabel = (props: any) => {
 
   const addDeclarationColumns = [
     {
-      title: '开始时间',
+      title: '序号',
+      dataIndex: 'index',
+      key: 'index',
+      width: 60,
+      align: 'center' as any,
+      render: (_text: any, _record: any, index: number) => {
+        return index + 1;
+      },
+    },
+    {
+      title: '响应时段起点',
       dataIndex: 'startTime',
       key: 'startTime',
     },
     {
-      title: '结束时间',
+      title: '响应时段终点',
       dataIndex: 'endTime',
       key: 'endTime',
     },
     {
-      title: '基线负荷',
+      title: '基线负荷(MW)',
       dataIndex: 'baselineLoad',
       key: 'baselineLoad',
     },
     {
-      title: '申报容量',
+      title: '申报容量(MW)',
       render: (_: any, record: any, index: any) => (
         <Input
           value={record.declaredCapacity}
@@ -136,7 +146,7 @@ const InitLabel = (props: any) => {
       key: 'declaredCapacity',
     },
     {
-      title: '申报价格',
+      title: '申报价格(元/MWh)',
       render: (_: any, record: any, index: any) => (
         <Input
           value={record.declaredPrice}
@@ -168,7 +178,9 @@ const InitLabel = (props: any) => {
             value={substationCode}
             disabled={disabled || modalInfo?.isEdit}
           />
-          <span style={{ height: '32px', lineHeight: '32px', marginLeft: '20px' }}>容量：</span>
+          <span style={{ height: '32px', lineHeight: '32px', marginLeft: '20px' }}>
+            可调容量(MW)：
+          </span>
           <Input style={{ width: 220 }} disabled value={capacity} />
         </Row>
         <Space>

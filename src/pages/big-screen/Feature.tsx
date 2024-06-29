@@ -6,8 +6,8 @@ import {
   getElasticEnergyOverView,
   getEnergyUse,
   getResponseStatistic,
+  getSubstationData,
   getTypicalResponseAnalysis,
-  getsubstationData,
 } from '@/services/big-screen';
 import { history } from '@umijs/max';
 import { useRequest } from 'ahooks';
@@ -31,7 +31,7 @@ import {
 } from './utils';
 dayjs.locale('zh-cn');
 
-let refeshThreeMap: any[] = []
+let refeshThreeMap: any[] = [];
 /***
  *特色场景
  * */
@@ -79,7 +79,7 @@ const Feature = () => {
   });
 
   // 特色场景-大屏地图-电站数据
-  const { data: substationData } = useRequest(getsubstationData, {
+  const { data: substationData } = useRequest(getSubstationData, {
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
   });
@@ -190,14 +190,18 @@ const Feature = () => {
     });
   }, [fullAndPutDate]);
 
-
   const handleScreenAuto = () => {
     const designDraftWidth = 1920;
     const designDraftHeight = 919;
-    if (document.documentElement.offsetWidth < designDraftWidth || document.documentElement.offsetHeight < designDraftHeight) {
+    if (
+      document.documentElement.offsetWidth < designDraftWidth ||
+      document.documentElement.offsetHeight < designDraftHeight
+    ) {
       const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
       const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
-      (document.querySelector('#root') as any).setAttribute("style", `
+      (document.querySelector('#root') as any).setAttribute(
+        'style',
+        `
       width: 1920px;
       height: 919px;
       transform: scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0);
@@ -206,18 +210,19 @@ const Feature = () => {
       left: 50%;
       transform-origin: 0 0;
       transition: 0.3s;
-    `)
+    `,
+      );
 
       setCircleWidth(188);
       setBlockWidthOrHeight({
         width: 470,
-        height: 313
+        height: 313,
       });
       return;
     } else {
-      (document.querySelector('#root') as any).removeAttribute('style')
+      (document.querySelector('#root') as any).removeAttribute('style');
     }
-    refeshThreeMap = []
+    refeshThreeMap = [];
     if (canvasWrapRef?.current) {
       const offsetWidth = (canvasWrapRef.current! as any).offsetWidth;
       const offsetHeight = (canvasWrapRef.current! as any).offsetHeight;
@@ -229,19 +234,16 @@ const Feature = () => {
       const tableOffsetWidth = (tableWrapRef.current! as any).offsetWidth;
       setBlockWidthOrHeight({
         width: tableOffsetWidth,
-        height: tableOffsetHeight
+        height: tableOffsetHeight,
       });
     }
   };
-
-
 
   useEffect(() => {
     // 初始化自适应
     handleScreenAuto();
     // 定义事件处理函数
-    const handleResize = () =>
-      handleScreenAuto();
+    const handleResize = () => handleScreenAuto();
     // 添加事件监听器
     window.addEventListener('resize', handleResize);
     return () => {
@@ -286,7 +288,10 @@ const Feature = () => {
           </div>
           <div className={styles.headerRight}>
             <Space>
-              <div className={styles.menuButton} onClick={() => history.push('/big-screen/bulletin-board')}>
+              <div
+                className={styles.menuButton}
+                onClick={() => history.push('/big-screen/bulletin-board')}
+              >
                 能源看板
               </div>
               <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>
@@ -385,7 +390,9 @@ const Feature = () => {
               </div>
             </div>
             <div className={styles.three}>
-              {substationData && <ThreeMap data={substationData?.data} refeshThreeMap={refeshThreeMap} />}
+              {substationData && (
+                <ThreeMap data={substationData?.data} refeshThreeMap={refeshThreeMap} />
+              )}
             </div>
           </div>
 

@@ -1,8 +1,7 @@
-import { formatXAxis } from '@/utils/common';
+import { formatXAxis, handleDiffMins } from '@/utils/common';
 import { Tooltip } from 'antd';
 import * as echarts from 'echarts';
 import moment from 'moment';
-import { MutableRefObject, SetStateAction } from 'react';
 import styles from './components/index.less';
 /***
  * 页面请求轮询时间
@@ -25,7 +24,11 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer} key={`totalDeviation-${item.planId || item.substationName}`} style={{ width: col.width }}>
+              <td
+                className={styles.tdContainer}
+                key={`totalDeviation-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -40,7 +43,11 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer}  key={`responseDeviationRate-${item.planId || item.substationName}`} style={{ width: col.width }}>
+              <td
+                className={styles.tdContainer}
+                key={`responseDeviationRate-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -55,9 +62,32 @@ export const typicalResponse = (type: string) => {
           width: '18%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer}  key={`deviationPower-${item.planId || item.substationName}`} style={{ width: col.width }}>
+              <td
+                className={styles.tdContainer}
+                key={`deviationPower-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {parseFloat(item[col.dataIndex]).toFixed(2) || '未知'}
+                </Tooltip>
+              </td>
+            );
+          },
+        },
+        {
+          name: '响应企业',
+          key: 'enterprise',
+          dataIndex: 'enterprise',
+          width: '17%',
+          render: (item: any, col: any) => {
+            return (
+              <td
+                className={styles.tdContainer}
+                key={`enterprise-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
+                <Tooltip title={item[col.dataIndex] || '未知'}>
+                  {item[col.dataIndex] || '未知'}
                 </Tooltip>
               </td>
             );
@@ -74,7 +104,11 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer}  key={`deviationStartTime-${item.planId || item.substationName}`} style={{ width: col.width }}>
+              <td
+                className={styles.tdContainer}
+                key={`deviationStartTime-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -89,7 +123,11 @@ export const typicalResponse = (type: string) => {
           width: '17%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer}  key={`deviationEndTime-${item.planId || item.substationName}`} style={{ width: col.width }}>
+              <td
+                className={styles.tdContainer}
+                key={`deviationEndTime-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {item[col.dataIndex] || '未知'}
                 </Tooltip>
@@ -104,9 +142,32 @@ export const typicalResponse = (type: string) => {
           width: '18%',
           render: (item: any, col: any) => {
             return (
-              <td className={styles.tdContainer}  key={`differenceInTime-${item.planId || item.substationName}`} style={{ width: col.width }}>
+              <td
+                className={styles.tdContainer}
+                key={`differenceInTime-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
                 <Tooltip title={item[col.dataIndex] || '未知'}>
                   {parseFloat(item[col.dataIndex]).toFixed(2) || '未知'}
+                </Tooltip>
+              </td>
+            );
+          },
+        },
+        {
+          name: '相关企业',
+          key: 'enterprise',
+          dataIndex: 'enterprise',
+          width: '17%',
+          render: (item: any, col: any) => {
+            return (
+              <td
+                className={styles.tdContainer}
+                key={`enterprise-${item.planId || item.substationName}`}
+                style={{ width: col.width }}
+              >
+                <Tooltip title={item[col.dataIndex] || '未知'}>
+                  {item[col.dataIndex] || '未知'}
                 </Tooltip>
               </td>
             );
@@ -123,20 +184,28 @@ export const typicalResponse = (type: string) => {
       width: '9%',
       render: (item: any, col: any, index: number) => {
         return (
-          <td className={styles.tdContainer} key={`index-${item.planId || item.substationName}`} style={{ width: col.width }}>
+          <td
+            className={styles.tdContainer}
+            key={`index-${item.planId || item.substationName}`}
+            style={{ width: col.width }}
+          >
             {index + 1}
           </td>
         );
       },
     },
     {
-      name: `目前计划名称`,
+      name: `日前计划名称`,
       key: 'planType',
       dataIndex: 'planType',
       width: '18%',
       render: (item: any, col: any) => {
         return (
-          <td className={styles.tdContainer} key={`planType-${item.planId || item.substationName}`} style={{ width: col.width }}>
+          <td
+            className={styles.tdContainer}
+            key={`planType-${item.planId || item.substationName}`}
+            style={{ width: col.width }}
+          >
             <Tooltip title={enumName[item[col.dataIndex]] || '未知'}>
               {enumName[item[col.dataIndex]] || '未知'}
             </Tooltip>
@@ -145,19 +214,6 @@ export const typicalResponse = (type: string) => {
       },
     },
     ...column,
-    {
-      name: '响应企业',
-      key: 'enterprise',
-      dataIndex: 'enterprise',
-      width: '17%',
-      render: (item: any, col: any) => {
-        return (
-          <td className={styles.tdContainer} key={`enterprise-${item.planId || item.substationName}`} style={{ width: col.width }}>
-            <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
-          </td>
-        );
-      },
-    },
   ];
 };
 
@@ -285,24 +341,36 @@ export const energyOverviewOptions = (data: any, type: any) => {
         type: 'bar',
         stack: 'Search Engine',
         name: '第一产业',
+        emphasis: {
+          focus: 'series',
+        },
       },
       {
         data: secondIndustry,
         type: 'bar',
         stack: 'Search Engine',
         name: '第二产业',
+        emphasis: {
+          focus: 'series',
+        },
       },
       {
         data: thirdIndustry,
         type: 'bar',
         stack: 'Search Engine',
         name: '第三产业',
+        emphasis: {
+          focus: 'series',
+        },
       },
       {
         data: residentIndustry,
         type: 'bar',
         stack: 'Search Engine',
         name: '第四产业',
+        emphasis: {
+          focus: 'series',
+        },
       },
     ],
   };
@@ -403,7 +471,7 @@ export const elasticityOverviewOptions = (data: any) => {
           ]),
         },
         smooth: true,
-        data: realTimeLoad,
+        data: realTimeLoad.slice(0, handleDiffMins() + 1),
       },
       {
         name: '基线负荷',
@@ -422,7 +490,7 @@ export const elasticityOverviewOptions = (data: any) => {
           ]),
         },
         smooth: true,
-        data: baselineLoad,
+        data: baselineLoad.slice(0, handleDiffMins() + 1),
       },
     ],
   };
@@ -453,7 +521,14 @@ export const statusQuoChartOptions = (params: any) => {
     // series
     const series = Object.keys(data).map((item: string) => {
       return {
-        data: Object.values(data[item]),
+        data: Object.values(data[item]).slice(
+          0,
+          handleDiffMins(
+            new Date(),
+            new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            60,
+          ) + 1,
+        ),
         type: 'line',
         name: nameEnum[item],
       };
@@ -466,7 +541,6 @@ export const statusQuoChartOptions = (params: any) => {
         appendToBody: true,
       },
       legend: {
-        data: ['第一产业', '第二产业', '第三产业', '第四产业'],
         textStyle: {
           color: '#d7eaef',
         },
@@ -513,9 +587,10 @@ export const statusQuoChartOptions = (params: any) => {
             color: '#95a4ad',
           },
         },
+        name: currentView === '现状' ? '单位：MW' : '',
       },
       grid: {
-        top: '12%',
+        top: '22%',
         left: '3%',
         right: '4%',
         bottom: '2%',
@@ -722,7 +797,11 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`substationName-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`substationName-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -735,7 +814,11 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`industryType-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`industryType-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={monitorEnum[item[col.dataIndex] - 1] || '未知'}>
             {monitorEnum[item[col.dataIndex] - 1] || '未知'}
           </Tooltip>
@@ -750,7 +833,11 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`energyUseDay-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`energyUseDay-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -763,7 +850,11 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`energyUseMonth-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`energyUseMonth-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -776,7 +867,11 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`energyUseYear-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`energyUseYear-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -789,7 +884,11 @@ export const monitorColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`power-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`power-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -808,7 +907,11 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`planName-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`planName-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -821,7 +924,11 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer}  key={`enterpriseName-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`enterpriseName-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -834,7 +941,11 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`planEnergy-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`planEnergy-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -847,7 +958,11 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`completeEnergy-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`completeEnergy-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -860,7 +975,11 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`deviationRate-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`deviationRate-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={item[col.dataIndex] || '未知'}>{item[col.dataIndex] || '未知'}</Tooltip>
         </td>
       );
@@ -873,7 +992,11 @@ export const elasticEnergyColumns = [
     width: '16%',
     render: (item: any, col: any) => {
       return (
-        <td className={styles.tdContainer} key={`status-${item.planId || item.substationName}`} style={{ width: col.width }}>
+        <td
+          className={styles.tdContainer}
+          key={`status-${item.planId || item.substationName}`}
+          style={{ width: col.width }}
+        >
           <Tooltip title={completionStateEnum[item[col.dataIndex] - 1] || '未知'}>
             {completionStateEnum[item[col.dataIndex] - 1] || '未知'}
           </Tooltip>
@@ -882,4 +1005,3 @@ export const elasticEnergyColumns = [
     },
   },
 ];
-

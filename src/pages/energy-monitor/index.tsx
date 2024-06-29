@@ -182,7 +182,7 @@ const EnergyMonitor = () => {
                   <Table
                     size="middle"
                     dataSource={dataFilter(rankingData) || []}
-                    columns={columns}
+                    columns={columns(rankingDateType)}
                     pagination={false}
                     rowKey="companyName"
                   />

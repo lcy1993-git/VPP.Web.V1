@@ -1,39 +1,41 @@
 import { Tooltip } from 'antd';
 import * as echarts from 'echarts';
 
-export const columns = [
-  {
-    title: '排名',
-    dataIndex: 'name',
-    key: 'name',
-    align: 'center' as any,
-    width: 60,
-    render: (_text: any, record: any, index: number) => {
-      return <span>{index + 1}</span>;
+export const columns = (type: string) => {
+  return [
+    {
+      title: '排名',
+      dataIndex: 'name',
+      key: 'name',
+      align: 'center' as any,
+      width: 60,
+      render: (_text: any, record: any, index: number) => {
+        return <span>{index + 1}</span>;
+      },
     },
-  },
-  {
-    title: '企业名称',
-    dataIndex: 'companyName',
-    align: 'center' as any,
-    ellipsis: true,
-    key: 'companyName',
-    render: (text: any) => {
-      return (
-        <Tooltip placement="top" title={text}>
-          {text}
-        </Tooltip>
-      );
+    {
+      title: '企业名称',
+      dataIndex: 'companyName',
+      align: 'center' as any,
+      ellipsis: true,
+      key: 'companyName',
+      render: (text: any) => {
+        return (
+          <Tooltip placement="top" title={text}>
+            {text}
+          </Tooltip>
+        );
+      },
     },
-  },
-  {
-    title: '用电量(kWh)',
-    align: 'center' as any,
-    dataIndex: 'electricityConsumption',
-    key: 'electricityConsumption',
-    ellipsis: true,
-  },
-];
+    {
+      title: `用电量(${type === 'day' ? '' : '万'}kWh)`,
+      align: 'center' as any,
+      dataIndex: 'electricityConsumption',
+      key: 'electricityConsumption',
+      ellipsis: true,
+    },
+  ];
+};
 
 // 用能详情charts options
 export const energyDetail = (data: any, selectDate: any) => {

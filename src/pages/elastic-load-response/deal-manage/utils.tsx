@@ -741,7 +741,7 @@ export const clearingResultColumns: any = (
       align: 'center',
     },
     {
-      title: '相应类型',
+      title: '响应类型',
       dataIndex: 'responseType',
       key: 'responseType',
       align: 'center',
@@ -1914,7 +1914,7 @@ export const responseChartOptions = (responsePlanData: any) => {
 
 export const responseTableData = (data: any) => {
   if (!data) return [];
-  const {baselineValueList, planValueList, regulateValueList, xaxis} = data;
+  const { baselineValueList, planValueList, regulateValueList, xaxis } = data;
 
   if (!baselineValueList && !planValueList && !regulateValueList && !xaxis) return [];
 
@@ -1925,11 +1925,10 @@ export const responseTableData = (data: any) => {
       dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
       planValueList: planValueList[index],
       regulateValueList: regulateValueList[index],
-    }
-  })
+    };
+  });
   return tableData;
-}
-
+};
 
 // 交易调控计划管理 --- 表格数据
 export const responsePlanTableData = (data: any) => {
@@ -2135,6 +2134,7 @@ export const adjustableOptions = (data: any) => {
     },
     tooltip: {
       trigger: 'axis',
+      appendToBody: true,
     },
     grid: {
       top: '14%',

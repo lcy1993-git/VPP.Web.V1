@@ -38,7 +38,7 @@ import {
 } from './utils';
 
 const DcsEnergyMonitor = () => {
-  // 表格实例
+  // seg实例
   const segRef = useRef<HTMLDivElement>(null);
   // 当天
   const DATE = dayjs(`${new Date()}`).format('YYYY-MM-DD');

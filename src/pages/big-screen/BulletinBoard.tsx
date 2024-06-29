@@ -13,7 +13,7 @@ import {
 } from '@/services/big-screen';
 import { history } from '@umijs/max';
 import { useRequest } from 'ahooks';
-import { ConfigProvider, DatePicker, Space } from 'antd';
+import { ConfigProvider, DatePicker, Space, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import { useEffect, useRef, useState } from 'react';
@@ -31,18 +31,18 @@ import {
 } from './utils';
 dayjs.locale('zh-cn');
 
-
-let refeshThreeMap: any[] = []
-
+let refeshThreeMap: any[] = [];
 
 /** 能源综合看板 */
 const BulletinBoard = () => {
+  // seg实例
+  const segRef = useRef<HTMLDivElement>(null);
   // 区域用能概览页面状态
   const [currentView, setCurrentView] = useState<'现状' | '趋势' | '特征'>('现状');
   // 区域用能 年月日 切换
-  const [fullAndPutDate, setFullAndPutDate] = useState<string>('年');
+  const [fullAndPutDate, setFullAndPutDate] = useState<string>();
   // 区域用能 日期组件切换
-  const [pickerType, setPickerType] = useState<'year' | 'month' | 'date'>('year');
+  const [pickerType, setPickerType] = useState<'year' | 'month' | 'date'>();
   // 区域用能 日期
   const [dateValue, setDateValue] = useState<any>(dayjs(dayjs(`${new Date()}`), 'YYYY-MM-DD'));
   // 计算大屏区域高度 自适应问题
@@ -62,8 +62,6 @@ const BulletinBoard = () => {
     }
     return null;
   };
-
-
 
   // 区域用能概览 --- 现状
   const { data: statusQuoData } = useRequest(getStatusQuo, {
@@ -153,6 +151,8 @@ const BulletinBoard = () => {
 
   // 区域用能概览请求数据
   useEffect(() => {
+    if (!fullAndPutDate) return;
+    if (currentView === '特征' && fullAndPutDate === '日') return;
     let date: any = null;
     let unit: any = '';
     datePickerEnum.forEach((item: any) => {
@@ -177,20 +177,36 @@ const BulletinBoard = () => {
   }, [fullAndPutDate, currentView]);
 
   useEffect(() => {
+    if (currentView === '趋势' || currentView === '特征') {
+      // 重置选中
+      if (segRef && segRef.current) {
+        //@ts-ignore
+        segRef.current.reset('年');
+      }
+      setFullAndPutDate('年');
+      setPickerType('year');
+    }
+  }, [currentView]);
+
+  useEffect(() => {
     fetchHeatDatas({ type });
   }, [type]); // 监听 type 的变化
-
 
   // // 处理屏幕尺寸变化
   const handleScreenAuto = () => {
     // 自适应页面
     const designDraftWidth = 1920;
     const designDraftHeight = 919;
-    if (document.documentElement.offsetWidth < designDraftWidth || document.documentElement.offsetHeight < designDraftHeight) {
+    if (
+      document.documentElement.offsetWidth < designDraftWidth ||
+      document.documentElement.offsetHeight < designDraftHeight
+    ) {
       const scaleWidth = document.documentElement.clientWidth / designDraftWidth;
       const scaleHeight = document.documentElement.clientHeight / designDraftHeight;
 
-      (document.querySelector('#root') as any).setAttribute("style", `
+      (document.querySelector('#root') as any).setAttribute(
+        'style',
+        `
           width: 1920px;
           height: 919px;
           transform: scale(${scaleWidth}, ${scaleHeight}) translate(-50%, -50%) translate3d(0, 0, 0);
@@ -199,23 +215,24 @@ const BulletinBoard = () => {
           left: 50%;
           transform-origin: 0 0;
           transition: 0.3s;
-        `)
+        `,
+      );
       if (tableWrapRef?.current) {
         // NOTE: 当在小屏幕上面的表格高度固定
-        setBlockHeight(313)
-        setBlockWidth(470)
+        setBlockHeight(313);
+        setBlockWidth(470);
         return;
       }
     } else {
-      (document.querySelector('#root') as any).removeAttribute('style')
+      (document.querySelector('#root') as any).removeAttribute('style');
     }
-    refeshThreeMap = []
+    refeshThreeMap = [];
     if (tableWrapRef?.current) {
       // 获取表格高度
       const offsetHeight = (tableWrapRef.current! as any).offsetHeight - 10;
       const offsetWidth = (tableWrapRef.current! as any).offsetWidth - 10;
-      setBlockWidth(offsetWidth)
-      setBlockHeight(offsetHeight)
+      setBlockWidth(offsetWidth);
+      setBlockHeight(offsetHeight);
     }
   };
 
@@ -268,7 +285,10 @@ const BulletinBoard = () => {
           </div>
           <div className={styles.headerRight}>
             <Space>
-              <div className={styles.menuButton} onClick={() => history.push('/big-screen/feature')}>
+              <div
+                className={styles.menuButton}
+                onClick={() => history.push('/big-screen/feature')}
+              >
                 特色场景
               </div>
               <div className={styles.menuButton} onClick={() => history.push('/energy-monitor')}>
@@ -289,8 +309,8 @@ const BulletinBoard = () => {
                       size="small"
                       options={['现状', '趋势', '特征']}
                       getSelectedValue={(value: any) => {
-                        setFullAndPutDate('年');
-                        setPickerType('year');
+                        // setFullAndPutDate('年');
+                        // setPickerType('year');
                         setCurrentView(value);
                       }}
                     />
@@ -309,8 +329,9 @@ const BulletinBoard = () => {
                         />
                         <SegmentedTheme
                           size="small"
-                          defaultValue="年"
+                          // defaultValue="年"
                           getSelectedValue={(value: any) => setFullAndPutDate(value)}
+                          ref={segRef}
                           options={
                             currentView === '特征'
                               ? ['月', '年']
@@ -324,7 +345,7 @@ const BulletinBoard = () => {
                     <CustomCharts
                       options={statusQuoChartOptions(getEnergyOverviewOptions())}
                       loading={false}
-                      height={blockHeight}
+                      height={currentView === '现状' ? blockHeight + 25 : blockHeight}
                       width={blockWidth}
                     />
                   </div>
@@ -371,7 +392,11 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap isHeatmap={true} data={substationData?.data} refeshThreeMap={refeshThreeMap} />
+              <ThreeMap
+                isHeatmap={true}
+                data={substationData?.data}
+                refeshThreeMap={refeshThreeMap}
+              />
             </div>
           </div>
           {/* right */}
@@ -385,11 +410,12 @@ const BulletinBoard = () => {
                     </div>
                     <div className={styles.clearItemUl}>
                       <div className={styles.clearItemLi}>
-                        <span className={styles.name}>总容量</span>
+                        <span className={styles.name}>总额定容量</span>
                         <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.essRatePower}/
                           {pageDataHandle(cleanEnergyManageData)?.essCapacity}
                         </span>
-                        <span className={styles.unit}>MWh</span>
+                        <span className={styles.unit}>MW/MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>实时充电功率</span>
@@ -401,12 +427,17 @@ const BulletinBoard = () => {
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>剩余可充放电量</span>
                         <span className={styles.value}>
+                          {pageDataHandle(cleanEnergyManageData)?.essChargeQuantity}/
                           {pageDataHandle(cleanEnergyManageData)?.essDischargeQuantity}
                         </span>
-                        <span className={styles.unit}>MWh</span>
+                        <span className={styles.unit}>MWh/MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
-                        <span className={styles.name}>接入完成率</span>
+                        <span className={styles.name}>
+                          <Tooltip placement="top" title="完成率为已接入容量/计划总接入容量">
+                            接入完成率
+                          </Tooltip>
+                        </span>
                         <span className={styles.value}>
                           {pageDataHandle(cleanEnergyManageData)?.essCompleteRate}
                         </span>
@@ -420,11 +451,11 @@ const BulletinBoard = () => {
                     </div>
                     <div className={styles.clearItemUl}>
                       <div className={styles.clearItemLi}>
-                        <span className={styles.name}>总容量</span>
+                        <span className={styles.name}>总额定容量</span>
                         <span className={styles.value}>
                           {pageDataHandle(cleanEnergyManageData)?.solarCapacity}
                         </span>
-                        <span className={styles.unit}>MWh</span>
+                        <span className={styles.unit}>MW</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>实时发电功率</span>
@@ -441,7 +472,11 @@ const BulletinBoard = () => {
                         <span className={styles.unit}>MWh</span>
                       </div>
                       <div className={styles.clearItemLi}>
-                        <span className={styles.name}>接入完成率</span>
+                        <span className={styles.name}>
+                          <Tooltip placement="top" title="完成率为已接入容量/计划总接入容量">
+                            接入完成率
+                          </Tooltip>
+                        </span>
                         <span className={styles.value}>
                           {pageDataHandle(cleanEnergyManageData)?.solarCompleteRate}
                         </span>
@@ -455,11 +490,11 @@ const BulletinBoard = () => {
                     </div>
                     <div className={styles.clearItemUl}>
                       <div className={styles.clearItemLi}>
-                        <span className={styles.name}>总容量</span>
+                        <span className={styles.name}>总额定容量</span>
                         <span className={styles.value}>
                           {pageDataHandle(cleanEnergyManageData)?.chargePileCapacity}
                         </span>
-                        <span className={styles.unit}>MWh</span>
+                        <span className={styles.unit}>MW</span>
                       </div>
                       <div className={styles.clearItemLi}>
                         <span className={styles.name}>实时负荷功率</span>
@@ -469,7 +504,11 @@ const BulletinBoard = () => {
                         <span className={styles.unit}>MW</span>
                       </div>
                       <div className={styles.clearItemLi}>
-                        <span className={styles.name}>接入完成率</span>
+                        <span className={styles.name}>
+                          <Tooltip placement="top" title="完成率为已接入容量/计划总接入容量">
+                            接入完成率
+                          </Tooltip>
+                        </span>
                         <span className={styles.value}>
                           {pageDataHandle(cleanEnergyManageData)?.chargePileCompleteRate}
                         </span>
@@ -516,10 +555,20 @@ const BulletinBoard = () => {
         </div>
         <div className={styles.footer}>
           <div className={styles.footerWrap}>
-            <div className={`${styles.button} ${styles.buttonLeft} ${type === 0 ? styles.activeBtn : null}`} onClick={() => setType(0)}>
+            <div
+              className={`${styles.button} ${styles.buttonLeft} ${
+                type === 0 ? styles.activeBtn : null
+              }`}
+              onClick={() => setType(0)}
+            >
               负荷热力
             </div>
-            <div className={`${styles.button} ${styles.buttonRight} ${type === 1 ? styles.activeBtn : null}`} onClick={() => setType(1)}>
+            <div
+              className={`${styles.button} ${styles.buttonRight} ${
+                type === 1 ? styles.activeBtn : null
+              }`}
+              onClick={() => setType(1)}
+            >
               电量热力
             </div>
           </div>

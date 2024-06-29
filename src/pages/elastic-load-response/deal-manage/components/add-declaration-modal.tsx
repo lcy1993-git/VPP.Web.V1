@@ -168,7 +168,7 @@ const AddDeclarationModal = (props: PropsType) => {
           </Row>
         </Form>
         <div className={styles.bottomContainer}>
-          <div style={{ height: '400px', overflowY: 'auto' }}>
+          <div style={{ height: '370px', overflowY: 'auto' }}>
             <Collapse
               accordion
               items={items}

@@ -38,7 +38,7 @@ export const getTypicalResponseAnalysis = (type: string) => {
 };
 
 // 特色场景-大屏地图-电站数据
-export const getsubstationData = () => {
+export const getSubstationData = () => {
   return request(`/api/bigScreen/scene/substationData`, {
     method: 'GET',
   });
@@ -94,7 +94,7 @@ export const getBoardCenterData = () => {
 export const getBoardSubstationData = (params: any) => {
   return request(`/api/bigScreen/energyBoard/substationData`, {
     method: 'GET',
-    params
+    params,
   });
 };
 
@@ -102,7 +102,6 @@ export const getBoardSubstationData = (params: any) => {
 export const getCleanEnergyManageData = (params: any) => {
   return request(`/api/bigScreen/energyBoard/cleanEnergyManage`, {
     method: 'GET',
-    params
+    params,
   });
 };
-

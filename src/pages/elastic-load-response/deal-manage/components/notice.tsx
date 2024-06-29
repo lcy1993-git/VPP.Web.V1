@@ -46,7 +46,7 @@ const Notice = () => {
     onSuccess: (res: any) => {
       setOptions([
         {
-          title: '目前邀约计划', // 分类标题
+          title: '日前邀约计划', // 分类标题
           options: res?.dayAheadInvitationPlan || [], // 该分类下的选项列表
         },
         {

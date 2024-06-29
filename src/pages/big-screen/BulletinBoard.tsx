@@ -13,7 +13,7 @@ import {
 } from '@/services/big-screen';
 import { history } from '@umijs/max';
 import { useRequest } from 'ahooks';
-import { ConfigProvider, DatePicker, Space, Tooltip } from 'antd';
+import { ConfigProvider, DatePicker, Space, Spin, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
 import { useEffect, useRef, useState } from 'react';
@@ -54,6 +54,11 @@ const BulletinBoard = () => {
   const tableWrapRef = useRef(null);
   // 区域用能概览--处理图标自适应问题
   const chartsRef = useRef(null);
+
+  // 地图组件左侧dom
+  const left_dom: any = useRef(null);
+  // 地图组件上侧dom
+  const top_dom: any = useRef(null);
 
   // 页面数据处理
   const pageDataHandle = (data: any) => {
@@ -111,7 +116,7 @@ const BulletinBoard = () => {
   });
 
   // 热力图数据
-  const { data: substationData, run: fetchHeatDatas } = useRequest(getBoardSubstationData, {
+  const { data: substationData, run: fetchHeatDatas, loading: healthLoading } = useRequest(getBoardSubstationData, {
     manual: true,
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
@@ -298,7 +303,7 @@ const BulletinBoard = () => {
           </div>
         </div>
         <div className={styles.content}>
-          <div className={styles.contentSide}>
+          <div className={styles.contentSide} ref={left_dom}>
             <div className={`${styles.sideItem} ${styles.marginB10}`}>
               <BlockWrap
                 title="区域用能概览"
@@ -367,7 +372,7 @@ const BulletinBoard = () => {
           </div>
           {/* center */}
           <div className={styles.contentMiddle}>
-            <div className={`${styles.middleTop} ${styles.boardModdle}`}>
+            <div className={`${styles.middleTop} ${styles.boardModdle}`} ref={top_dom}>
               <dl>
                 <dt>{pageDataHandle(boardCenterData)?.totalIncome}</dt>
                 <dd>运营商总收益</dd>
@@ -388,11 +393,14 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              <ThreeMap
-                isHeatmap={true}
-                data={substationData?.data}
-                refeshThreeMap={refeshThreeMap}
-              />
+              {healthLoading ? <Spin size="large" className={styles.spinStyle} /> :
+                <ThreeMap
+                  left={left_dom.current?.offsetWidth}
+                  top={top_dom.current?.offsetHeight}
+                  isHeatmap={true}
+                  data={substationData?.data}
+                  refeshThreeMap={refeshThreeMap}
+                />}
             </div>
           </div>
           {/* right */}
@@ -552,17 +560,15 @@ const BulletinBoard = () => {
         <div className={styles.footer}>
           <div className={styles.footerWrap}>
             <div
-              className={`${styles.button} ${styles.buttonLeft} ${
-                type === 0 ? styles.activeBtn : null
-              }`}
+              className={`${styles.button} ${styles.buttonLeft} ${type === 0 ? styles.activeBtn : null
+                }`}
               onClick={() => setType(0)}
             >
               负荷热力
             </div>
             <div
-              className={`${styles.button} ${styles.buttonRight} ${
-                type === 1 ? styles.activeBtn : null
-              }`}
+              className={`${styles.button} ${styles.buttonRight} ${type === 1 ? styles.activeBtn : null
+                }`}
               onClick={() => setType(1)}
             >
               电量热力

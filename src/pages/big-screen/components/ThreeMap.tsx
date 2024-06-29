@@ -12,17 +12,20 @@ import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
 import mapBg from './image/map-bg.png';
 import Mark1 from './image/mark1.png';
 import Outline from './image/outline.png';
+import { closePoup, creat3DPoup } from './utils';
 // import h337 from './js/heatmap.js';
 // import mapBg from './bg01.png';
 
 interface ThreeMapInfo {
+  left?: number // 地图左侧dom宽度
+  top?: number // 地图顶部dom高度
   isHeatmap?: boolean; // 是否加载热力图
   data?: any; // 热力图数据
   refeshThreeMap: any[]
 }
 
 const ThreeMap = (props: ThreeMapInfo) => {
-  const { isHeatmap = false, data, refeshThreeMap } = props;
+  const { isHeatmap = false, data, left = 0, top = 0, refeshThreeMap } = props;
 
   const chart_dom: any = useRef(null);
   const heat_dom: any = useRef(null);
@@ -52,6 +55,11 @@ const ThreeMap = (props: ThreeMapInfo) => {
   const material: any = useRef(null);
   const mesh: any = useRef(null);
   const texture: any = useRef(null);
+
+  const dialogRef: any = useRef(null);
+
+  const scaleWidth: any = useRef(1);
+  const scaleHeight: any = useRef(1);
 
   const [mapData, setMapData] = useState<any>(data);
 
@@ -139,7 +147,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 是否可以缩放
     control.enableZoom = true;
     // 是否可以旋转
-    control.enableRotate = false;
+    control.enableRotate = true;
     // 禁止平移
     control.enablePan = false;
     // 设置控制器中心点
@@ -319,13 +327,14 @@ const ThreeMap = (props: ThreeMapInfo) => {
   };
 
   // 添加标注
-  const addMark = (position_: any) => {
+  const addMark = (markData: any) => {
+    const lont = [parseFloat(markData?.longitude), parseFloat(markData?.latitude)];
     const projection = d3
       .geoMercator()
       .center([104.300989, 30.607689])
       .scale(5000)
       .translate([0, 0]);
-    const [x, y] = projection(position_);
+    const [x, y] = projection(lont);
     const position = new THREE.Vector3(x, 5.4, -y);
 
     // 创建一个点位图片
@@ -340,15 +349,37 @@ const ThreeMap = (props: ThreeMapInfo) => {
     // 设置平移
     const translation = new THREE.Vector3(0, -3, 0); // 平移向量
     sprite.position.add(translation); // 平移点位
+    sprite.name = 'mark';
+    sprite.data = markData;
     viewScene.current.add(sprite);
     // viewCamera.current.look
   };
 
+
   const onWindowResize = () => {
     if (chart_dom.current) {
-      viewCamera.current.aspect = chart_dom.current.clientWidth / chart_dom.current.clientHeight;
+      // 自适应页面
+      const designDraftWidth = 1920;
+      const designDraftHeight = 919;
+      if (
+        document.documentElement.offsetWidth < designDraftWidth
+      ) {
+        scaleWidth.current = document.documentElement.clientWidth / designDraftWidth;
+      } else {
+        scaleWidth.current = 1;
+      }
+
+      if (
+        document.documentElement.offsetHeight < designDraftHeight
+      ) {
+        scaleHeight.current = document.documentElement.clientHeight / designDraftHeight;
+      } else {
+        scaleHeight.current = 1;
+      }
+
+      viewCamera.current.aspect = chart_dom.current.clientWidth * scaleWidth.current / chart_dom.current.clientHeight * scaleHeight.current;
       viewCamera.current.updateProjectionMatrix();
-      renderer.current.setSize(chart_dom.current.clientWidth, chart_dom.current.clientHeight);
+      renderer.current.setSize(chart_dom.current.clientWidth * scaleWidth.current, chart_dom.current.clientHeight * scaleHeight.current);
       if (renderer.current) {
         const rendererDomElement = renderer.current.domElement;
         if (rendererDomElement.parentNode === chart_dom.current) {
@@ -364,6 +395,7 @@ const ThreeMap = (props: ThreeMapInfo) => {
           geometry.current = null;
           material.current = null;
           mesh.current = null;
+
           initMap(containrtWidth, containrtHeight);
         }
       }
@@ -447,17 +479,69 @@ const ThreeMap = (props: ThreeMapInfo) => {
       });
       mesh.current = new THREE.Mesh(geometry.current, material.current);
       mesh.current.name = 'heatmap';
-      viewScene.current.add(mesh.current);
+      viewScene.current?.add(mesh.current);
     }
   };
+
 
   // 添加标注
   const initMark = (markData: any) => {
     let i = 0;
     while (i < markData.length) {
-      const lont = [parseFloat(markData[i]?.longitude), parseFloat(markData[i]?.latitude)];
-      addMark(lont);
+      addMark(markData[i]);
       i++;
+    }
+  };
+
+  const onMouseClick = (event: any) => {
+    closePoup(dialogRef.current);
+    const mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+    // 将鼠标点击位置的屏幕坐标转换成NDC坐标
+    mouse.x = ((event.clientX - left * scaleWidth.current - 20 * scaleWidth.current) / scaleWidth.current / chart_dom.current?.offsetWidth) * 2 - 1;
+    mouse.y = -((event.clientY - top * scaleHeight.current - 95 * scaleHeight.current - 10 * scaleHeight.current) / scaleHeight.current / chart_dom.current?.offsetHeight) * 2 + 1;
+
+    // addMark_(mouse.x,  mouse.y)
+
+    // 设置射线的起点和方向
+    raycaster.setFromCamera(mouse, viewCamera.current);
+
+
+    // 计算射线与场景中所有物体的相交点
+    let intersects = raycaster.intersectObjects(viewScene.current.children, true);
+
+
+    // 遍历相交点，处理相交的物体
+
+
+    if (intersects.length > 0) {
+      const point = intersects.find((item: any) => item.object.name === 'mark');
+      if (point) {
+        creat3DPoup(
+          dialogRef.current,
+          chart_dom.current,
+          point.object.data,
+          1,
+          event.clientX / scaleWidth.current,
+          event.clientY / scaleHeight.current,
+        );
+        return;
+      }
+    }
+  }
+
+
+  const handleMouseEnter = () => {
+    // 鼠标移入时的处理逻辑
+    if (dialogRef.current) {
+      dialogRef.current.style.display = 'block';
+    }
+  };
+
+  const handleMouseLeave = () => {
+    // 鼠标移出时的处理逻辑
+    if (dialogRef.current) {
+      dialogRef.current.style.display = 'none';
     }
   };
 
@@ -482,22 +566,63 @@ const ThreeMap = (props: ThreeMapInfo) => {
       renderer.current.render(viewScene.current, viewCamera.current);
     }
     animate();
+
+    // 监听鼠标点击事件
+    chart_dom.current!.addEventListener('click', onMouseClick, false);
   };
 
+  // useEffect(() => {
+  //   if (chart_dom?.current) {
+  //     const containrtWidth = chart_dom.current?.offsetWidth;
+  //     const containrtHeight = chart_dom.current?.offsetHeight;
+  //     initMap(containrtWidth, containrtHeight);
+  //   }
+  //   return () => {
+  //     if (chart_dom?.current) {
+  //       window.removeEventListener('resize', onWindowResize);
+  //     }
+  //     // 从DOM中移除渲染器的canvas元素
+  //     chart_dom.current?.removeChild(renderer.current.domElement);
+  //   };
+  // }, []);
+
+
+
   useEffect(() => {
-    if (chart_dom?.current) {
+    if (chart_dom?.current && left && top) {
+      // 自适应页面
+      const designDraftWidth = 1920;
+      const designDraftHeight = 919;
+      if (
+        document.documentElement.offsetWidth < designDraftWidth
+      ) {
+        scaleWidth.current = document.documentElement.clientWidth / designDraftWidth;
+      } else {
+        scaleWidth.current = 1;
+      }
+
+      if (
+        document.documentElement.offsetHeight < designDraftHeight
+      ) {
+        scaleHeight.current = document.documentElement.clientHeight / designDraftHeight;
+      } else {
+        scaleHeight.current = 1;
+      }
+
       const containrtWidth = chart_dom.current?.offsetWidth;
       const containrtHeight = chart_dom.current?.offsetHeight;
       initMap(containrtWidth, containrtHeight);
+      if (viewScene.current) closePoup(dialogRef.current);
     }
     return () => {
-      if (chart_dom?.current) {
-        window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener('resize', onWindowResize);
+      if (chart_dom?.current && renderer.current) {
+        // 从DOM中移除渲染器的canvas元素
+        chart_dom?.current?.removeChild(renderer.current.domElement);
       }
-      // 从DOM中移除渲染器的canvas元素
-      chart_dom.current?.removeChild(renderer.current.domElement);
     };
-  }, []);
+  }, [left, top]);
+
   useEffect(() => {
     if (heat_dom.current) {
       initHeatmap(data || []);
@@ -515,7 +640,15 @@ const ThreeMap = (props: ThreeMapInfo) => {
       </script>
 
       {isHeatmap && <div id="heatmap-canvas" style={{ display: 'none' }} ref={heat_dom}></div>}
-      <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}></div>
+      <div id="three-map" style={{ width: '100%', height: '100%' }} ref={chart_dom}>
+        <div
+          ref={dialogRef}
+          style={{ display: 'none' }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        ></div>
+
+      </div>
     </>
   );
 };

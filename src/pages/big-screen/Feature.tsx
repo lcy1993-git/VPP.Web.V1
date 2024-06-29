@@ -53,6 +53,11 @@ const Feature = () => {
   // 典型响应分析查询类型，默认负荷
   const [typicalResponseAnalysisType, setTypicalResponseAnalysisType] = useState<string>('负荷');
 
+  // 地图组件左侧dom
+  const left_dom: any = useRef(null);
+  // 地图组件上侧dom
+  const top_dom: any = useRef(null);
+
   // 区域用能概览数据请求
   const {
     run: fetchEnergyUse,
@@ -194,8 +199,11 @@ const Feature = () => {
   }, [fullAndPutDate]);
 
   const handleScreenAuto = () => {
-    const designDraftWidth = 1920;
-    const designDraftHeight = 919;
+    const designDraftWidth = 1910;
+    const designDraftHeight = 910;
+    console.log(document.documentElement.offsetWidth, 123);
+    console.log(document.documentElement.offsetHeight, 321);
+
     if (
       document.documentElement.offsetWidth < designDraftWidth ||
       document.documentElement.offsetHeight < designDraftHeight
@@ -304,7 +312,7 @@ const Feature = () => {
           </div>
         </div>
         <div className={styles.content}>
-          <div className={styles.contentSide}>
+          <div className={styles.contentSide} ref={left_dom}>
             <div className={`${styles.sideItem} ${styles.marginB10}`}>
               <BlockWrap title="区域用能概览" headerRightRender={energyOverviewRender}>
                 <CustomCharts
@@ -345,7 +353,7 @@ const Feature = () => {
           </div>
           {/* center */}
           <div className={styles.contentMiddle}>
-            <div className={styles.middleTop}>
+            <div className={styles.middleTop} ref={top_dom}>
               <div className={styles.totalCount}>
                 <p className={styles.title}>接入企业/预计接入企业(个)</p>
                 <p className={styles.value}>
@@ -413,7 +421,12 @@ const Feature = () => {
             </div>
             <div className={styles.three}>
               {substationData && (
-                <ThreeMap data={substationData?.data} refeshThreeMap={refeshThreeMap} />
+                <ThreeMap
+                left={left_dom.current?.offsetWidth} 
+                top={top_dom.current?.offsetHeight}
+                data={substationData?.data} 
+                refeshThreeMap={refeshThreeMap} 
+                />
               )}
             </div>
           </div>

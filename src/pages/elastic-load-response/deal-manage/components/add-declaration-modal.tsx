@@ -8,6 +8,7 @@ import { useRequest } from '@umijs/max';
 import { Button, Col, Collapse, Form, Input, Modal, Row, Select, message } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styles from '../index.less';
+import AddCollapse from './add-collapse';
 import { default as Label } from './label';
 
 interface PropsType {
@@ -22,8 +23,6 @@ const AddDeclarationModal = (props: PropsType) => {
   const [form] = Form.useForm();
   // 计划
   const identificationNum = Form.useWatch('identificationNum', form);
-  // 是否保存
-  const [save, setSave] = useState<boolean>(false);
 
   // 邀约计划option
   const { data: planOptions } = useRequest(getIdentificationNum, {
@@ -37,10 +36,6 @@ const AddDeclarationModal = (props: PropsType) => {
     }
   }, [modalInfo]);
 
-  const [items, setItems] = useState<any>([]);
-  const [activeKey, setActiveKey] = useState<any>([]);
-  const [renderCount, setRenderCount] = useState<number>(0);
-
   // 获取计划信息
   const { run: fetchPlanInfo } = useRequest(getPlanInfo, {
     manual: true,
@@ -50,52 +45,9 @@ const AddDeclarationModal = (props: PropsType) => {
   useEffect(() => {
     if (identificationNum) {
       fetchPlanInfo(identificationNum);
-      getUserList(identificationNum).then((res) => {
-        setSave(false);
-        setRenderCount(renderCount + 1);
-        setActiveKey(`1-${renderCount}`);
-        setItems([
-          {
-            key: `1-${renderCount}`,
-            children: (
-              <Label
-                data={res.data}
-                identificationNum={identificationNum}
-                setSave={setSave}
-                modalInfo={modalInfo}
-                save={save}
-              />
-            ),
-          },
-        ]);
-      });
     }
   }, [identificationNum]);
 
-  // 新增新的面板
-  const addItem = () => {
-    if (!save) return message.info('请对上一条数据进行保存');
-    getUserList(identificationNum).then((res) => {
-      const newKey = items.length + 1;
-      const saveValue = false;
-      setActiveKey(newKey);
-      setSave(saveValue);
-      const newItem = {
-        key: newKey,
-
-        children: (
-          <Label
-            data={res.data}
-            setSave={setSave}
-            save={saveValue}
-            modalInfo={modalInfo}
-            identificationNum={identificationNum}
-          />
-        ), // 或者其他动态生成的children内容
-      };
-      setItems([...items, newItem]);
-    });
-  };
 
   return (
     <Modal
@@ -168,20 +120,11 @@ const AddDeclarationModal = (props: PropsType) => {
           </Row>
         </Form>
         <div className={styles.bottomContainer}>
-          <div style={{ height: '400px', overflowY: 'auto' }}>
-            <Collapse
-              accordion
-              items={items}
-              collapsible="icon"
-              activeKey={activeKey}
-              onChange={(value) => setActiveKey(value)}
+          <div style={{ height: '450px', overflowY: 'auto' }}>
+            <AddCollapse
+              identificationNum={identificationNum}
             />
           </div>
-          {!modalInfo?.isEdit && (
-            <Button onClick={addItem}>
-              <PlusOutlined />
-            </Button>
-          )}
         </div>
       </div>
     </Modal>

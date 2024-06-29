@@ -1796,7 +1796,14 @@ export const companyChartOptions = (companySourceData: any) => {
         smooth: true,
       },
       {
-        data: realValueList,
+        data: realValueList.slice(
+          0,
+          handleDiffMins(
+            new Date(),
+            new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            60,
+          ) + 1,
+        ),
         type: 'line',
         name: '实时（kW）',
         smooth: true,

@@ -274,7 +274,7 @@ export const essOverviewChart = (
     ],
     series: [
       {
-        name: isSingle ? '计划充放电功率' : '充电功率',
+        name: isSingle ? '实际充放电功率' : '充电功率',
         type: 'line',
         data: isToday ? planPower.slice(0, handleDiffMins() + 1) : planPower,
         smooth: true, // 设置为 true，使折线变得平滑
@@ -286,19 +286,21 @@ export const essOverviewChart = (
           ]),
         },
       },
-      {
-        name: isSingle ? '实际充放电功率' : '放电功率',
-        type: 'line',
-        data: isToday ? power.slice(0, handleDiffMins() + 1) : power,
-        smooth: true, // 设置为 true，使折线变得平滑
-        showSymbol: false, // 设置为 false，隐藏数据点
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(255, 126, 48, 0.05)' },
-            { offset: 1, color: 'rgba(255, 126, 48, 0.3)' },
-          ]),
-        },
-      },
+      isSingle
+        ? null
+        : {
+            name: '放电功率',
+            type: 'line',
+            data: isToday ? power.slice(0, handleDiffMins() + 1) : power,
+            smooth: true, // 设置为 true，使折线变得平滑
+            showSymbol: false, // 设置为 false，隐藏数据点
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: 'rgba(255, 126, 48, 0.05)' },
+                { offset: 1, color: 'rgba(255, 126, 48, 0.3)' },
+              ]),
+            },
+          },
     ],
   };
 };

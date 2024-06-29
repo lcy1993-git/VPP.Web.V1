@@ -1,11 +1,11 @@
 import logo from '@/assets/image/base/logo1.png';
 import title from '@/assets/image/base/title.png';
+import Captcha from '@/components/captcha';
 import { getUserAuth, loginRequest } from '@/services/login';
 import { history } from '@umijs/max';
 import { Button, Col, ConfigProvider, Form, Input, Row, message } from 'antd';
 import { md5 } from 'js-md5';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Captcha from '@/components/captcha';
 import styles from './index.less';
 
 const Login = () => {

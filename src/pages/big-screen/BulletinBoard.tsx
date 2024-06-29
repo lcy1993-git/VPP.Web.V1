@@ -55,6 +55,11 @@ const BulletinBoard = () => {
   // 区域用能概览--处理图标自适应问题
   const chartsRef = useRef(null);
 
+  // 地图组件左侧dom
+  const left_dom: any = useRef(null);
+  // 地图组件上侧dom
+  const top_dom: any = useRef(null);
+
   // 页面数据处理
   const pageDataHandle = (data: any) => {
     if (data?.code === 200) {
@@ -298,7 +303,7 @@ const BulletinBoard = () => {
           </div>
         </div>
         <div className={styles.content}>
-          <div className={styles.contentSide}>
+          <div className={styles.contentSide} ref={left_dom}>
             <div className={`${styles.sideItem} ${styles.marginB10}`}>
               <BlockWrap
                 title="区域用能概览"
@@ -367,7 +372,7 @@ const BulletinBoard = () => {
           </div>
           {/* center */}
           <div className={styles.contentMiddle}>
-            <div className={`${styles.middleTop} ${styles.boardModdle}`}>
+            <div className={`${styles.middleTop} ${styles.boardModdle}`} ref={top_dom}>
               <dl>
                 <dt>
                   {pageDataHandle(boardCenterData)?.enterpriseNum}/
@@ -392,12 +397,14 @@ const BulletinBoard = () => {
               </dl>
             </div>
             <div className={styles.three}>
-              { healthLoading ? <Spin size="large" className={styles.spinStyle} /> : 
-              <ThreeMap
-                isHeatmap={true}
-                data={substationData?.data}
-                refeshThreeMap={refeshThreeMap}
-              /> }
+              {healthLoading ? <Spin size="large" className={styles.spinStyle} /> :
+                <ThreeMap
+                  left={left_dom.current?.offsetWidth}
+                  top={top_dom.current?.offsetHeight}
+                  isHeatmap={true}
+                  data={substationData?.data}
+                  refeshThreeMap={refeshThreeMap}
+                />}
             </div>
           </div>
           {/* right */}
@@ -557,17 +564,15 @@ const BulletinBoard = () => {
         <div className={styles.footer}>
           <div className={styles.footerWrap}>
             <div
-              className={`${styles.button} ${styles.buttonLeft} ${
-                type === 0 ? styles.activeBtn : null
-              }`}
+              className={`${styles.button} ${styles.buttonLeft} ${type === 0 ? styles.activeBtn : null
+                }`}
               onClick={() => setType(0)}
             >
               负荷热力
             </div>
             <div
-              className={`${styles.button} ${styles.buttonRight} ${
-                type === 1 ? styles.activeBtn : null
-              }`}
+              className={`${styles.button} ${styles.buttonRight} ${type === 1 ? styles.activeBtn : null
+                }`}
               onClick={() => setType(1)}
             >
               电量热力

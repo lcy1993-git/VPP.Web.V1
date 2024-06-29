@@ -70,7 +70,7 @@ const HeatMap = (props: HeatMapInfo) => {
             radius: 8, // 半径，可调整
             weight: function(feature) {
               // 获取点位的权重，这里假设值存储在属性 'value' 中              
-              const weight = parseFloat(feature.get('carbonTotal')) / 100 < 0.3 ? 0.3 : parseFloat(feature.get('carbonTotal')) / 90;
+              const weight = parseFloat(feature.get('carbonTotal')) / 100 < 0.3 ? 0.3 : parseFloat(feature.get('carbonTotal')) / result.data[0].carbonTotal;
               // const weight = feature.get('carbonTotal');
               console.log('Weight value:', weight);
               return weight;

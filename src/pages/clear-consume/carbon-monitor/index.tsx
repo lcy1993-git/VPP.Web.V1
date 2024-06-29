@@ -133,7 +133,7 @@ const CarbonMonitor = () => {
           <CustomCard title="碳排放监测">
             <div className={styles.content}>
               <div className={styles.search}>
-                <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} disabled />
+                <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
               </div>
               <div className={styles.chartDom}>
                 <CustomCharts

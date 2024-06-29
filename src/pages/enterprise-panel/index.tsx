@@ -3,10 +3,11 @@ import ContentComponent from '@/components/content-component';
 import CustomCharts from '@/components/custom-charts';
 import CustomDatePicker from '@/components/custom-datePicker';
 import GeneralTable from '@/components/general-table';
+import { getSubstationList } from '@/services/energy-analysis';
 import { getSubstationElectricity, getSubstationPower } from '@/services/enterprise-panel';
 import { SearchOutlined } from '@ant-design/icons';
 import { useRequest } from '@umijs/max';
-import { Button, Form, Input, Modal } from 'antd';
+import { Button, Form, Modal, Select } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 import styles from './index.less';
@@ -41,6 +42,11 @@ const EnterprisePanel = () => {
     },
   );
 
+  // 企业数据
+  const { data: substationList } = useRequest(getSubstationList, {
+    manual: false,
+  });
+
   // 查询按钮
   const handleSearchClick = (values: any) => {
     if (tableRef && tableRef.current) {
@@ -64,8 +70,14 @@ const EnterprisePanel = () => {
           <Form.Item label="统计周期" name="date">
             <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />
           </Form.Item>
-          <Form.Item label="企业名称" name="name">
-            <Input placeholder="请选择企业名称" allowClear style={{ width: 250 }} />
+          <Form.Item label="企业名称" name="substationCode">
+            <Select
+              placeholder="请选择企业"
+              options={substationList}
+              allowClear
+              style={{ width: 250, marginRight: '15px' }}
+              fieldNames={{ label: 'name', value: 'substationCode' }}
+            />
           </Form.Item>
           <Form.Item>
             <Button icon={<SearchOutlined />} htmlType="submit">

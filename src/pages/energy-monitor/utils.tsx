@@ -133,6 +133,12 @@ export const energyStructureOptions = (data: any) => {
   return {
     tooltip: {
       trigger: 'item',
+      formatter: (params: any) => {
+        if (params && params.data) {
+          return `${params.name}: ${params.percent}%`;
+        }
+        return '';
+      },
     },
     legend: {
       bottom: 4,
@@ -154,8 +160,8 @@ export const energyStructureOptions = (data: any) => {
         type: 'pie',
         radius: '50%',
         data: [
-          { value: data?.cleanEnergyElectricity, name: '清洁能源' },
-          { value: data?.conventionalEnergyElectricity, name: '传统能源' },
+          { value: Number(data?.cleanEnergyElectricity), name: '清洁能源' },
+          { value: Number(data?.conventionalEnergyElectricity), name: '传统能源' },
         ],
         emphasis: {
           itemStyle: {

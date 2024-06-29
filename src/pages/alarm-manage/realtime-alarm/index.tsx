@@ -117,7 +117,11 @@ const RealtimeAlarm = () => {
       endTime = dayjs(time[1]).format('YYYY-MM-DD HH:mm:ss');
     }
     // @ts-ignore
-    tableRef.current?.searchByParams({ beginTime, endTime });
+    tableRef.current?.searchByParams({
+      beginTime,
+      endTime,
+      eventStatus: form.getFieldValue('eventStatus'),
+    });
   };
 
   // 初始化 table columns

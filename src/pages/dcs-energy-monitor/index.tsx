@@ -189,6 +189,7 @@ const DcsEnergyMonitor = () => {
           essOverview?.chargePower,
           essOverview?.disChargePower,
           energyOverviewIsToday,
+          false,
         );
         res.loading = essOverviewLoading;
         break;
@@ -221,9 +222,10 @@ const DcsEnergyMonitor = () => {
       res.loading = singleSolarOverviewLoading;
     } else {
       res.chart = essOverviewChart(
-        singleEssOverview?.chargePower,
-        singleEssOverview?.disChargePower,
+        singleEssOverview?.planPowerMap,
+        singleEssOverview?.powerMap,
         enterpriseOverviewIsToday,
+        true,
       );
       res.loading = singleEssOverviewLoading;
     }

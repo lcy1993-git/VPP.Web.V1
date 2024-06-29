@@ -224,7 +224,7 @@ const CarbonAnalysis = () => {
   const renderSearch = () => {
     return (
       <Row>
-        <Col span={12}>
+        <Col span={type === 1 ? 12 : 4}>
           <SelectForm
             setType={setType}
             setIndustryCode={setIndustry}
@@ -232,7 +232,7 @@ const CarbonAnalysis = () => {
             setEnterpriseCategory={setEnterpriseCategory}
           />
         </Col>
-        <Col span={12}>
+        <Col>
           <Form name="basic" autoComplete="off" form={searchForm} style={{ display: 'flex' }}>
             <Form.Item label="时间" style={{ marginRight: '20px' }}>
               <CustomDatePicker datePickerType="" setDate={setDate} setUnit={setUnit} />

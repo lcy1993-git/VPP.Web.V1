@@ -41,9 +41,9 @@ const DealDeclaration = () => {
   // 删除/撤销/申报弹框
   const [open, setOpen] = useState<boolean>(false);
   // 删除/撤销/申报弹框类型
-  const [modalType, setModalType] = useState<'delete' | 'cancel' | 'declare' | 'userDelete'>(
-    'delete',
-  );
+  const [modalType, setModalType] = useState<
+    'delete' | 'cancel' | 'declare' | 'userDelete' | 'batchDeclare'
+  >('delete');
   // 删除/撤销/申报弹框类型id
   const [modalId, setModalId] = useState<any>([]);
   // 申报详情-曲线or表格
@@ -114,7 +114,7 @@ const DealDeclaration = () => {
   // 申报按钮
   const handleDeclare = () => {
     if (tableSelectRows && tableSelectRows.length > 0) {
-      setModalType('declare');
+      setModalType('batchDeclare');
       setOpen(true);
       setModalId(tableSelectRows.map((item: any) => item.identificationNum));
     } else {

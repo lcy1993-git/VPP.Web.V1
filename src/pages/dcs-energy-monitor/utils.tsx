@@ -42,13 +42,12 @@ export const handleSolarData = (data: any) => {
 
 // 分布式能源总览-储能
 export const handleEssData = (data: any) => {
-  const { power, powerConversion, powerGeneration, powerGenerationConversion } = Unit;
+  const { powerGeneration, powerGenerationConversion } = Unit;
   return [
     {
-      label: '实时功率',
-      unit: power,
+      label: '运行状态',
       id: 1,
-      value: parseInt(data?.realTimePower) / powerConversion,
+      value: data?.status === '0' ? '充电' : '放电',
       icon: 'icon-gongshuai',
     },
     {
@@ -203,14 +202,19 @@ export const solarOverviewChart = (powerMap: any, irradianceMap: any, isToday: b
 };
 
 // 分布式能源总览-储能-曲线
-export const essOverviewChart = (chargePower: any, disChargePower: any, isToday: boolean) => {
-  if (!chargePower || !disChargePower) return false;
+export const essOverviewChart = (
+  planPowerMap: any,
+  powerMap: any,
+  isToday: boolean,
+  isSingle: boolean,
+) => {
+  if (!planPowerMap || !powerMap) return false;
   // x轴
-  const chargeKeys = Object.keys(chargePower);
-  const dischargeKeys = Object.keys(disChargePower);
+  const chargeKeys = Object.keys(planPowerMap);
+  const dischargeKeys = Object.keys(powerMap);
   // y轴
-  const chargeData = chargeKeys ? Object.values(chargePower) : [];
-  const dischargeData = dischargeKeys ? Object.values(disChargePower) : [];
+  const planPower = chargeKeys ? Object.values(planPowerMap) : [];
+  const power = dischargeKeys ? Object.values(powerMap) : [];
 
   return {
     grid: {
@@ -221,7 +225,6 @@ export const essOverviewChart = (chargePower: any, disChargePower: any, isToday:
       containLabel: true,
     },
     legend: {
-      data: ['充电', '放电'],
       x: 'center',
       textStyle: {
         color: '#E7FAFF',
@@ -266,32 +269,14 @@ export const essOverviewChart = (chargePower: any, disChargePower: any, isToday:
           },
         },
         type: 'value',
-        name: '充电/kWh',
-      },
-      {
-        splitLine: {
-          show: true,
-          lineStyle: {
-            color: 'rgba(231, 250, 255, 0.1)',
-          },
-        },
-        axisLine: {
-          lineStyle: {
-            fontSize: '10px',
-            fontWeight: 400,
-            color: 'rgba(231, 250, 255, 0.6)', // 设置 y 轴文字颜色
-          },
-        },
-        type: 'value',
-        name: '放电/kWh',
+        name: '功率/kW',
       },
     ],
     series: [
       {
-        name: '充电',
+        name: isSingle ? '计划充放电功率' : '充电功率',
         type: 'line',
-        data: isToday ? chargeData.slice(0, handleDiffMins() + 1) : chargeData,
-        yAxisIndex: 0, // 指定使用第一个 y 轴
+        data: isToday ? planPower.slice(0, handleDiffMins() + 1) : planPower,
         smooth: true, // 设置为 true，使折线变得平滑
         showSymbol: false, // 设置为 false，隐藏数据点
         areaStyle: {
@@ -302,10 +287,9 @@ export const essOverviewChart = (chargePower: any, disChargePower: any, isToday:
         },
       },
       {
-        name: '放电',
+        name: isSingle ? '实际充放电功率' : '放电功率',
         type: 'line',
-        data: isToday ? dischargeData.slice(0, handleDiffMins() + 1) : dischargeData,
-        yAxisIndex: 1, // 指定使用第二个 y 轴
+        data: isToday ? power.slice(0, handleDiffMins() + 1) : power,
         smooth: true, // 设置为 true，使折线变得平滑
         showSymbol: false, // 设置为 false，隐藏数据点
         areaStyle: {
@@ -569,7 +553,7 @@ export const renderInverterList = (data: any, type: string, subStationCode: stri
                       color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe662;
+                    &#xe6a2;
                   </i>
                 ) : (
                   <i
@@ -578,7 +562,7 @@ export const renderInverterList = (data: any, type: string, subStationCode: stri
                       color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe661;
+                    &#xe619;
                   </i>
                 )}
               </div>
@@ -670,7 +654,7 @@ export const renderPcsList = (data: any, subStationCode: string) => {
                         handleInverterStatus_psc(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe662;
+                    &#xe6a2;
                   </i>
                 ) : (
                   <i
@@ -680,7 +664,7 @@ export const renderPcsList = (data: any, subStationCode: string) => {
                         handleInverterStatus_psc(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe661;
+                    &#xe619;
                   </i>
                 )}
               </div>
@@ -789,7 +773,7 @@ export const renderBmsList = (data: any, subStationCode: string) => {
                       color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe662;
+                    &#xe6a2;
                   </i>
                 ) : (
                   <i
@@ -798,7 +782,7 @@ export const renderBmsList = (data: any, subStationCode: string) => {
                       color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe661;
+                    &#xe619;
                   </i>
                 )}
               </div>

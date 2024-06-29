@@ -131,7 +131,7 @@ const BulletinBoard = () => {
       }
     });
     // 请求数据
-    fetchEnergyTrend({
+    fetchEnergyManageFeature({
       date: fetchDate,
       unit: pickerType === 'date' ? 'day' : pickerType,
     });
@@ -369,26 +369,22 @@ const BulletinBoard = () => {
           <div className={styles.contentMiddle}>
             <div className={`${styles.middleTop} ${styles.boardModdle}`}>
               <dl>
-                <dt>
-                  {pageDataHandle(boardCenterData)?.enterpriseNum}/
-                  {pageDataHandle(boardCenterData)?.predictEnterpriseNum}
-                </dt>
-                <dd>接入企业/预计接入企业(个)</dd>
+                <dt>{pageDataHandle(boardCenterData)?.totalIncome}</dt>
+                <dd>运营商总收益</dd>
+                <dd>(万元)</dd>
               </dl>
               <dl>
-                <dt>{pageDataHandle(boardCenterData)?.traditionalTotal}</dt>
-                <dd>传统能源总用电量(万kWh)</dd>
+                <dt>{pageDataHandle(boardCenterData)?.userIncome}</dt>
+                <dd>用户收益</dd>
+                <dd>(万元)</dd>
               </dl>
               <dl>
-                <dt>{pageDataHandle(boardCenterData)?.cleanTotal}</dt>
-                <dd>清洁能源总用电量(万kWh)</dd>
+                <dt>{pageDataHandle(boardCenterData)?.totalTransactionMileage}</dt>
+                <dd>累计交易里程(MWh)</dd>
               </dl>
               <dl>
-                <dt>{pageDataHandle(boardCenterData)?.carbonSaveTotal}</dt>
-                <dd>
-                  <p>累计计节碳量</p>
-                  <p>(t)</p>
-                </dd>
+                <dt>{pageDataHandle(boardCenterData)?.totalResponseMileageAvgDeviation}</dt>
+                <dd>累计响应里程平均偏差 (%)</dd>
               </dl>
             </div>
             <div className={styles.three}>

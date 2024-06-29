@@ -24,7 +24,7 @@ export default [
   },
   {
     path: '/big-screen/bulletin-board',
-    name: '综能看板',
+    name: '能源综和看板',
     layout: false,
     component: './big-screen/BulletinBoard',
   },

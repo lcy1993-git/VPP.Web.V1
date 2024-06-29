@@ -190,7 +190,7 @@ const DeviceDetail = () => {
         ];
 
         // 后端接口定义运行状态 目前可能返回的值不只 0 1，目前把0当作运行，非0当作停止
-        const status = ['运行'];
+        const status = ['停止', '运行'];
         setDeviceRunStatus(status[result.status] || '停止');
         setRuntimeData(runTime);
         setCircleRingData(dataList);
@@ -553,11 +553,11 @@ const DeviceDetail = () => {
                       <div className={styles.statusTitle}>
                         {deviceRunStatus === '运行' ? (
                           <i className={`iconfont ${styles.icon}`} style={{ color: '#00FF90' }}>
-                            &#xe662;
+                            &#xe6a2;
                           </i>
                         ) : (
                           <i className={`iconfont ${styles.icon}`} style={{ color: '#FF3838' }}>
-                            &#xe661;
+                            &#xe619;
                           </i>
                         )}
                         <span style={{ color: deviceRunStatus === '运行' ? '#00FF90' : '#FF3838' }}>

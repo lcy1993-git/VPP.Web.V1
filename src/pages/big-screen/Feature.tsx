@@ -54,7 +54,11 @@ const Feature = () => {
   const [typicalResponseAnalysisType, setTypicalResponseAnalysisType] = useState<string>('负荷');
 
   // 区域用能概览数据请求
-  const { data: energyUseData, run: fetchEnergyUse } = useRequest(getEnergyUse, {
+  const {
+    run: fetchEnergyUse,
+    loading: energyUseDataLoading,
+    data: energyUseData,
+  } = useRequest(getEnergyUse, {
     manual: true,
     pollingInterval: INTERVALTIME,
     pollingErrorRetryCount: 3,
@@ -99,7 +103,6 @@ const Feature = () => {
     if (!date) {
       return;
     }
-
     let fetchDate: any;
     datePickerEnum.forEach((item: any) => {
       if (item.name === fullAndPutDate) {
@@ -306,7 +309,7 @@ const Feature = () => {
               <BlockWrap title="区域用能概览" headerRightRender={energyOverviewRender}>
                 <CustomCharts
                   options={energyOverviewOptions(pageDataHandle(energyUseData), fullAndPutDate)}
-                  loading={false}
+                  loading={energyUseDataLoading}
                   width={blockWidthOrHeight.width}
                   height={blockWidthOrHeight.height}
                 />
@@ -343,6 +346,25 @@ const Feature = () => {
           {/* center */}
           <div className={styles.contentMiddle}>
             <div className={styles.middleTop}>
+              <div className={styles.totalCount}>
+                <p className={styles.title}>接入企业/预计接入企业(个)</p>
+                <p className={styles.value}>
+                  {(
+                    pageDataHandle(overviewData)?.joinCompanyNum +
+                    '/' +
+                    pageDataHandle(overviewData)?.expectedJoinCompanyNum
+                  )
+                    .toString()
+                    .split('')
+                    .map((item: string, index: any) => {
+                      return Number(item) || Number(item) === 0 ? (
+                        <span key={`${item}-totalAdjustPower-${index}`}>{item}</span>
+                      ) : (
+                        <i key={`${item}-${index}`}>{item}</i>
+                      );
+                    })}
+                </p>
+              </div>
               <div className={styles.totalCount}>
                 <p className={styles.title}>总可调节负荷（MW）</p>
                 <p className={styles.value}>

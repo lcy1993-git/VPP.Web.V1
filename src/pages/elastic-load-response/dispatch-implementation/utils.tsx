@@ -1,14 +1,15 @@
-import { Button, Space } from 'antd';
+import { handleDiffMins } from '@/utils/common';
+import { Space } from 'antd';
 // 计划信息数据类型
 export interface planInfoType {
   dayAheadPlanned: string; // 日前计划里程
-  endTime: string // 计划结束时间
-  expectedRevenue: string // 预计收益
-  identificationNum: string // 计划编号
+  endTime: string; // 计划结束时间
+  expectedRevenue: string; // 预计收益
+  identificationNum: string; // 计划编号
   numParticipatingUsers: number; // 参与用户数量
-  powerDeviation: string // 功率偏差
-  realTimeCompleted: string // 实时完成里程
-  startTime: string // 计划开始时间
+  powerDeviation: string; // 功率偏差
+  realTimeCompleted: string; // 实时完成里程
+  startTime: string; // 计划开始时间
 }
 
 // 计划执行情况数据类型
@@ -23,14 +24,18 @@ export interface executionStatusDataType {
   xaxis: string[];
 }
 
-
 export const statusticsChart = (hisStatisticData: any) => {
-
   if (!hisStatisticData) {
     return;
   }
 
-  const { dayAheadPeakShaving, realTimePeakShaving, dayAheadValleyFilling, uninvited, totalInvited  } = hisStatisticData;
+  const {
+    dayAheadPeakShaving,
+    realTimePeakShaving,
+    dayAheadValleyFilling,
+    uninvited,
+    totalInvited,
+  } = hisStatisticData;
 
   return {
     tooltip: {
@@ -105,12 +110,12 @@ export const planChartOptions = (executionStatusData: executionStatusDataType | 
     return false;
   }
 
-  const {baseline, invitationAdjustment, invitationPlan, realTimeValue, xaxis } = executionStatusData;
+  const { baseline, invitationAdjustment, invitationPlan, realTimeValue, xaxis } =
+    executionStatusData;
 
   const xAxisData = xaxis.map((item: string) => {
-    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1]
-  })
-
+    return item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1];
+  });
 
   return {
     tooltip: {
@@ -127,11 +132,11 @@ export const planChartOptions = (executionStatusData: executionStatusDataType | 
     },
     color: ['#39ffc5', '#0090ff', '#ffea00', '#fa8c44'],
     legend: {
-      data: ['邀约计划', '实时', '邀约调节', '基线'],
+      data: ['邀约计划', '实时数据', '邀约调节', '基线'],
       textStyle: {
         color: '#d7eaef',
       },
-      top: 20
+      top: 20,
     },
     xAxis: {
       type: 'category',
@@ -168,29 +173,36 @@ export const planChartOptions = (executionStatusData: executionStatusDataType | 
         data: invitationPlan,
         type: 'line',
         name: '邀约计划',
-        smooth: true
+        smooth: true,
       },
       {
-        data: realTimeValue,
+        data: realTimeValue.slice(
+          0,
+          handleDiffMins(
+            new Date(),
+            new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            60,
+          ) + 1,
+        ),
         type: 'line',
-        name: '实时',
-        smooth: true
+        name: '实时数据',
+        smooth: true,
       },
       {
         data: invitationAdjustment,
         type: 'line',
         name: '邀约调节',
-        smooth: true
+        smooth: true,
       },
       {
         data: baseline,
         type: 'line',
         name: '基线',
-        smooth: true
+        smooth: true,
       },
     ],
-  }
-}
+  };
+};
 
 // 执行情况表格columns
 export const executionStatusTableColumns = [
@@ -199,8 +211,8 @@ export const executionStatusTableColumns = [
     dataIndex: 'dateTime',
     align: 'center' as any,
     key: 'dateTime',
-    sorter: (a: any ,b: any ) => {
-      return Number(a.key.split(' ')[1].split(':')[0]) - Number(b.key.split(' ')[1].split(':')[0])
+    sorter: (a: any, b: any) => {
+      return Number(a.key.split(' ')[1].split(':')[0]) - Number(b.key.split(' ')[1].split(':')[0]);
     },
   },
   {
@@ -208,8 +220,8 @@ export const executionStatusTableColumns = [
     dataIndex: 'invitationPlan',
     align: 'center' as any,
     key: 'invitationPlan',
-    sorter: (a: any ,b: any ) => {
-      return Number(a.invitationPlan) - Number(b.invitationPlan)
+    sorter: (a: any, b: any) => {
+      return Number(a.invitationPlan) - Number(b.invitationPlan);
     },
   },
   {
@@ -217,8 +229,8 @@ export const executionStatusTableColumns = [
     dataIndex: 'realTimeValue',
     align: 'center' as any,
     key: 'realTimeValue',
-    sorter: (a: any ,b: any ) => {
-      return Number(a.realTimeValue) - Number(b.realTimeValue)
+    sorter: (a: any, b: any) => {
+      return Number(a.realTimeValue) - Number(b.realTimeValue);
     },
   },
   {
@@ -226,8 +238,8 @@ export const executionStatusTableColumns = [
     dataIndex: 'invitationAdjustment',
     align: 'center' as any,
     key: 'invitationAdjustment',
-    sorter: (a: any ,b: any ) => {
-      return Number(a.invitationAdjustment) - Number(b.invitationAdjustment)
+    sorter: (a: any, b: any) => {
+      return Number(a.invitationAdjustment) - Number(b.invitationAdjustment);
     },
   },
   {
@@ -235,11 +247,11 @@ export const executionStatusTableColumns = [
     dataIndex: 'baseline',
     align: 'center' as any,
     key: 'baseline',
-    sorter: (a: any ,b: any ) => {
-      return Number(a.baseline) - Number(b.baseline)
+    sorter: (a: any, b: any) => {
+      return Number(a.baseline) - Number(b.baseline);
     },
   },
-]
+];
 
 // 执行情况表格数据处理
 export const executionStatusDataSource = (executionStatusData: executionStatusDataType | null) => {
@@ -247,7 +259,8 @@ export const executionStatusDataSource = (executionStatusData: executionStatusDa
     return [];
   }
 
-  const {baseline, invitationAdjustment, invitationPlan, realTimeValue, xaxis } = executionStatusData;
+  const { baseline, invitationAdjustment, invitationPlan, realTimeValue, xaxis } =
+    executionStatusData;
 
   const tableData = xaxis.map((item, index) => {
     return {
@@ -256,11 +269,11 @@ export const executionStatusDataSource = (executionStatusData: executionStatusDa
       dateTime: item.split(' ')[1].split(':')[0] + ':' + item.split(' ')[1].split(':')[1],
       invitationPlan: invitationPlan[index],
       realTimeValue: realTimeValue[index],
-      invitationAdjustment: invitationAdjustment[index]
-    }
-  })
+      invitationAdjustment: invitationAdjustment[index],
+    };
+  });
   return tableData;
-}
+};
 
 // 告警信息 columns
 export const alarmTableColumns = [
@@ -280,12 +293,16 @@ export const alarmTableColumns = [
     align: 'center' as any,
     key: 'level',
     render: (text: any) => {
-      const levelLabel = ['一级告警','二级告警','三级告警']
-      const levelColor = ['#FF0000', '#FF6B12', '#FFD800']
-      return <Space>
-        <i className='iconfont' style={{color: levelColor[text - 1]}}>&#xea77;</i>
-        <span  style={{color: levelColor[text - 1]}}>{levelLabel[text - 1]}</span>
-      </Space>;
+      const levelLabel = ['一级告警', '二级告警', '三级告警'];
+      const levelColor = ['#FF0000', '#FF6B12', '#FFD800'];
+      return (
+        <Space>
+          <i className="iconfont" style={{ color: levelColor[text - 1] }}>
+            &#xea77;
+          </i>
+          <span style={{ color: levelColor[text - 1] }}>{levelLabel[text - 1]}</span>
+        </Space>
+      );
     },
   },
   {
@@ -307,7 +324,7 @@ export const alarmTableColumns = [
     align: 'center' as any,
     key: 'index',
     render: (_text: any, record: any) => {
-      return `${record.companyName}公司：响应偏差率${record.variationAmount}, ${record.variationContent}`
-    }
+      return `${record.companyName}公司：响应偏差率${record.variationAmount}, ${record.variationContent}`;
+    },
   },
-]
+];

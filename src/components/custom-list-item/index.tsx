@@ -20,7 +20,7 @@ const CustomListItem = (props: propsType) => {
             </div>
             <dl className={styles.listItemLabel}>
               <dt>
-                {item.label} ({item.unit})
+                {item.label} {item.unit ? '(' + item.unit + ')' : ''}
               </dt>
               <dd>{item.value || '-'}</dd>
             </dl>

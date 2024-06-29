@@ -148,6 +148,7 @@ const EnergyOverview = () => {
                 <CustomCharts
                   options={stackedBarChart(
                     type,
+                    chargeOrQuantity,
                     electricOverview?.peakElectricityMap,
                     electricOverview?.highElectricityMap,
                     electricOverview?.normalElectricityMap,

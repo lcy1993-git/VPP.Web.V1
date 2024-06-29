@@ -13,11 +13,15 @@ enum ErrorShowType {
 // 与后端约定的响应数据格式
 interface ResponseStructure {
   success: boolean;
-  data: any;
   errorCode?: number;
   errorMessage?: string;
   showType?: ErrorShowType;
+  msg: string;
+  data: any;
+  code: number;
 }
+
+let showMsg = true;
 
 /**
  * @name 错误处理
@@ -46,6 +50,7 @@ export const errorConfig: RequestConfig = {
         const errorInfo: ResponseStructure | undefined = error.info;
         if (errorInfo) {
           const { errorMessage, errorCode } = errorInfo;
+
           switch (errorInfo.showType) {
             case ErrorShowType.SILENT:
               // do nothing
@@ -63,7 +68,6 @@ export const errorConfig: RequestConfig = {
               });
               break;
             case ErrorShowType.REDIRECT:
-              // TODO: redirect
               break;
             default:
               message.error(errorMessage);
@@ -72,18 +76,40 @@ export const errorConfig: RequestConfig = {
       } else if (error.response) {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-        message.error(`Response status:${error.response.status}`);
+        if (showMsg) {
+          message.open({
+            type: 'error',
+            content: '服务器内部异常,请稍后重试',
+            style: {
+              color: 'red',
+            },
+          });
+          showMsg = false;
+          setTimeout(() => {
+            showMsg = true;
+          }, 5000);
+        }
       } else if (error.request) {
-        // 请求已经成功发起，但没有收到响应
-        // 而在node.js中是 http.ClientRequest 的实例
-        message.error('没有回应！请重试。');
+        if (showMsg) {
+          message.error('没有回应！请重试。');
+          showMsg = false;
+          setTimeout(() => {
+            showMsg = true;
+          }, 5000);
+        }
       } else {
         // 发送请求时出了点问题
-        const reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
-        message.open({
-          type: 'error',
-          content: reg.test(error) ? error : '服务器内部错误！！！',
-        });
+        if (showMsg) {
+          const reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
+          message.open({
+            type: 'error',
+            content: reg.test(error) ? error : '服务器内部错误！！！',
+          });
+          showMsg = false;
+          setTimeout(() => {
+            showMsg = true;
+          }, 5000);
+        }
       }
     },
   },
@@ -106,6 +132,7 @@ export const errorConfig: RequestConfig = {
           },
         };
       }
+
       return {
         ...config,
         url,
@@ -115,8 +142,7 @@ export const errorConfig: RequestConfig = {
 
   // 响应拦截器
   responseInterceptors: [
-    (response) => {
-      // 拦截响应数据，进行个性化处理
+    (response: any) => {
       const { data } = response as unknown as ResponseStructure;
 
       if (data.code === 403) {

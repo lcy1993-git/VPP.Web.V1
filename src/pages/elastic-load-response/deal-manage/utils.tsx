@@ -1,4 +1,5 @@
 import ColorCircleScript from '@/components/color-circle-script';
+import { handleDiffMins } from '@/utils/common';
 import { Badge, Button, Space } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 引入中文语言包
@@ -751,6 +752,12 @@ export const clearingResultColumns: any = (
       },
     },
     {
+      title: '可调容量(MW)',
+      dataIndex: 'dispatchCapacity',
+      key: 'dispatchCapacity',
+      align: 'center',
+    },
+    {
       title: '申报交易量(MWh)',
       dataIndex: 'declaredTradingVolume',
       key: 'declaredTradingVolume',
@@ -1499,7 +1506,6 @@ export const dayPlanChartOptions = (data: any) => {
     },
     color: ['#39ffc5', '#0090ff', '#ffea00', '#fb8d44'],
     legend: {
-      data: ['邀约计划（kW）', '实时（kW）', '邀约调节（kW）', '基线（kW）'],
       textStyle: {
         color: '#d7eaef',
       },
@@ -1537,7 +1543,14 @@ export const dayPlanChartOptions = (data: any) => {
         smooth: true,
       },
       {
-        data: realValueList,
+        data: realValueList.slice(
+          0,
+          handleDiffMins(
+            new Date(),
+            new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            60,
+          ) + 1,
+        ),
         type: 'line',
         name: '实时（kW）',
         smooth: true,

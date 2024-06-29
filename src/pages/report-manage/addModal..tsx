@@ -123,6 +123,7 @@ const AddModal = (props: propsType) => {
         message.success('添加成功');
         setIsModalOpen(false);
         setIsVisible(false);
+        setReportListField([]);
         addForm.resetFields();
         if (refresh) refresh();
         setSaveLoading(false);
@@ -284,6 +285,7 @@ const AddModal = (props: propsType) => {
                           treeDefaultExpandAll
                           onChange={onChange}
                           treeData={deviceTree}
+                          maxTagCount={2}
                         />
                       </Form.Item>
                     </div>
@@ -294,7 +296,10 @@ const AddModal = (props: propsType) => {
                       rules={[{ required: true, message: '请选择模版数据' }]}
                     >
                       {reportListField.length ? (
-                        <Checkbox.Group options={reportListField} />
+                        <Checkbox.Group
+                          options={reportListField}
+                          style={{ maxHeight: '68px', overflowY: 'auto' }}
+                        />
                       ) : (
                         <span>暂无数据</span>
                       )}
@@ -303,7 +308,7 @@ const AddModal = (props: propsType) => {
                 </div>
                 <Button
                   onClick={previewReport}
-                  style={{ marginLeft: '100px', marginBottom: '10px' }}
+                  style={{ marginLeft: '100px', marginBottom: '5px' }}
                 >
                   <FileTextOutlined />
                   报表预览
@@ -325,7 +330,7 @@ const AddModal = (props: propsType) => {
                             </div>
                           ),
                         }}
-                        scroll={{ x: 300, y: tableHeightRef.current }}
+                        scroll={{ x: 300, y: tableHeightRef.current - 20 }}
                       />
                     </div>
                   </div>

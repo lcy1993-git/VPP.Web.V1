@@ -125,12 +125,20 @@ const AlarmModal = (props: any) => {
           if (tableRef && tableRef.current) {
             setConfirmVisible(false);
             //@ts-ignore
-            tableRef.current?.searchByParams({ beginTime, endTime });
+            tableRef.current?.searchByParams({
+              beginTime,
+              endTime,
+              eventStatus: searchValues.eventStatus,
+            });
           }
         } catch (err) {
           setConfirmVisible(false);
           //@ts-ignore
-          tableRef.current?.searchByParams({ beginTime, endTime });
+          tableRef.current?.searchByParams({
+            beginTime,
+            endTime,
+            eventStatus: searchValues.eventStatus,
+          });
         }
       }
     });

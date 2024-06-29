@@ -17,14 +17,20 @@ interface propsType {
   ids: any; // id数组
   setModalOpen: Dispatch<SetStateAction<boolean>>; // 修改派单模态框状态
   open: boolean; // 模态框状态
-  modalType: 'delete' | 'cancel' | 'declare' | 'userDelete'; // 模态框类型
+  modalType: 'delete' | 'cancel' | 'declare' | 'userDelete' | 'batchDeclare'; // 模态框类型
   refresh: any; // 成功后操作
 }
 
 // 信息删除/申报/撤销，详情删除弹框
 const DeleteModal = (props: propsType) => {
   const { setModalOpen, open, modalType, ids, refresh } = props;
-  const ModalTitle: any = { delete: '删除', cancel: '撤销', declare: '申报', userDelete: '删除' };
+  const ModalTitle: any = {
+    delete: '删除',
+    cancel: '撤销',
+    declare: '申报',
+    userDelete: '删除',
+    batchDeclare: '批量申报',
+  };
   // 保存loading
   const [loading, setLoading] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -41,6 +47,7 @@ const DeleteModal = (props: propsType) => {
           await cancelPlan(ids);
           break;
         case 'declare':
+        case 'batchDeclare':
           await submissPlan(ids);
           break;
         case 'userDelete':

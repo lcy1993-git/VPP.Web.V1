@@ -71,23 +71,23 @@ export const renderList = (data: any, subStationCode: string) => {
           <div className={styles.moduleItem} key={item.deviceName}>
             <div className={styles.ItemHeader}>
               <div className={styles.circle}>
-                {handleInverterStatus(item.status) === '运行' ? (
+                {handleInverterStatus(item?.status) === '运行' ? (
                   <i
                     className="iconfont"
                     style={{
-                      color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
+                      color: handleInverterStatus(item?.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe662;
+                    &#xe6a2;
                   </i>
                 ) : (
                   <i
                     className="iconfont"
                     style={{
-                      color: handleInverterStatus(item.status) === '运行' ? '#00FF90' : '#FF3838',
+                      color: handleInverterStatus(item?.status) === '运行' ? '#00FF90' : '#FF3838',
                     }}
                   >
-                    &#xe661;
+                    &#xe619;
                   </i>
                 )}
               </div>

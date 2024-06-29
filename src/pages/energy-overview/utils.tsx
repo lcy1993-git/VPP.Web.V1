@@ -247,10 +247,10 @@ export const pieChart = (
   valleyElectricity: string,
 ) => {
   const data = [
-    { name: '尖值', value: peakElectricity, itemStyle: { color: '#3EADE4' } },
-    { name: '峰值', value: highElectricity, itemStyle: { color: '#3AE6E6' } },
-    { name: '平值', value: normalElectricity, itemStyle: { color: '#E0B437' } },
-    { name: '谷值', value: valleyElectricity, itemStyle: { color: '#1CCB6E' } },
+    { name: '尖值', value: peakElectricity, itemStyle: { color: '#1877C8' } },
+    { name: '峰值', value: highElectricity, itemStyle: { color: '#26AD90' } },
+    { name: '平值', value: normalElectricity, itemStyle: { color: '#D3B53A' } },
+    { name: '谷值', value: valleyElectricity, itemStyle: { color: '#65BD35' } },
   ];
   return {
     legend: {
@@ -294,6 +294,7 @@ export const pieChart = (
 // 用电概览柱状图
 export const stackedBarChart = (
   type: string,
+  chargeOrQuantity: boolean,
   peakElectricityMap: any,
   highElectricityMap: any,
   normalElectricityMap: any,
@@ -342,7 +343,7 @@ export const stackedBarChart = (
           color: 'rgba(231, 250, 255, 0.6)', // 设置 y 轴文字颜色
         },
       },
-      name: 'kWh',
+      name: chargeOrQuantity ? '元/kWh' : 'kWh',
       type: 'value',
     },
     series: [

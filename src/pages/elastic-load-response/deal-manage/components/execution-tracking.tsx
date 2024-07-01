@@ -71,7 +71,7 @@ const ExecutionTracking = () => {
                     <span>{item.planMilestone}MWh</span>
                   </li>
                   <li>
-                    <span>实时完成里程：</span>
+                    <span>实际完成里程：</span>
                     <span>{item.actualMilestone}MWh</span>
                   </li>
                   <li>
